@@ -150,5 +150,7 @@
 * First public version available for other users.
 ### v1.0 - *[2016-04-02]*
 * First version used only on my channels.
+## Feedback
+Please open a GitHub Issue.
 ## License
 Premium is free and licensed under Creative Commons CC-BY-NC-SA 4.0 (see [Creative Commons](http://creativecommons.org/licenses/by-nc-sa/4.0/) for the full text).
