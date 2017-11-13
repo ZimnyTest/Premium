@@ -1,6 +1,6 @@
 # Premium
 ## About
-**Premium** is a powerful JavaScript application for [Synchtube](https://synchtu.be/) (or CyTube, etc.) channels. It adds to your channel many missing features, functions, and enhancements.
+**Premium** is a powerful JavaScript application for [Synchtube](https://synchtu.be/) (or any server based on CyTube) channels. It adds to your channel many missing features, functions, and enhancements.
 ## Installation
 1. Log as an admin to your Synchtube / CyTube room, and go to: Channel Settings > Admin Settings
 2. Paste following URL to "External Javascript": `https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js`<br />
@@ -14,11 +14,18 @@
 * Relatively small filesize - only 275 kB of code.
 #### General features
 * User settings stored in cookies/localStorage, applied for all Premium channels
-* Synchtube logo in the navbar (only for Synchtu.be server)
+* Synchtube logo in the navbar (only for Synchtube server)
 * Channel ID instead of default server name
-* Extended "Layout" navigation bar menu
-* Default media progress bar (can be disabled by a user)
-* Premium counter in the channel footer
+* Extended "Layout" menu in the navigation bar
+* Media progress bar (can be disabled by a user)
+* Premium credits added to footer
+* Elements added to default layout:
+  * 2 navigation bar handling icons
+  * 3 chat header and 4 playlist footer labels
+  * "Colors" menu button next to "Emote List"
+  * Chat controls - group of 4/5 buttons
+  * Menu button added to playlist controls
+  * 2 menu buttons and "Favourites panel" button added to player controls
 ### List of user options and functions
 #### General layout
 * Modal windows without fading background
@@ -26,6 +33,11 @@
 * Browser's tab title: page title/ current media title/ channel ID/ number of chat messages
 * Displaying/hiding various layout elements
 * Theme/skin selector, 5 default plus 9 Premium themes
+* Ignore channels' CSS
+* Ignore only this channel CSS
+* User CSS code
+* 9 optional background patterns
+* 14 optional Google fonts
 * Compact layout
 * Single column layout
 * Old Synchtube layout (player on left, chat on right)
