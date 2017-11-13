@@ -18,10 +18,6 @@ Installation finished!
 #### General layout
 * Modal windows without fading background
 * Glue layout elements to the edge of the screen
-* Transparent navigation bar (opaque on mouseover)
-* Collapse MOTD on load
-* Collapse userlist on load
-* Separate userlist items
 * Browser's tab title: page title/ current media title/ channel ID/ number of chat messages
 * Displaying/hiding various layout elements
 * Theme/skin selector, 5 default plus 9 Premium themes
@@ -36,6 +32,14 @@ Installation finished!
 #### Navigation bar
 * Make navbar scrollable
 * Collapse navigation bar
+* Transparent navigation bar (opaque on mouseover)
+#### MOTD
+* Collapse MOTD on load
+#### Userlist
+* Collapse userlist on load
+* Separate userlist items
+* Userlist on right
+* Big user profiles
 #### Chat
 * Autohide scrollbars (chat & userlist)
 * Don't display "New Messages Below" alert
@@ -45,19 +49,44 @@ Installation finished!
 * Scroll chat panel to top on load
 * Custom character(s) after username in chat messages
 * Maximum number of visible chat messages: 50/ 100/ 200/ 500
-* Handy Emotes Panel (expanded on mouseover) with selectable number of emotes per page: 25/ 50/ 100/ 200/ 500
+* Handy emotes panel (expanded on mouseover) with selectable number of emotes per page: 25/ 50/ 100/ 200/ 500
 * Emotes tab completion preview with selectable position: don't show preview/ bottom left/ bottom right/ top left/ top right
 * Premium Notifiactions with selectable mode: don't show neither/ show only "user joined/disconnected"/ show only "now playing"/ show both
 * Ignore chat colors and/or effets with selectable mode: ignore only colors/ ignore only effects/ ignore both colors and effects
 * Custom chat filters (simplified regular expressions)
-* Media database (requires external .js file)
-* Custom HTML in empty space under the chat
-* Chat panel expanding (full-height)
+* Chat panel expanding (to full-height)
 * "Scroll to playlist" button
 * "Scroll chat panel to top" button
 * Colors button with selectable 30 chat text colors, using proper code in the chatline any HTML color is possible
 * Oeakaki - drawing board, uses modified external application, lets user draw a simple picture and returns link to uploaded file (to imgur.com)
+* Pseudo-random, info, fun and playlist handling commands - 16 commands started with "!"
+* Layout and channel handling commands - 24 commands started with "/"
+* 12 chatline codes for text effects
+* Up to 10 available shorthands (form "//0" to "//9") for defined long texts or code sequences
+* List of user chat messages in current session
+* List of chat messages in current session that mentioned user's name, with possibility to save up to 200 mentions
+* Unicode characters panel (expanded on mouseover) with single symbols, diacritic letters and text emojis
+* Custom ping (notification) sound file with adjustable ping volume
+* Clear user's chat window
+* Upload to imgur - lets user select an image from disk and returns link to uploaded file
+* Convert links to images (image is displayed directly on chat, instead of link)
+* Convert media to images (player with video or music file is displayed directly on chat instead, of link)
+* NicoNico mode (chat messages displayed on the player)
+* White background chat
+* Separate chat messages (messages separated with lines)
+* Ignore avatars and name colors
+* Ignore emotes (displaying only emote text codes instead of images)
+* Chat font size
+* Hide AFK users (AFKers will be hidden on the userlist)
+* Hide timestamps
+* Disable autoscroll
+* Always show usernames (username displaying after every consecutive message)
+* Matrix style chat
+* Bubbled chat messages
 #### Player
 * Hide player until next, possible custom covering image
 #### Other
 * Personal notepad (up to 1M charasters)
+* Media database (requires external .js file)
+* Custom HTML in empty space under the chat
+* 17 keyboard shortcuts (using "left alt" button)
