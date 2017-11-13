@@ -14,7 +14,12 @@ Installation finished!
 * Relatively small filesize - only 275 kB of code.
 #### General features
 * User settings stored in cookies/localStorage, applied for all Premium channels
-### List of user options
+* Synchtube logo in the navbar (only for Synchtu.be server)
+* Channel ID instead of default server name
+* Extended "Layout" navigation bar menu
+* Default media progress bar (can be disabled by a user)
+* Premium counter in the channel footer
+### List of user options and functions
 #### General layout
 * Modal windows without fading background
 * Glue layout elements to the edge of the screen
@@ -76,17 +81,51 @@ Installation finished!
 * Separate chat messages (messages separated with lines)
 * Ignore avatars and name colors
 * Ignore emotes (displaying only emote text codes instead of images)
-* Chat font size
+* Adjustable chat font size
+* Leader status menu item (quick toggling of self-leader status)
 * Hide AFK users (AFKers will be hidden on the userlist)
 * Hide timestamps
 * Disable autoscroll
 * Always show usernames (username displaying after every consecutive message)
 * Matrix style chat
 * Bubbled chat messages
+* Autoclear button - non-stop clearing the chat (if raid or spam attack)
+* AntiAFK button - prevents user from AFK status
+* Buttons for "/clear" and "/afk" commands
 #### Player
 * Hide player until next, possible custom covering image
+* Full-width title bar
+* Hide progress bar
+* Show time left
+* Adjustable player brightness
+* Adjustable sound volume
+* Disable player (hide both video and sound)
+* Remove player
+* Mirror player horizontally
+* Mirror player vertically
+* Show player mascot (12 selectable animated mascots) with selectable position: bottom left/ bottom center/ bottom right/ top left/ top right/ center
+#### Playlist
+* List of last played (items played in current session with history of user's plays - up to 100 items)
+* Contributors ranking
+* Numbered playlist items
+* Show contributors usernames (usernames displayed directly on the playlist)
+* Filter playlist by username
+* Hide playlist scrollbar
+* Show miniatures (for YouTube and Dailymotion)
+* Hide buttons
+* Video quality selector
+* Improved retrieve playlist links button - 5 options: raw links/ plain text/ HTML code/ ordered list/ array format
+* "Scroll playlist to current item" button
+* Expand playlist (playlist displayed without scrollbar)
+* Hide playlist
+* "Scroll to chat" button
 #### Other
 * Personal notepad (up to 1M charasters)
 * Media database (requires external .js file)
 * Custom HTML in empty space under the chat
 * 17 keyboard shortcuts (using "left alt" button)
+* Premium admin tools - chat effects, CSS tips, MOTD tabs, soundfilters, media database, customization
+* Playlist mode button
+* Channels button - displays list of public channels
+* UTC time shown in advanced options panel
+* Favourites links panel - up to 200 links to save, with YouTube preview and 3 modes of sorting (oldest firest/ newest first/ alphabetically)
