@@ -120,8 +120,8 @@ Installation finished!
 * Hide playlist
 * "Scroll to chat" button
 #### Other
-* Personal notepad (up to 1M charasters)
-* Media database (requires external .js file)
+* Personal notepad (up to 1M characters)
+* Personal media database (requires external .js file)
 * Custom HTML in empty space under the chat
 * 17 keyboard shortcuts (using "left alt" button)
 * Premium admin tools - chat effects, CSS tips, MOTD tabs, soundfilters, media database, customization
@@ -129,3 +129,14 @@ Installation finished!
 * Channels button - displays list of public channels
 * UTC time shown in advanced options panel
 * Favourites links panel - up to 200 links to save, with YouTube preview and 3 modes of sorting (oldest firest/ newest first/ alphabetically)
+## Changelog
+### v2.10 - *[2017-??-??]*
+* First release on Github.
+### v2.0 - *[2017-01-15]*
+* Heavily modified, reviewed and largely extended new version.
+### v1.5 - *[2016-11-04]*
+* First public version available for other users.
+### v1.0 - *[2016-04-02]*
+* First version used only on my channels.
+## License
+Premium is free and licensed under Creative Commons CC-BY-NC-SA 4.0 (see [Creative Commons](http://creativecommons.org/licenses/by-nc-sa/4.0/) for the full text).
