@@ -5,7 +5,7 @@
 # ABOUT
 _______
 
-# Synchtube Premium is a powerful JavaScript application for Synchtube (and similar) channels
+# Synchtube Premium is a powerful JavaScript application for Synchtube (or any similar server) channels
 # Multi-functional - adds to your channel over 100 missing features, functions, and enhancements
 # Minimal layout interference - maximum channel boost by adding only few buttons and menus
 # Ready-to-use - doesn't require any configuration to work (see: INSTALLATION)
@@ -22,10 +22,11 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.alpha 2
-# Release date:		2017-11-11
+# Version:		2.10.alpha 4
+# Release date:		2017-11-14
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
+# Project URL:		https://github.com/ZimnyTest/SynchtubePremium
 
 # API CONTENTS
 ______________
@@ -44,10 +45,10 @@ ______________
 // ***** API activation control ***** //
 
 START = new Date().getTime();
-var msg = 'Synchtube Premium error! Application was not loaded properly, some functions may not work. '
-	+ 'If channel player doesn\'t work, try to refresh the page. '
+var msg = 'Synchtube Premium error! Application hasn\'t been loaded properly, some functions may not work. '
+	+ 'If there\'s a problem with media player, try to refresh the page. '
 	+ 'Otherwise, ask channel administrator, or disable script access.';
-setTimeout(function() {if (typeof LOADED === "undefined") addServerMessage(msg)}, 8000);
+setTimeout(function() {if (typeof LOADED === "undefined") addServerMessage(msg)}, 10000);
 
 
 // ***** BASIC CUSTOMIZATION ***** //
@@ -195,8 +196,8 @@ ExternalScriptURL	= '';
 // ***** END OF BASIC CUSTOMIZATION ***** //
 
 
-// Force reloading after unexpected site error (if API was already loaded), to prevent duplication of the elements
-// It fixes also incompability with site after enabling "Chat Only" default layout option
+// Reload after unexpected site error (if API was already loaded), to prevent duplication of the elements
+// It fixes also incompability with enabled "Chat Only" layout
 
 if (typeof LOADED !== "undefined" || $("body").hasClass('chatOnly')) document.location.reload();
 
@@ -208,13 +209,12 @@ if (typeof LOADED !== "undefined" || $("body").hasClass('chatOnly')) document.lo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Set default layout settings for the first-time visitors
+// Get default layout settings of the first-timers
 
-_LAYOUT		= USEROPTS.layout;
 _USERTHEME	= document.getElementById("usertheme").getAttribute("href");
-_COMPACT	= (['fluid', 'synchtube-fluid'].indexOf(_LAYOUT) > -1) ? false : true;
-_SINGLECOLUMN	= (_LAYOUT == "hd") ? true : false;
-_SYNCH		= (_LAYOUT.indexOf("synchtube") > -1) ? true : false;
+_COMPACT	= ['fluid', 'synchtube-fluid'].indexOf(USEROPTS.layout) < 0 ? true : false;
+_SINGLECOLUMN	= USEROPTS.layout == "hd" ? true : false;
+_SYNCH		= USEROPTS.layout.indexOf("synchtube") > -1 ? true : false;
 _ELEMENTS	= 'header:1|logo:1|motd:1|announcements:1|mainheader:1|playerlabels:1|chatlabels:1|playercontrols:1|'
 		+ 'playlistbtns:1|playlistmenu:1|playermenu:1|playerbtns:1|mediadbbtns:1|chatcontrols:1|'
 		+ 'pollemotebtns:1|colorsbtn:1|chatbtns:1|chatmenus:1|plmeta:1|playlistlabels:1|footer:1';
@@ -301,7 +301,7 @@ HIDEINDICATOR	= getOrDefault('SP_hideindicator',	false);
 HIDEPLAYERURL	= getOrDefault('SP_hideplayerurl',	'');
 IGNORECHATMODE	= getOrDefault('SP_ignorechatmode',	3);
 IMAGEURLACCEPT	= getOrDefault('SP_imageurlaccept',	false);
-PREMIUMNOTMODE	= getOrDefault('SP_premiumnotmode',	3);
+PREMIUMNOTMODE	= getOrDefault('SP_premiumnotmode',	4);
 SEPARATEULIST	= getOrDefault('SP_separateulist',	false);
 TABMODE		= getOrDefault('SP_tabmode',		0);
 TRANSPARENTNAV	= getOrDefault('SP_transparentnav',	false);
@@ -314,6 +314,7 @@ CHATMSGNUM	= 0;
 CHATUNRNUM	= 0;
 COMMAND 	= false;
 COMMANDSTSTAMPS	= [];
+DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
 HIDDENPLR	= false;
 HIDDENVWRAP	= false;
 LASTPLAYED 	= [];
@@ -321,7 +322,7 @@ MUTEDVOICES	= [];
 NOPLAYER	= false;
 ONLINETIME 	= 0;
 PREVTIME	= 0;
-VERSION		= '2.10.alpha 2';
+VERSION		= '2.10.alpha 4';
 VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "unicode":1}
 
 // Allowed link extensions that can be displayed directly on chat by a user
@@ -372,28 +373,28 @@ UnicodeEmojiArray = [
 // Additional layout themes/skins
 
 ThemesArray = [
-	['Cosmos',	'https://dl.dropboxusercontent.com/s/w75q2eqcj6p7cz4/cosmos.css'],
-	['DarkCells',	'https://dl.dropboxusercontent.com/s/d6esvco1v8iu7ir/darkcells.css'],
-	['Vichan',	'https://dl.dropboxusercontent.com/s/wpux079r6kfuk3k/vichan.css'],
-	['RedPlus',	'https://dl.dropboxusercontent.com/s/9y42udvkaky59a0/redplus.css'],
-	['Postmodern',	'https://dl.dropboxusercontent.com/s/9pp0l6x418mpch4/triangles.css'],
-	['Gray',	'https://dl.dropboxusercontent.com/s/5z8d9rsu8hobz55/grey.css'],
-	['Jungle',	'https://dl.dropboxusercontent.com/s/h5w9ecz1qu0ns7g/jungle.css'],
-	['Winter',	'https://dl.dropboxusercontent.com/s/i50wsa5ghh9oc0s/winter.css'],
-	['FreshAir',	'https://dl.dropboxusercontent.com/s/lq14vuztxvjxqz5/freshair.css'],
+	['Cosmos',	DROPBOX + 'w75q2eqcj6p7cz4/cosmos.css'],
+	['DarkCells',	DROPBOX + 'd6esvco1v8iu7ir/darkcells.css'],
+	['Vichan',	DROPBOX + 'wpux079r6kfuk3k/vichan.css'],
+	['RedPlus',	DROPBOX + '9y42udvkaky59a0/redplus.css'],
+	['Postmodern',	DROPBOX + '9pp0l6x418mpch4/triangles.css'],
+	['Gray',	DROPBOX + '5z8d9rsu8hobz55/grey.css'],
+	['Jungle',	DROPBOX + 'h5w9ecz1qu0ns7g/jungle.css'],
+	['Winter',	DROPBOX + 'i50wsa5ghh9oc0s/winter.css'],
+	['FreshAir',	DROPBOX + 'lq14vuztxvjxqz5/freshair.css'],
 ];
 
 // Background pattern images
 
 BackgroundsArray = [
-	['Chequered',	'https://dl.dropboxusercontent.com/s/9su405d9ise5e3v/chequered.png'],
-	['Cosmos',	'https://dl.dropboxusercontent.com/s/qimrhicuocjutag/space.jpg'],
-	['Damask',	'https://dl.dropboxusercontent.com/s/8cl7edsnhh1ncun/damask.jpg'],
-	['Denim',	'https://dl.dropboxusercontent.com/s/li4q7xkxj75ev6v/denim.jpg'],
-	['Hibiscus',	'https://dl.dropboxusercontent.com/s/wd6wgisowlrxpfi/hibiscus.jpg'],
-	['Tiles',	'https://dl.dropboxusercontent.com/s/wsypfghvl8s39dz/checked.png'],
-	['Triangles',	'https://dl.dropboxusercontent.com/s/fptdsrtetoo7zoe/triangles.png'],
-	['Zigzag',	'https://dl.dropboxusercontent.com/s/pptzler9mnf6ake/zigzag.jpg'],
+	['Chequered',	DROPBOX + '9su405d9ise5e3v/chequered.png'],
+	['Cosmos',	DROPBOX + 'qimrhicuocjutag/space.jpg'],
+	['Damask',	DROPBOX + '8cl7edsnhh1ncun/damask.jpg'],
+	['Denim',	DROPBOX + 'li4q7xkxj75ev6v/denim.jpg'],
+	['Hibiscus',	DROPBOX + 'wd6wgisowlrxpfi/hibiscus.jpg'],
+	['Tiles',	DROPBOX + 'wsypfghvl8s39dz/checked.png'],
+	['Triangles',	DROPBOX + 'fptdsrtetoo7zoe/triangles.png'],
+	['Zigzag',	DROPBOX + 'pptzler9mnf6ake/zigzag.jpg'],
 ];
 
 // Google fonts
@@ -429,7 +430,7 @@ $plmeta			= $("#plmeta");
 # FAVSORTMODE, MASCOT, MASCOTPOS, MENTIONHISTORY, NOBACKDROP, PLAYERHISTORY
 
 # List of session global variables loaded dynamically:
-# BRIGHTNESS, MEDIADBLOAD, OEKAKILOAD
+# BRIGHTNESS, MEDIADBLOAD, OEKAKILOAD, OETSTAMP
 
 # List of interval global variables loaded dynamically:
 # ANTIAFK, CLEARING, GQI, MEDIACLOCK, PBAR, TIMELEFTCLOCK, UTCCLOCK
@@ -465,7 +466,7 @@ function alterMOTD() {
 // Check if chat commands were abused
 
 function checkCommandsAbuse() {
-	var time = (new Date()).getTime();
+	var time = new Date().getTime();
 	if (COMMANDSTSTAMPS.length > 4) {
 		if (time - COMMANDSTSTAMPS[0] < 60000) {
 			addServerMessage('Warning: abuse of the random-type commands (5 times per minute allowed)');
@@ -782,11 +783,11 @@ function handleMediaChange() {
 	}
 	NOPLAYER ? $("#plr-13").hide() : $("#plr-13").show();
 	if ($queue.find(".queue_entry").length > 0 && FAVLINKS.indexOf(link) > -1) {
-		$favsbtn.addClass('btn-success');
+		$favsBtn.addClass('btn-success');
 		$("#addtofav-btn").addClass('btn-success disabled');
 	} else if ($queue.find(".queue_entry").length < 1) $("#addtofav-btn").addClass('disabled')
 	else {
-		$favsbtn.removeClass('btn-success');
+		$favsBtn.removeClass('btn-success');
 		$("#addtofav-btn").removeClass('btn-success disabled');
 	}
 }
@@ -840,7 +841,7 @@ function loadDatabase(link) {
 			setTimeout(function() {$dbwell.find("div").remove()}, 20000);
 			return;
 		}
-		$dbbtn.addClass('jsloaded');
+		$dbBtn.addClass('jsloaded');
 		$("#getdb-btn").show();
 		createMediaDatabase();
 		MEDIADBLOAD = true;
@@ -870,7 +871,7 @@ function nowPlaying() {
 	var uid = $(".queue_active").data("media");
 	if (NowPlaying == "") NowPlaying = 'Now playing';
 	var html = NowPlaying + ': ' + uid.title + ' [' + uid.duration + ']';
-	if ($favsbtn.hasClass('btn-success')) html += ' <span class="glyphicon glyphicon-thumbs-up"></span>';
+	if ($favsBtn.hasClass('btn-success')) html += ' <span class="glyphicon glyphicon-thumbs-up"></span>';
 	if (!NOPLAYER) addServerMessage(html);
 }
 
@@ -1103,7 +1104,7 @@ function removeFav(id) {
 			if ($queue.find(".queue_entry").length < 1) {
 				$("#favs-btn, #addtofav-btn").removeClass('btn-success');
 			} else if (oldlink == formatURL($(".queue_active").data("media"))) {
-				$favsbtn.removeClass('btn-success');
+				$favsBtn.removeClass('btn-success');
 				$("#addtofav-btn").removeClass('btn-success disabled');
 			}
 		}
@@ -1479,7 +1480,7 @@ function largePlayer() {
 	if (ratio > 1.85) classes = 'col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2'
 	else classes = 'col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1';
 	$("#videowrap, #rightcontrols").removeClass().addClass(classes);
-	$scrolltochat.html('To player ▴');
+	$scrollToChat.html('To player ▴');
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
@@ -1494,7 +1495,7 @@ function normalPlayer() {
 	var class2 = 12 - parseInt(match[1], 10);
 	$chatwrap.removeClass().addClass('col-md-' + class1 + ' col-lg-' + class1);
 	$("#videowrap, #rightcontrols").removeClass().addClass('col-md-' + class2 + ' col-lg-' + class2);
-	$scrolltochat.html('To chat ▴');
+	$scrollToChat.html('To chat ▴');
 	collapseChat();
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
@@ -1535,7 +1536,7 @@ function theatreMode() {
 		$tqueue = $('<div id="tqueue" />').appendTo($body).append($("#queue-parent").detach())
 			    .addClass($chatwrap.hasClass('tmode') ? 'tmode' : 'tmode2');
 		$tqueuecl = $('<span id="tqueue-close" class="label label-default pull-right pointer scroll-label" />')
-			      .html('Close').insertAfter($scrolltocurrent)
+			      .html('Close').insertAfter($scrollToCurrent)
 			      .on("click", function() {
 				$("#rightpane-inner").append($("#queue-parent").detach());
 				$("#tqueue-close, #tqueue").remove();
@@ -1552,7 +1553,7 @@ function theatreMode() {
 		$("#emote-view").removeClass('b-right').addClass('t-right bright-old');
 		EMOTESPREVPOS = "t-right";
 	}
-	if ($expandchat.hasClass('label-success')) collapseChat();
+	if ($expandChat.hasClass('label-success')) collapseChat();
 	closebtn = $('<button id="close-btn" class="btn btn-danger pointer" title="Close Theatre Mode" />')
 	  .addClass(!SYNCH ? 'tmode' : 'tmode2').appendTo("body")
 	  .append('<span class="glyphicon glyphicon-new-window" />')
@@ -1634,7 +1635,7 @@ function radioMode() {
 	if (NOPLAYER) $("#plr-btn").hide();
 	$("#chatwrap, #videowrap, #leftcontrols, #rightcontrols, #rightpane").removeClass()
 	  .addClass('col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2');
-	if ($expandchat.hasClass('label-success')) collapseChat();
+	if ($expandChat.hasClass('label-success')) collapseChat();
 	var html = 'You are listening to: /r/' + window.location.href.split("/").pop();
 	if (CHANNEL.opts.pagetitle != "") html += '<i> - ' + CHANNEL.opts.pagetitle + '</i>';
 	radioheaderwrap = $('<div id="radioheaderwrap" class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2" />')
@@ -1710,7 +1711,7 @@ function closeRadioMode() {
 	$("#switch-btn, #css-btn, #radioslider").remove();
 	$body.removeClass('radio-mode');
 	$videowrapHeader.removeClass("radiotitle");
-	if ($expandchat.hasClass('label-success')) $expandchat.removeClass('label-success');
+	if ($expandChat.hasClass('label-success')) $expandChat.removeClass('label-success');
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").show();
 	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-btn, #plr-1, #plr-14, #plr-15, #plr-16").show();
@@ -1752,7 +1753,7 @@ function fixedNavbar() {
 }
 
 function expandChat() {
-	$expandchat.addClass('label-success');
+	$expandChat.addClass('label-success');
 	if ($body.hasClass('radio-mode')) {
 		var ht = $(window).height() - $videowrap.outerHeight() - $chatheader.outerHeight();
 		ht -= $chatline.outerHeight();
@@ -1767,7 +1768,7 @@ function expandChat() {
 }
 
 function collapseChat() {
-	$expandchat.removeClass('label-success');
+	$expandChat.removeClass('label-success');
 	var ht = $ytapiplayer.height();
 	if (NOPLAYER || LARGECHAT || $("#plr-13").hasClass('activated')) ht = $(window).height() - 300;
 	$("#messagebuffer, #userlist").height(ht);
@@ -1907,16 +1908,16 @@ var html = '<li><a id="layout-1">Premium Settings</a></li>'
 	 + '<li class="divider"></li>'
 	 + '<li><a id="layout-9"><span class="glyphicon glyphicon-th-list"></span>Theatre Mode</a></li>'
 	 + '<li><a id="layout-10"><span class="glyphicon glyphicon-headphones"></span>Radio Mode</a></li>';
-$layoutmenu = $('#nav-collapsible a[onclick*="chatOnly"]').parent().parent().addClass('noclose').html(html)
+$layoutMenu = $('#nav-collapsible a[onclick*="chatOnly"]').parent().parent().addClass('noclose').html(html)
   .parent().find("> a").prepend('<span class="glyphicon glyphicon-cog nav-cog layout-cog" />')
   .parent().addClass('layout-menu');
 
 
 // Navbar options icons
 
-$navbarup = $('<div id="navbar-up" class="pull-right pointer navbar-text" />').appendTo("#nav-collapsible")
+$navbarUp = $('<div id="navbar-up" class="pull-right pointer navbar-text" />').appendTo("#nav-collapsible")
   .html('<span class="glyphicon glyphicon-chevron-up" title="Collapse navigation bar"></span>');
-$navbarunpin = $('<div id="navbar-unpin" class="pull-right pointer navbar-text" />').appendTo("#nav-collapsible")
+$navbarUnpin = $('<div id="navbar-unpin" class="pull-right pointer navbar-text" />').appendTo("#nav-collapsible")
   .html('<span class="glyphicon glyphicon-open" title="Make navbar scrollable"></span>');
 
 
@@ -1950,11 +1951,11 @@ if (HIDEINDICATOR) $chatwrap.addClass('noindicator');
 // Chat header labels
 
 $("#modflair").detach().prependTo($chatheader);
-$scrolltop = $('<span id="scroll-top" class="label label-default pull-right pointer scroll-label" />')
+$scrollTop = $('<span id="scroll-top" class="label label-default pull-right pointer scroll-label" />')
   .insertBefore($userlisttoggle).attr('title', 'Scroll chat panel to top').html('Top ▴');
-$scrolltopl = $('<span id="scroll-to-pl" class="label label-default pull-right pointer scroll-label" />')
+$scrollTopl = $('<span id="scroll-to-pl" class="label label-default pull-right pointer scroll-label" />')
   .insertBefore($userlisttoggle).attr('title', 'Scroll to playlist').html('Pl ▾');
-$expandchat = $('<span id="expand-chat" class="label label-default pull-right pointer scroll-label" />')
+$expandChat = $('<span id="expand-chat" class="label label-default pull-right pointer scroll-label" />')
   .insertBefore($userlisttoggle).attr('title', 'Toggle chat expanding')
   .html('<span class="glyphicon glyphicon-resize-vertical"></span>');
 
@@ -1988,7 +1989,7 @@ if (hasPermission("settemp")) $(".add-temp").prop('checked', false);
 
 if (typeof MediaDatabase !== "undefined" || getURLVar("db") != "" || (EXECDB && CUSTOMDBURL != "")) {
 	dbgroup = $('<div id="db-group" class="btn-group pull-right" />').appendTo("#addfromurl .checkbox");
-	$dbbtn = $('<button id="db-btn" class="btn btn-sm btn-default" title="Toggle Media Database" />')
+	$dbBtn = $('<button id="db-btn" class="btn btn-sm btn-default" title="Toggle Media Database" />')
 	  .html('Media Database').appendTo(dbgroup)
 	  .on("click", function() {
 		if (typeof MEDIADBLOAD === "undefined") MEDIADBLOAD = false;
@@ -2008,7 +2009,7 @@ if (typeof MediaDatabase !== "undefined" || getURLVar("db") != "" || (EXECDB && 
 	  .attr('title', 'Hide/reload data (if channel seems overloaded)')
 	  .append('<span class="glyphicon glyphicon-refresh" />')
 	  .on("click", function() {
-		$dbbtn.removeClass('btn-success');
+		$dbBtn.removeClass('btn-success');
 		$dbwell.hide().html('');
 		MEDIADBLOAD = false;
 	  });
@@ -2154,13 +2155,13 @@ $("#plr-menu").find("li[group=2]").hide();
 
 // Advanced options button
 
-$advoptsbtn = $('<button id="advopts-btn" class="btn btn-sm btn-default" title="Advanced options" />')
+$advoptsBtn = $('<button id="advopts-btn" class="btn btn-sm btn-default" title="Advanced options" />')
   .html('<span class="glyphicon glyphicon-flash"></span> ▾').insertBefore("#mediarefresh");
 
 
 // Favourite Premium links button
 
-$favsbtn = $('<button id="favs-btn" class="btn btn-sm btn-default" title="Add and manage Premium favourites" />')
+$favsBtn = $('<button id="favs-btn" class="btn btn-sm btn-default" title="Add and manage Premium favourites" />')
   .html('<span class="glyphicon glyphicon-thumbs-up"></span>').insertBefore("#mediarefresh");
 
 
@@ -2177,10 +2178,10 @@ $("#newpollbtn, #emotelistbtn").addClass('btn-chatctrl');
 var html = '<button id="colors-btn" class="btn btn-sm btn-default btn-chatctrl dropdown-toggle" '
 	 + 'data-toggle="dropdown" aria-expanded="false">Colors ▴</button>'
 	 + '<ul id="colors-wrap" class="dropdown-menu centered"></ul>';
-$colorsmenu = $('<div id="colors-menu" class="dropup btn-group" />').appendTo($pollcontrols).html(html);
+$colorsMenu = $('<div id="colors-menu" class="dropup btn-group" />').appendTo($pollcontrols).html(html);
 
-if (ColorsArray.length < 1) $colorsmenu.hide()
-else if (ColorsArray.length > 50) $colorsmenu.addClass('widecm');
+if (ColorsArray.length < 1) $colorsMenu.hide()
+else if (ColorsArray.length > 50) $colorsMenu.addClass('widecm');
 
 for (i in ColorsArray) {
 	var j = ColorsArray.length > 50 ? 8 : 5;
@@ -2361,22 +2362,22 @@ $queue.parent().attr('id', 'queue-parent');
 // Playlist labels
 
 var html = LARGEPLAYER ? 'To player ▴' : 'To chat ▴';
-$scrolltochat = $('<span id="scroll-to-chat" class="label label-default pull-right pointer scroll-label" />')
+$scrollToChat = $('<span id="scroll-to-chat" class="label label-default pull-right pointer scroll-label" />')
   .attr('title', 'Scroll to chat').appendTo($plmeta).html(html);
-$hideplaylist = $('<span id="hide-playlist" class="label label-default pull-right pointer scroll-label" />')
+$hidePlaylist = $('<span id="hide-playlist" class="label label-default pull-right pointer scroll-label" />')
   .attr('title', 'Hide playlist').appendTo($plmeta).html('<span class="glyphicon glyphicon-ban-circle"></span>');
-$expandplaylist = $('<span id="expand-playlist" class="label label-default pull-right pointer scroll-label" />')
+$expandPlaylist = $('<span id="expand-playlist" class="label label-default pull-right pointer scroll-label" />')
   .attr('title', 'Expand playlist').appendTo($plmeta).html('<span class="glyphicon glyphicon-resize-vertical"></span>');
-$scrolltocurrent = $('<span id="scroll-to-current" class="label label-default pull-right pointer scroll-label" />')
+$scrollToCurrent = $('<span id="scroll-to-current" class="label label-default pull-right pointer scroll-label" />')
   .attr('title', 'Scroll playlist to current item').appendTo($plmeta)
   .html('<span class="glyphicon glyphicon-arrow-up"></span>');
 
 if (HIDEPLS) {
-	$hideplaylist.addClass('label-danger').attr('title', 'Show playlist');
+	$hidePlaylist.addClass('label-danger').attr('title', 'Show playlist');
 	$queue.hide();
 }
 if (EXPANDPL) {
-	$expandplaylist.addClass('label-success');
+	$expandPlaylist.addClass('label-success');
 	$queue.addClass('expanded');
 }
 
@@ -2521,7 +2522,7 @@ $("#useroptions .modal-footer button:nth-child(1)").on("click", function() {
 
 // Navbar mode icons events
 
-$navbarup.on("click", function() {
+$navbarUp.on("click", function() {
 	$nav.hide();
 	$navbarcollapsed = $('<div id="navbar-collapsed" class="centered maxwidth" />').appendTo("body");
 	$('<div class="pointer" title="Expand navigation bar" />').appendTo($("#navbar-collapsed"))
@@ -2532,7 +2533,7 @@ $navbarup.on("click", function() {
 	  });
 });
 
-$navbarunpin.on("click", function() {
+$navbarUnpin.on("click", function() {
 	SCROLLNAVBAR ? fixedNavbar() : scrollableNavbar();
 	setOpt('SP_scrollnavbar', SCROLLNAVBAR = !SCROLLNAVBAR);
 });
@@ -2541,7 +2542,7 @@ $navbarunpin.on("click", function() {
 // Layout dropdown menu events
 
 $("#layout-1").on("click", function() {
-	$layoutmenu.parent().removeClass('open');
+	$layoutMenu.parent().removeClass('open');
 	createModal('Premium Settings');
 	createModalTabs(['Basic', 'Advanced', 'Show/Hide', 'Filters', 'Media DB', 'HTML'], "options");
 
@@ -2957,7 +2958,7 @@ $("#layout-1").on("click", function() {
 });
 
 $("#layout-2").on("click", function() {
-	$layoutmenu.parent().removeClass('open');
+	$layoutMenu.parent().removeClass('open');
 	createModal('Theme & User CSS');
 
 	var html = '<form class="form-horizontal"><div class="form-group">'
@@ -3120,14 +3121,14 @@ $("#layout-2").on("click", function() {
 $("#layout-3").on("click", function() {
 	COMPACT ? fluidLayout() : compactLayout();
 	setOpt('SP_compact', COMPACT = !COMPACT);
-	if ($expandchat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) expandChat();
 });
 
 
 $("#layout-4").on("click", function() {
 	SINGLECOLUMN ? twoColumns() : singleColumn();
 	setOpt('SP_singlecolumn', SINGLECOLUMN = !SINGLECOLUMN);
-	if ($expandchat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) expandChat();
 });
 
 $("#layout-5").on("click", function() {
@@ -3141,14 +3142,14 @@ $("#layout-6").on("click", function() {
 });
 
 $("#layout-7").on("click", function() {
-	$layoutmenu.parent().removeClass('open');
+	$layoutMenu.parent().removeClass('open');
 	LARGECHAT ? normalChat() : largeChat();
 	setOpt('SP_largechat', LARGECHAT = !LARGECHAT);
 	scrollChatToTop();
 });
 
 $("#layout-8").on("click", function() {
-	$layoutmenu.parent().removeClass('open');
+	$layoutMenu.parent().removeClass('open');
 	LARGEPLAYER ? normalPlayer() : largePlayer();
 	setOpt('SP_largeplayer', LARGEPLAYER = !LARGEPLAYER);
 	scrollChatToTop();
@@ -3172,7 +3173,7 @@ $('#main').on('transitionend', '#player-chat-wrap .player-chat', function() {
 
 // Chat header labels events
 
-$expandchat.on("click", function() {
+$expandChat.on("click", function() {
 	if ($(this).hasClass('label-success')) collapseChat()
 	else {
 		expandChat();
@@ -3183,7 +3184,7 @@ $expandchat.on("click", function() {
 	if (SCROLLCHAT) scrollChat();
 });
 
-$scrolltopl.on("click", function() {
+$scrollTopl.on("click", function() {
 	window.scrollTo(0, $queue.offset().top);
 });
 
@@ -3351,7 +3352,7 @@ $("#plr-1").on("click", function() {
 $("#plr-2").on("click", function() {
 	FULLTITLE ? compactTitle() : fullWidthTitle();
 	setOpt('SP_fulltitle', FULLTITLE = !FULLTITLE);
-	if ($expandchat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) expandChat();
 });
 
 $("#plr-3").on("click", function() {
@@ -3471,7 +3472,7 @@ $("#plr-13").on("click", function() {
 		HIDDENVWRAP = false;
 		$("#layout-4, #layout-7, #layout-8, #layout-9, #layout-10, #videowrap, #plr-14, #plmode-btn").show();
 		$chatwrap.removeClass().addClass('col-lg-5 col-md-5');
-		if (!$expandchat.hasClass('label-success')) handleVideoResize();
+		if (!$expandChat.hasClass('label-success')) handleVideoResize();
 		if (PLAYER) PLAYER.setVolume(CURRENTVOL);
 		var match = document.getElementById("leftcontrols").className.match(/col-md-(\d+)/);
 		var classe = parseInt(match[1], 10);
@@ -3498,13 +3499,14 @@ $("#plr-14").on("click", function() {
 		$("#layout-8, #layout-9, #layout-10, #titlerow, #videowrap, #plcontrol").show();
 		$("#videocontrols > button, #plr-menu > li:not(.rpl)").show();
 		$("#fullscreenbtn, #plr-17, #plr-13").show();
+		$("#plr-11").trigger("click");
 		if (SINGLECOLUMN || LARGECHAT || LARGEPLAYER) setTimeout(function() {$("#plr-13").hide()}, 500);
-		if ($favsbtn.hasClass('active')) $favscontrol.show();
+		if ($favsBtn.hasClass('active')) $favscontrol.show();
 		var tmp = $('<div class="embed-responsive embed-responsive-16by9" />').appendTo($videowrap);
 		$ytapiplayer = $('<iframe id="ytapiplayer" class="embed-responsive-item" frameborder="0" />')
 		  .attr({title:'YouTube video player', allowfullscreen:'1'}).appendTo(tmp);
 		refreshPlayer();
-		if (!$expandchat.hasClass('label-success')) handleVideoResize();
+		if (!$expandChat.hasClass('label-success')) handleVideoResize();
 		if (PLAYERTEXT) $videowrap.find(".embed-responsive-16by9").prepend('<div id="player-chat-wrap" />');
 	} else {
 		NOPLAYER = true;
@@ -3535,18 +3537,18 @@ $("#plr-17").on("click", function() {
 	if ($(this).hasClass('activated')) $("#mascot").remove()
 	else {
 		var arr = [
-			['Swinging Miku', 'https://dl.dropboxusercontent.com/s/slv73jrurvhkzpb/1.gif'],
-			['Raving Miku', 'https://dl.dropboxusercontent.com/s/k1f6a5h4anqbnz1/2.gif'],
-			['Small Miku', 'https://dl.dropboxusercontent.com/s/jl1984kqelw5s2n/3.gif'],
-			['Rocking Miku', 'https://dl.dropboxusercontent.com/s/r43pbglzdy2risu/4.gif'],
-			['Emilia', 'https://dl.dropboxusercontent.com/s/4me121ir8yh4vr5/5.gif'],
-			['Koneko', 'https://dl.dropboxusercontent.com/s/je6owthtawuubkr/6.gif'],
-			['Cirno', 'https://dl.dropboxusercontent.com/s/ky3jex5hzvdezfl/7.gif'],
-			['Haruhi', 'https://dl.dropboxusercontent.com/s/0slpa6al657bvj5/8.gif'],
-			['Blue dress girl', 'https://dl.dropboxusercontent.com/s/m2qfgwl2oc6ooha/9.gif'],
-			['Flashing colours girl', 'https://dl.dropboxusercontent.com/s/a9onwax8v1m7c4y/10.gif'],
-			['Cheerleader girl', 'https://dl.dropboxusercontent.com/s/tpr1ppaqxnxsrfe/11.gif'],
-			['Silver-haired girl', 'https://dl.dropboxusercontent.com/s/383g9evpm7zhs5z/12.gif'],
+			['Swinging Miku', DROPBOX + 'slv73jrurvhkzpb/1.gif'],
+			['Raving Miku', DROPBOX + 'k1f6a5h4anqbnz1/2.gif'],
+			['Small Miku', DROPBOX + 'jl1984kqelw5s2n/3.gif'],
+			['Rocking Miku', DROPBOX + 'r43pbglzdy2risu/4.gif'],
+			['Emilia', DROPBOX + '4me121ir8yh4vr5/5.gif'],
+			['Koneko', DROPBOX + 'je6owthtawuubkr/6.gif'],
+			['Cirno', DROPBOX + 'ky3jex5hzvdezfl/7.gif'],
+			['Haruhi', DROPBOX + '0slpa6al657bvj5/8.gif'],
+			['Blue dress girl', DROPBOX + 'm2qfgwl2oc6ooha/9.gif'],
+			['Flashing colours girl', DROPBOX + 'a9onwax8v1m7c4y/10.gif'],
+			['Cheerleader girl', DROPBOX + 'tpr1ppaqxnxsrfe/11.gif'],
+			['Silver-haired girl', DROPBOX + '383g9evpm7zhs5z/12.gif'],
 		];
 		MASCOT = getOrDefault('SP_mascot', '');
 		if (MASCOT == "") MASCOT = arr[0][1];
@@ -3635,7 +3637,7 @@ $("#addtofav-btn").on("click", function() {
 	}
 	var newid = 1;
 	if (len > 0) newid = arr[len - 1]["id"] + 1;
-	$favsbtn.addClass('btn-success');
+	$favsBtn.addClass('btn-success');
 	$(this).addClass('btn-success disabled');
 	var str = FAVLINKS.slice(0, -2);
 	if (len > 0) str += ', ';
@@ -3653,7 +3655,7 @@ $("#fixfavs-btn").on("click", function() {
 		+ 'Note: use this feature if your links are broken and the list is not working properly.';
 	if (confirm(str)) {
 		$("#addtofav-btn").removeClass('btn-success disabled');
-		$favsbtn.removeClass('btn-success active');
+		$favsBtn.removeClass('btn-success active');
 		$("#favscontrol").hide();
 		FAVLINKS = '{"links":[]}';
 		setOpt('SP_favlinks', FAVLINKS);
@@ -4831,7 +4833,7 @@ $("#chat-21").on("click", function() {
 
 // Playlist labels events
 
-$scrolltocurrent.on("click", function() {
+$scrollToCurrent.on("click", function() {
 	if (EXPANDPL) {
 		var pos = $(".queue_active").offset().top;
 		var mp = $("#mainpage").css('padding-top').replace('px', '') * 1;
@@ -4839,17 +4841,17 @@ $scrolltocurrent.on("click", function() {
 		window.scrollTo(0, pos - mp);
 	} else scrollQueue();
 	$(this).addClass('label-success');
-	setTimeout(function() {$scrolltocurrent.removeClass('label-success')}, 1000);
+	setTimeout(function() {$scrollToCurrent.removeClass('label-success')}, 1000);
 });
 
-$expandplaylist.on("click", function() {
+$expandPlaylist.on("click", function() {
 	$(this).attr('title', EXPANDPL ? 'Expand playlist' : 'Collapse playlist').toggleClass('label-success');
 	$queue.toggleClass('expanded');
 	setOpt('SP_expandpl', EXPANDPL = !EXPANDPL);
 	scrollQueue();
 });
 
-$hideplaylist.on("click", function() {
+$hidePlaylist.on("click", function() {
 	toggleElement("#queue");
 	$(this).attr('title', HIDEPLS ? 'Hide playlist' : 'Show playlist').toggleClass('label-danger');
 	setOpt('SP_hidepls', HIDEPLS = !HIDEPLS);
@@ -5471,7 +5473,7 @@ $("#resize-video-larger").addClass('label label-default').unbind()
   .on("click", function() {
     try {
 	CyTube.ui.changeVideoWidth(1);
-	if ($expandchat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) expandChat();
     } catch (error) {
 	console.error(error);
     }
@@ -5481,7 +5483,7 @@ $("#resize-video-smaller").addClass('label label-default').unbind()
   .on("click", function() {
     try {
 	CyTube.ui.changeVideoWidth(-1);
-	if ($expandchat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) expandChat();
     } catch (error) {
 	console.error(error);
     }
@@ -5742,8 +5744,6 @@ uploadinput.onchange = function() {
 
 // Copyright (c) 2015 Emmanuel Pelletier [Licensed MIT]
 
-OETSTAMP = 0;
-
 function uploadOekaki(pic) {
 	upalert = $('<div id="upalert" class="profile-box text-center upalert">Oekaki drawing upload...</div>')
 	  .appendTo("#chatwrap");
@@ -5772,6 +5772,7 @@ function uploadOekaki(pic) {
 
 function oekaki() {
 	$.getScript("https://dl.dropboxusercontent.com/s/sbuj4e1z3dh87z1/oekaki.js", function() {
+		OETSTAMP = 0;
 		$("#spoekaki").html('');
 		$('<link id="oekakicss" rel="stylesheet" type="text/css" />').appendTo("head")
 		  .attr('href', 'https://dl.dropboxusercontent.com/s/syendmytcl4rgzt/oekaki.css');
@@ -6007,7 +6008,7 @@ var synchlogo = 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYA
 
 var chatlineHT = $chatline.outerHeight();
 var chatbtnHT = (USEROPTS.chatbtn) ? $("#chatbtn").outerHeight() : 0;
-if (HidingPlayerURL == "") HidingPlayerURL = 'https://dl.dropboxusercontent.com/s/3qp3v6ychbswqvm/stop.png';
+if (HidingPlayerURL == "") HidingPlayerURL = DROPBOX + '3qp3v6ychbswqvm/stop.png';
 
 var css = '.autoscroll {overflow-y:auto !important}\n'
 	+ '.cbtn {background-image:none !important; margin-right:0px !important}\n'
@@ -6151,6 +6152,7 @@ var css = '.autoscroll {overflow-y:auto !important}\n'
 	+ '#pollwrap.tmode div.dismissed, #pollwrap.tmode div.muted {display:none !important}\n'
 	+ '#pollwrap.tmode2 div.dismissed, #pollwrap.tmode2 div.muted {display:none !important}\n'
 
+if (window.location.href.indexOf("//synchtu.be/") < 0) synchlogo = 'none';
 var _bg = $(".navbar-brand").css('background-image');
 if (_bg != "none") synchlogo = _bg;
 if (MiniLogoURL != "") synchlogo = 'url("' + MiniLogoURL + '")';
@@ -6160,6 +6162,7 @@ if (ChannelNamePadding != "") {
 	var _pd = $(".navbar-brand").css('padding-left');
 	ChannelNamePadding = (_pd != "none") ? _pd.replace('px', '') : 15;
 }
+if (synchlogo == "none") ChannelNamePadding = 15;
 css += '.navbar-brand {background-image:none !important; font-size:0pt !important; padding-left:15px !important}\n'
     +  '.navbar-brand.logo {\n'
     +  '  background-image:' + synchlogo + ' !important; background-repeat:no-repeat !important;\n'
@@ -6189,7 +6192,7 @@ else if (USERTHEME == '/css/themes/modern.css') $body.addClass('modern');
 if (_SYNCH) $body.removeClass('synchtube');
 setTimeout(function() {
 	handleVideoResize();
-	if ($expandchat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) expandChat();
 }, 2000);
 
 
