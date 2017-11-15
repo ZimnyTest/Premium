@@ -11,7 +11,8 @@
 2. Paste following URL to "External Javascript": `https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js`<br />
 3. *Installation finished! No configuration is needed.*
 ## Screenshots
-Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS.md) page to see example screens of Synchtube Premium.
+Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS.md) page to see example images of Synchtube Premium.
+
 ---
 ## Features
 ### General overwiew
