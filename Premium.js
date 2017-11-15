@@ -66,7 +66,7 @@ For advanced admins (own hosting required). Absolutely DO NOT DELETE any given v
 # MiniLogoURL		| custom mini logo in the navigation bar
 			| height: 36px (logo will be automatically resized)
 # CustomWelcomeText	| custom navigation bar "Welcome" message
-# WelcomeSoundFile	| URL of an optional welcome sound file played on load
+# WelcomeSoundFileURL	| URL of an optional welcome sound file played on load
 			| recommended: .ogg file (best support by browsers)
 # MOTDAlteredElement	| ID of the optional specific MOTD element, that will be altered after script loading
 			| e.g.: 'altered-div'
@@ -98,7 +98,7 @@ MiniLogoURL		= '';
 
 CustomWelcomeText	= '';
 
-WelcomeSoundFile	= 'https://dl.dropbox.com/s/8c38jikbba5mmgo/witamy.ogg';
+WelcomeSoundFileURL	= 'https://dl.dropbox.com/s/8c38jikbba5mmgo/witamy.ogg';
 
 MOTDAlteredElement	= '';
 
@@ -114,7 +114,7 @@ NowPlaying		= 'Now playing';
 
 PlayingNext		= 'Playing next';
 
-PlayerCoveringURL		= '';
+PlayerCoveringURL	= '';
 
 CustomTitleCaption	= '';
 
@@ -2196,7 +2196,7 @@ var html = '<button id="notepad-btn" class="btn btn-sm btn-default btn-chatctrl"
 	 +   '<ul id="chatopts-menu" class="dropdown-menu dropdown-menu-right noclose"></ul></div>';
 $chatcontrols = $('<div id="chatcontrols" class="btn-group pull-right" />').appendTo("#leftcontrols").html(html);
 
-if ((jQuery.isEmptyObject(SoundFiltersArray) && WelcomeSoundFile == "") || !CHATSOUNDS) $("#sounds-btn").hide();
+if ((jQuery.isEmptyObject(SoundFiltersArray) && WelcomeSoundFileURL == "") || !CHATSOUNDS) $("#sounds-btn").hide();
 if (MUTECHAT) $("#sounds-btn").addClass('btn-danger').attr('title', 'Unmute chat sounds');
 
 
@@ -6385,8 +6385,8 @@ if (FaviconURL != "") {
 
 // Optional welcome soundfile
 
-if (WelcomeSoundFile != "" && PLAYWELCOME) {
-	CHATW = new Audio(WelcomeSoundFile);
+if (WelcomeSoundFileURL != "" && PLAYWELCOME) {
+	CHATW = new Audio(WelcomeSoundFileURL);
 	if (!PLAYER) CHATW.volume = SOUNDSLVL * 0.1
 	else {
 		PLAYER.getVolume(function(vol) {
