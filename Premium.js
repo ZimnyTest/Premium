@@ -50,14 +50,19 @@ var msg = 'Synchtube Premium error! Application hasn\'t been loaded properly, so
 	+ 'Otherwise, ask channel administrator, or disable script access.';
 setTimeout(function() {if (typeof LOADED === "undefined") addServerMessage(msg)}, 10000);
 
+// Reload after unexpected site error (if API was already loaded), to prevent duplication of the elements
+// It fixes also incompability with enabled "Chat Only" layout
+
+if (typeof LOADED !== "undefined" || $("body").hasClass('chatOnly')) document.location.reload();
+
 
 // ***** BASIC CUSTOMIZATION ***** //
 
 /*
-For advanced script admins. Absolutely DO NOT DELETE any given variable, or the API may not work.
+For advanced admins (own hosting required). Absolutely DO NOT DELETE any given variable, or the API may not work.
 
 # FaviconURL		| URL of an optional channel favicon
-# ChannelName		| custom channel name instead of default server name
+# ChannelName		| custom channel name in the navigation bar instead of default server name
 # MiniLogoURL		| custom mini logo in the navigation bar
 			| height: 36px (logo will be automatically resized)
 # CustomWelcomeText	| custom navigation bar "Welcome" message
@@ -69,10 +74,10 @@ For advanced script admins. Absolutely DO NOT DELETE any given variable, or the 
 # AnnouncementHTML	| HTML/text of an optional announcement/message below MOTD
 # JoinMessage		| "user joined" message displayed on chat
 # LeaveMessage		| "user left" message displayed on chat
-			| user can enable/disable displaying join/leave messages in Premium Settings > Advanced
+			| user can enable/disable displaying join/leave messages in: Premium Settings > Advanced
 # NowPlaying		| "now playing" message in Radio Mode
 # PlayingNext		| "playing next" message in Radio Mode
-# HidingPlayerURL	| custom URL of the player covering image for "Hide Player Until Next" function
+# PlayerCoveringURL	| custom URL of the player covering image for "Hide Player Until Next" function
 # CustomTitleCaption	| custom title caption (default: 'Currently Playing:')
 # CustomFooterHTML	| HTML or text of an optional, additional custom footer
 # AnswersArray		| answers for "!ask" chat command
@@ -84,7 +89,6 @@ For advanced script admins. Absolutely DO NOT DELETE any given variable, or the 
 # ImgurClientID		| imgur client ID for images upload (leave default ID if you don't have one)
 # ExternalScriptURL	| URL of an optional, additional external JavaScript file
 */
-
 
 FaviconURL		= 'https://pl.vichan.net/static/icons/vichan.png';
 
@@ -110,7 +114,7 @@ NowPlaying		= 'Now playing';
 
 PlayingNext		= 'Playing next';
 
-HidingPlayerURL		= '';
+PlayerCoveringURL		= '';
 
 CustomTitleCaption	= '';
 
@@ -187,14 +191,7 @@ ImgurClientID		= 'a11c2b9fbdd104a';
 
 ExternalScriptURL	= '';
 
-
 // ***** END OF BASIC CUSTOMIZATION ***** //
-
-
-// Reload after unexpected site error (if API was already loaded), to prevent duplication of the elements
-// It fixes also incompability with enabled "Chat Only" layout
-
-if (typeof LOADED !== "undefined" || $("body").hasClass('chatOnly')) document.location.reload();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,7 +300,7 @@ TABMODE		= getOrDefault('SP_tabmode',		0);
 TRANSPARENTNAV	= getOrDefault('SP_transparentnav',	false);
 USERNAMEMARK	= getOrDefault('SP_usernamemark',	':');
 
-// Set session global variables
+// Session global variables
 
 CHATMENTIONS	= [];
 CHATMSGNUM	= 0;
@@ -319,7 +316,7 @@ ONLINETIME 	= 0;
 PREVTIME	= 0;
 VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "unicode":1}
 
-// Set constants
+// Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
 VERSION		= '2.10.alpha 5';
@@ -444,7 +441,6 @@ $plmeta			= $("#plmeta");
 
 
 // ***** Helper functions (in alphabetical order) ***** //
-
 
 // Add private premium message to chat
 
@@ -1313,7 +1309,6 @@ function volumeLvl() {
 
 
 // ***** Layout functions (in order of appearance) ***** //
-
 
 function compactLayout() {
 	$body.addClass('fluid');
@@ -3334,7 +3329,7 @@ $("#pls-11").on("click", function() {
 $("#plr-1").on("click", function() {
 	if (HIDDENPLR) $("#hidden-plr").remove()
 	else {
-		var css = 'background-image:url(\'' + HidingPlayerURL + '\') !important';
+		var css = 'background-image:url(\'' + PlayerCoveringURL + '\') !important';
 		if (HIDEPLAYERURL != "" && IMAGEURLACCEPT) {
 			css = 'background-image:url(\'' + HIDEPLAYERURL + '\') !important';
 		}
@@ -6045,7 +6040,7 @@ var synchlogo = 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYA
 
 var chatlineHT = $chatline.outerHeight();
 var chatbtnHT = (USEROPTS.chatbtn) ? $("#chatbtn").outerHeight() : 0;
-if (HidingPlayerURL == "") HidingPlayerURL = DROPBOX + '3qp3v6ychbswqvm/stop.png';
+if (PlayerCoveringURL == "") PlayerCoveringURL = DROPBOX + '3qp3v6ychbswqvm/stop.png';
 
 var css = '.autoscroll {overflow-y:auto !important}\n'
 	+ '.cbtn {background-image:none !important; margin-right:0px !important}\n'
@@ -6467,11 +6462,9 @@ if (EMOTESCACHE) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // Append optional external script
 
 if (ExternalScriptURL != "") $.getScript(ExternalScriptURL);
-
 
 /* End of Synchtube Premium API */
 
