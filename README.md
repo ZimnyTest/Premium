@@ -38,7 +38,7 @@
 * Glue layout elements to the edge of the screen
 * Browser's tab title: page title/ current media title/ channel ID/ number of chat messages
 * Displaying/hiding various layout elements
-* Theme/skin selector, 5 default plus 9 Premium themes
+* Theme/skin selector, 5 default plus 9 additional themes
 * Ignore channels' CSS
 * Ignore only this channel CSS
 * User CSS code
@@ -121,7 +121,7 @@
 * Remove player
 * Mirror player horizontally
 * Mirror player vertically
-* Show player mascot (12 selectable animated mascots) with selectable position: bottom left/ bottom center/ bottom right/ top left/ top right/ center
+* Show player mascot (12 selectable animated mascots plus option for custom image) with selectable position: bottom left/ bottom center/ bottom right/ top left/ top right/ center
 #### Playlist
 * List of last played (items played in current session with history of user's plays - up to 100 items)
 * Contributors ranking
