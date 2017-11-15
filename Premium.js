@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.alpha 4
-# Release date:		2017-11-14
+# Version:		2.10.alpha 5
+# Release date:		2017-11-15
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyTest/SynchtubePremium
@@ -31,14 +31,14 @@ _________
 # API CONTENTS
 ______________
 
-# [REGION 1]		INITIAL GLOBAL VARIABLES
-# [REGION 2]		GLOBAL FUNCTIONS
-# [REGION 3]		USER INTERFACE
-# [REGION 4]		USER INTERFACE EVENTS
-# [REGION 5]		SYNCHTUBE API EXTENSION
-# [REGION 6]		IMGUR API
-# [REGION 7]		OEKAKI API
-# [REGION 8]		CSS AND FINAL LAYOUT
+# [SECTION 1]		INITIAL GLOBAL VARIABLES
+# [SECTION 2]		GLOBAL FUNCTIONS
+# [SECTION 3]		USER INTERFACE
+# [SECTION 4]		USER INTERFACE EVENTS
+# [SECTION 5]		SYNCHTUBE API EXTENSION
+# [SECTION 6]		IMGUR API
+# [SECTION 7]		OEKAKI API
+# [SECTION 8]		CSS AND FINAL LAYOUT
 
 ***********************************************************************************************************************/
 
@@ -204,7 +204,7 @@ if (typeof LOADED !== "undefined" || $("body").hasClass('chatOnly')) document.lo
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 1] INITIAL GLOBAL VARIABLES ---------- */
+/* ---------- [SECTION 1] INITIAL GLOBAL VARIABLES ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,7 +278,7 @@ USERPATTERN	= getOrDefault('SP_userpattern',	'');
 USERTHEME	= getOrDefault('SP_usertheme',		_USERTHEME);
 VISITS		= getOrDefault('SP_visits',		0);
 
-// Get and set Premium Settings
+// Premium Settings
 
 AVATARSLIST	= getOrDefault('SP_avatarslist',	false);
 CHATHIDESCROLL	= getOrDefault('SP_chathidescroll',	false);
@@ -314,7 +314,6 @@ CHATMSGNUM	= 0;
 CHATUNRNUM	= 0;
 COMMAND 	= false;
 COMMANDSTSTAMPS	= [];
-DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
 HIDDENPLR	= false;
 HIDDENVWRAP	= false;
 LASTPLAYED 	= [];
@@ -322,8 +321,12 @@ MUTEDVOICES	= [];
 NOPLAYER	= false;
 ONLINETIME 	= 0;
 PREVTIME	= 0;
-VERSION		= '2.10.alpha 4';
 VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "unicode":1}
+
+// Set constants
+
+DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
+VERSION		= '2.10.alpha 5';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -439,7 +442,7 @@ $plmeta			= $("#plmeta");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 2] GLOBAL FUNCTIONS ---------- */
+/* ---------- [SECTION 2] GLOBAL FUNCTIONS ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1170,7 +1173,7 @@ function showContributors() {
 	$queue.find("li").each(function() {
 		var contr = $(this).attr('title').replace('Added by: ', '');
 		var time = $(this).find(".qe_time");
-		time.find(".contrib").remove();
+		time.find(".contrib").remove()
 		time.html('<span class="contrib">' + contr + ' | </span>' + time.html());
 	});
 }
@@ -1336,7 +1339,7 @@ function fluidLayout() {
 function singleColumn() {
 	if (LARGECHAT) document.getElementById("layout-7").click();
 	if (LARGEPLAYER) document.getElementById("layout-8").click();
-	$("#layout-7, #layout-8, #controlsrow, #playlistrow, #plmode-btn, #plr-13").hide();
+	$("#layout-7, #layout-8, #controlsrow, #playlistrow, #jukebox-btn, #plr-13").hide();
 	$("#resize-video-smaller, #resize-video-larger").hide();
 	$body.addClass('singlecolumn');
 	$("#layout-4").addClass('activated');
@@ -1367,7 +1370,7 @@ function singleColumn() {
 
 function twoColumns() {
 	$("#layout-7, #layout-8, #resize-video-smaller, #resize-video-larger").show();
-	$("#controlsrow, #playlistrow, #plr-13, #plmode-btn").show();
+	$("#controlsrow, #playlistrow, #plr-13, #jukebox-btn").show();
 	if (NOPLAYER) $("#plr-13").hide();
 	$body.removeClass('singlecolumn');
 	$("#layout-4").removeClass('activated');
@@ -1440,7 +1443,7 @@ function topMOTD() {
 function largeChat() {
 	HIDDENVWRAP = true;
 	if (LARGEPLAYER) document.getElementById("layout-8").click();
-	$("#videowrap, #resize-video-smaller, #resize-video-larger, #rightcontrols, #plr-13, #plmode-btn").hide();
+	$("#videowrap, #resize-video-smaller, #resize-video-larger, #rightcontrols, #plr-13, #jukebox-btn").hide();
 	$("#layout-7").addClass('activated');
 	var classes;
 	var ratio = $(window).width() / $(window).height();
@@ -1457,7 +1460,7 @@ function largeChat() {
 
 function normalChat() {
 	HIDDENVWRAP = false;
-	$("#rightcontrols, #resize-video-smaller, #resize-video-larger, #plr-13, #plmode-btn").show();
+	$("#rightcontrols, #resize-video-smaller, #resize-video-larger, #plr-13, #jukebox-btn").show();
 	NOPLAYER ? $("#plr-13").hide() : $("#videowrap").show();
 	$("#layout-7").removeClass('activated');
 	var match = document.getElementById("leftpane").className.match(/col-md-(\d+)/);
@@ -1473,7 +1476,7 @@ function normalChat() {
 function largePlayer() {
 	if (LARGECHAT) document.getElementById("layout-7").click();
 	$("#chatwrap, #resize-video-smaller, #resize-video-larger, #leftcontrols, #plr-14").hide();
-	$("#plmode-btn, #plr-13").hide();
+	$("#jukebox-btn, #plr-13").hide();
 	$("#layout-8").addClass('activated');
 	var classes;
 	var ratio = $(window).width() / $(window).height();
@@ -1487,7 +1490,7 @@ function largePlayer() {
 
 function normalPlayer() {
 	$("#chatwrap, #resize-video-smaller, #resize-video-larger, #leftcontrols, #plr-14").show();
-	$("#plmode-btn, #plr-13").show();
+	$("#jukebox-btn, #plr-13").show();
 	if (NOPLAYER) $("#plr-13").hide();
 	$("#layout-8").removeClass('activated');
 	var match = document.getElementById("leftpane").className.match(/col-md-(\d+)/);
@@ -1629,8 +1632,9 @@ function radioMode() {
 	$videowrapHeader.addClass("radiotitle");
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").hide();
-	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-1, #plr-2, #plr-14, #plr-15, #plr-16").hide();
-	$("#fullscreenbtn, #advopts-btn, #favs-btn, #plr-13, #plmode-btn").hide();
+	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-1, #plr-2, #plr-11, #plr-13, #plr-14").hide();
+	$("#plr-15, #plr-16, #fullscreenbtn, #advopts-btn, #favs-btn, #jukebox-btn").hide();
+	$("#plr-5").parent().parent().hide();
 	$("#playlistrow, #leftpane, #oekakiwrap, #notepadwrap, #rightpane, #sitefooter").hide();
 	if (NOPLAYER) $("#plr-btn").hide();
 	$("#chatwrap, #videowrap, #leftcontrols, #rightcontrols, #rightpane").removeClass()
@@ -1657,7 +1661,9 @@ function radioMode() {
 		  .prependTo("#videocontrols")
 		  .on("click", function() {
 			HIDDENVWRAP = !HIDDENVWRAP;
-			$("#videowrap .embed-responsive-16by9, #plr-1, #plr-15, #plr-16").toggle();
+			if ($(this).hasClass('btn-success')) $("#plr-12").trigger("click");
+			$("#videowrap .embed-responsive-16by9, #plr-1, #plr-11, #plr-15, #plr-16").toggle();
+			$("#plr-5").parent().parent().toggle();
 			if (!NOPLAYER) $("#fullscreenbtn").toggle();
 			$(this).toggleClass('btn-success');
 	 	 });
@@ -1712,10 +1718,12 @@ function closeRadioMode() {
 	$body.removeClass('radio-mode');
 	$videowrapHeader.removeClass("radiotitle");
 	if ($expandChat.hasClass('label-success')) $expandChat.removeClass('label-success');
+	$("#plr-12").trigger("click");
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").show();
-	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-btn, #plr-1, #plr-14, #plr-15, #plr-16").show();
-	$("#plr-2, #fullscreenbtn, #advopts-btn, #favs-btn, #plr-13, #plmode-btn").show();
+	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-btn, #plr-1, #plr-2, #plr-11, #plr-13").show();
+	$("#plr-14, #plr-15, #plr-16, #fullscreenbtn, #advopts-btn, #favs-btn, #jukebox-btn").show();
+	$("#plr-5").parent().parent().show();
 	$("#playlistrow, #leftpane, #rightpane, #sitefooter").show();
 	if ($("#oekaki-btn").hasClass('btn-success')) $oekakiwrap.show();
 	if ($("#notepad-btn").hasClass('btn-success')) $notepadwrap.show();
@@ -1750,42 +1758,6 @@ function fixedNavbar() {
 	document.getElementById("navbar-unpin")
 	  .innerHTML = '<span class="glyphicon glyphicon-open" title="Make navbar scrollable"></span>';
 	$(".navbar-fixed-top, #mainpage").removeClass('snav');
-}
-
-function expandChat() {
-	$expandChat.addClass('label-success');
-	if ($body.hasClass('radio-mode')) {
-		var ht = $(window).height() - $videowrap.outerHeight() - $chatheader.outerHeight();
-		ht -= $chatline.outerHeight();
-		$("#messagebuffer, #userlist").height(ht - 12);
-	} else {
-		var ht = $(window).height() - $chatheader.outerHeight() - $chatline.outerHeight();
-		if (!SCROLLNAVBAR) ht -= $nav.outerHeight();
-		if (FULLTITLE && !SINGLECOLUMN) ht -= ($chatwrap.offset().top - $titlerow.offset().top);
-		$("#messagebuffer, #userlist").height(ht - 6);
-	}
-	scrollChatToTop();
-}
-
-function collapseChat() {
-	$expandChat.removeClass('label-success');
-	var ht = $ytapiplayer.height();
-	if (NOPLAYER || LARGECHAT || $("#plr-13").hasClass('activated')) ht = $(window).height() - 300;
-	$("#messagebuffer, #userlist").height(ht);
-	handleVideoResize();
-	$(window).unbind('resize.expandchat');
-}
-
-function userlistRight() {
-	$("#chat-f5").addClass('activated');
-	$userlist.addClass('pull-right');
-	$body.addClass('synchtube');
-}
-
-function userlistLeft() {
-	$("#chat-f5").removeClass('activated');
-	$userlist.removeClass('pull-right');
-	$body.removeClass('synchtube');
 }
 
 function fullWidthTitle() {
@@ -1825,15 +1797,51 @@ function showProgressBar() {
 	progressBar();
 }
 
+function expandChat() {
+	$expandChat.addClass('label-success');
+	if ($body.hasClass('radio-mode')) {
+		var ht = $(window).height() - $videowrap.outerHeight() - $chatheader.outerHeight();
+		ht -= $chatline.outerHeight();
+		$("#messagebuffer, #userlist").height(ht - 12);
+	} else {
+		var ht = $(window).height() - $chatheader.outerHeight() - $chatline.outerHeight();
+		if (!SCROLLNAVBAR) ht -= $nav.outerHeight();
+		if (FULLTITLE && !SINGLECOLUMN) ht -= ($chatwrap.offset().top - $titlerow.offset().top);
+		$("#messagebuffer, #userlist").height(ht - 6);
+	}
+	scrollChatToTop();
+}
+
+function collapseChat() {
+	$expandChat.removeClass('label-success');
+	var ht = $ytapiplayer.height();
+	if (NOPLAYER || LARGECHAT || $("#plr-13").hasClass('activated')) ht = $(window).height() - 300;
+	$("#messagebuffer, #userlist").height(ht);
+	handleVideoResize();
+	$(window).unbind('resize.expandchat');
+}
+
+function userlistRight() {
+	$("#chat-f5").addClass('activated');
+	$userlist.addClass('pull-right');
+	$body.addClass('synchtube');
+}
+
+function userlistLeft() {
+	$("#chat-f5").removeClass('activated');
+	$userlist.removeClass('pull-right');
+	$body.removeClass('synchtube');
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 3] USER INTERFACE ---------- */
+/* ---------- [SECTION 3] USER INTERFACE ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Add temporary videowrap if user has enabled "Remove the video player" option or "Remove Video" mode
+// Add temporary videowrap for "Remove the video player" or "Remove Video" mode
 
 if (!$("#videowrap")[0]) {
 	NOPLAYER = true;
@@ -1876,16 +1884,13 @@ if (!$("#videowrap")[0]) {
 
 if (_SINGLECOLUMN) undoHDLayout();
 
-
 // "Glued" layout (if enabled)
 
 if (GLUELAYOUT) $body.addClass('glued');
 
-
 // Navbar transparency (if enabled)
 
 if (TRANSPARENTNAV) $nav.addClass('transparent');
-
 
 // Alter brand link to channel URL, instead of homepage
 
@@ -1913,7 +1918,7 @@ $layoutMenu = $('#nav-collapsible a[onclick*="chatOnly"]').parent().parent().add
   .parent().addClass('layout-menu');
 
 
-// Navbar options icons
+// Navbar handling icons
 
 $navbarUp = $('<div id="navbar-up" class="pull-right pointer navbar-text" />').appendTo("#nav-collapsible")
   .html('<span class="glyphicon glyphicon-chevron-up" title="Collapse navigation bar"></span>');
@@ -1927,21 +1932,17 @@ if (CustomWelcomeText != "" && CLIENT.rank > 0) {
 	$("#welcome").html($("#welcome").html().replace(/Welcome/, CustomWelcomeText));
 }
 
-
 // Collpse MOTD on load (if enabled)
 
 if (COLLAPSEMOTD && $("#motd").css("display") != "none") $("#togglemotd").trigger("click");
-
 
 // Optional Premium announcement
 
 if (AnnouncementHTML != "") makeAlert('Channel Administrator Message', AnnouncementHTML).appendTo("#announcements");
 
-
 // Full-width title (if enabled)
 
 if (FULLTITLE) fullWidthTitle();
-
 
 // Disable "New Messages Below" notification (if enabled)
 
@@ -1960,25 +1961,21 @@ $expandChat = $('<span id="expand-chat" class="label label-default pull-right po
   .html('<span class="glyphicon glyphicon-resize-vertical"></span>');
 
 
+// Autohide chat and userlist scrolls (if enabled)
+
+if (CHATHIDESCROLL) $("#messagebuffer, #userlist").addClass('autoscroll');
+
 // Collapse userlist on load (if enabled)
 
 if (COLLAPSEULIST && $("#userlist").css("display") != "none") $("#usercount").trigger("click");
-
-
-// Autohide chat and userlist scrolls (if enabled)
-
-if (CHATHIDESCROLL) $("#userlist, #messagebuffer").addClass('autoscroll');
-
 
 // Separate userlist items (if enabled)
 
 if (SEPARATEULIST) $userlist.addClass('separate');
 
-
 // Better search query placeholder
 
 $("#library_query").attr('placeholder', 'Search query (leave empty to display all channel library)');
-
 
 // Default uncheck "Add as temporary" checkbox for users with permission
 
@@ -2159,7 +2156,7 @@ $advoptsBtn = $('<button id="advopts-btn" class="btn btn-sm btn-default" title="
   .html('<span class="glyphicon glyphicon-flash"></span> ▾').insertBefore("#mediarefresh");
 
 
-// Favourite Premium links button
+// Favourite media links button
 
 $favsBtn = $('<button id="favs-btn" class="btn btn-sm btn-default" title="Add and manage Premium favourites" />')
   .html('<span class="glyphicon glyphicon-thumbs-up"></span>').insertBefore("#mediarefresh");
@@ -2354,6 +2351,74 @@ if (CHATSTYLE == "matrix") {
 $("#chatopts-menu").find("li[group=2]").hide();
 
 
+// Advanced options control panel
+
+var html = '<div class="well"><div class="btn-group">'
+	 +   '<button id="tools-btn" class="btn btn-sm btn-default" title="Premium Admin Tools">Tools</button>'
+	 +   '<button id="clear-btn" class="btn btn-sm btn-default" title="Clear chat">/clear</button>'
+	 +   '<button id="autoclear-btn" class="btn btn-sm btn-default" title="Toggle Autoclear function '
+	 +   '(automatically deletes chat flood)">Autoclear</button>'
+	 +   '<button id="antiafk-btn" class="btn btn-sm btn-default" title="Toggle Anti-AFK function '
+	 +   '(prevents you from AFK status)">AntiAFK</button>'
+	 +   '<button id="afk-btn" class="btn btn-sm btn-default" title="Toggle AFK status">/afk</button>'
+	 + '</div><div class="btn-group pull-right">'
+	 +   '<button id="jukebox-btn" class="btn btn-sm btn-default" title="Jukebox mode">'
+	 +     '<span class="glyphicon glyphicon-th-list"></span> Jukebox</button>'
+	 +   '<div id="qualitybtn-outer" class="btn-group">'
+	 +     '<button id="quality-btn" class="btn btn-sm btn-default dropdown-toggle" '
+	 +     'data-toggle="dropdown" title="Video quality"><span class="glyphicon glyphicon-film"></span> '
+	 +     '</button><ul id="quality-menu" class="dropdown-menu dropdown-menu-right">'
+	 +	 '<li><a id="quality-1" class="opt" val="auto"><span class="glyphicon glyphicon-ok"></span> Auto</a>'
+	 +	 '</li><li><a id="quality-2" class="opt" val="240">'
+	 +	   '<span class="glyphicon glyphicon-ok"></span> 240 px</a>'
+	 +	 '</li><li><a id="quality-3" class="opt" val="360">'
+	 +	   '<span class="glyphicon glyphicon-ok"></span> 360 px</a>'
+	 +	 '</li><li><a id="quality-4" class="opt" val="480">'
+	 +	   '<span class="glyphicon glyphicon-ok"></span> 480 px'
+	 +	   '<span class="glyphicon glyphicon-sd-video icon-right"></span></a>'
+	 +	 '</li><li><a id="quality-5" class="opt" val="720">'
+	 +	   '<span class="glyphicon glyphicon-ok"></span> 720 px'
+	 +	   '<span class="glyphicon glyphicon-hd-video icon-right"></span></a>'
+	 +	 '</li><li><a id="quality-6" class="opt" val="1080">'
+	 +	   '<span class="glyphicon glyphicon-ok"></span> 1080 px'
+	 +	   '<span class="glyphicon glyphicon-hd-video icon-right"></span></a>'
+	 +	 '</li><li><a id="quality-7" class="opt" val="best">'
+	 +	   '<span class="glyphicon glyphicon-ok"></span> Highest</a></li></ul></div></div>'
+	 + '<div class="clearfix5"></div><div id="utc" class="pull-right" title="Universal time clock"></div>'
+	 + '<div class="btn-group">'
+	 +   '<button id="public-btn" class="btn btn-sm btn-default" title="Show list of public channels">'
+	 +     '<span class="glyphicon glyphicon-globe"></span> Channels</button></div></div>';
+$advoptswrap = $('<div id="advoptswrap" class="col-lg-12 col-md-12" />').insertAfter("#queuefail").html(html).hide();
+
+$("#quality-btn").html($("#quality-btn").html() + USEROPTS.default_quality + ' ▾');
+$("#quality-menu").find("a[val=" + USEROPTS.default_quality + "]").addClass('activated');
+
+
+// Favourite Premium links control panel
+
+var html = '<div class="vertical-spacer"></div><div class="centered">'
+	 +   '<button id="addtofav-btn" class="btn btn-default" title="Add to your Premium favourite links">'
+	 +     '<span class="glyphicon glyphicon-thumbs-up"></span> Add to favourite links</button>'
+	 +   '<button id="fixfavs-btn" class="btn btn-sm btn-default pull-right" title="Reset/clear links if broken">'
+	 +     'Reset</button>'
+	 + '</div><ul id="queue-fav" class="videolist col-lg-12 col-md-12"></ul>';
+$favscontrol = $('<div id="favscontrol" class="col-lg-12 col-md-12 pl" />').insertAfter("#queuefail").html(html).hide();
+
+
+// Filter playlist control panel
+
+var html = '<div class="vertical-spacer"></div><div class="input-group">'
+	 +   '<input class="form-control" id="plfilter" placeholder="Enter Username" type="text">'
+	 +   '<span class="input-group-btn"><button class="btn btn-default" id="filter_playlist" '
+	 +     'title="Filter playlist for items added by a specific user">Filter</button></span>'
+	 +   '<span class="input-group-btn"><button class="btn btn-default" id="whole_playlist" '
+	 +     'title="Show whole playlist">Show All</button></span>'
+	 +   '<span class="input-group-btn"><button class="btn btn-default" id="close_plfilter" '
+	 +     'title="Close panel">×</button></span></div>';
+$plfiltercontrol = $('<div id="plfiltercontrol" class="col-lg-12 col-md-12 pl" />')
+  .insertAfter("#queuefail").html(html).hide();
+
+
 // Playlist container ID
 
 $queue.parent().attr('id', 'queue-parent');
@@ -2403,7 +2468,7 @@ $notepadwrap = $('<div id="notepadwrap" class="col-lg-12 col-md-12 wells leftare
 $("#note-area").val(getOrDefault('SP_notes', ''));
 
 
-// Avatars panel if enabled
+// Avatars panel (if enabled)
 
 if (AVATARSLIST) {
 	showAvatarsPanel();
@@ -2411,85 +2476,18 @@ if (AVATARSLIST) {
 	if (THEATREMODE) $avatarswrap.hide();
 }
 
-// Filter playlist control panel
-
-var html = '<div class="vertical-spacer"></div><div class="input-group">'
-	 +   '<input class="form-control" id="plfilter" placeholder="Enter Username" type="text">'
-	 +   '<span class="input-group-btn"><button class="btn btn-default" id="filter_playlist" '
-	 +     'title="Filter playlist for items added by a specific user">Filter</button></span>'
-	 +   '<span class="input-group-btn"><button class="btn btn-default" id="whole_playlist" '
-	 +     'title="Show the whole playlist">Show All</button></span>'
-	 +   '<span class="input-group-btn"><button class="btn btn-default" id="close_plfilter" '
-	 +     'title="Close panel">×</button></span></div>';
-$plfiltercontrol = $('<div id="plfiltercontrol" class="col-lg-12 col-md-12 pl" />')
-  .insertAfter("#queuefail").html(html).hide();
-
-
-// Favourite Premium links control panel
-
-var html = '<div class="vertical-spacer"></div><div class="centered">'
-	 +   '<button id="addtofav-btn" class="btn btn-default" title="Add to your Premium favourite links">'
-	 +     '<span class="glyphicon glyphicon-thumbs-up"></span> Add to favourite links</button>'
-	 +   '<button id="fixfavs-btn" class="btn btn-sm btn-default pull-right" title="Reset/clear links if broken">'
-	 +     'Reset</button>'
-	 + '</div><ul id="queue-fav" class="videolist col-lg-12 col-md-12"></ul>';
-$favscontrol = $('<div id="favscontrol" class="col-lg-12 col-md-12 pl" />').insertAfter("#queuefail").html(html).hide();
-
-
-// Advanced options control panel
-
-var html = '<div class="well"><div class="btn-group">'
-	 +   '<button id="tools-btn" class="btn btn-sm btn-default" title="Premium Admin Tools">Tools</button>'
-	 +   '<button id="clear-btn" class="btn btn-sm btn-default" title="Clear chat">/clear</button>'
-	 +   '<button id="autoclear-btn" class="btn btn-sm btn-default" title="Toggle Autoclear function '
-	 +   '(automatically deletes chat flood)">Autoclear</button>'
-	 +   '<button id="antiafk-btn" class="btn btn-sm btn-default" title="Toggle Anti-AFK function '
-	 +   '(prevents you from AFK status)">AntiAFK</button>'
-	 +   '<button id="afk-btn" class="btn btn-sm btn-default" title="Toggle AFK status">/afk</button>'
-	 + '</div><div class="btn-group pull-right">'
-	 +   '<button id="plmode-btn" class="btn btn-sm btn-default" title="Playlist mode">'
-	 +     '<span class="glyphicon glyphicon-th-list"></span> PL mode</button>'
-	 +   '<div id="qualitybtn-outer" class="btn-group">'
-	 +     '<button id="quality-btn" class="btn btn-sm btn-default dropdown-toggle" '
-	 +     'data-toggle="dropdown" title="Video quality"><span class="glyphicon glyphicon-film"></span> '
-	 +     '</button><ul id="quality-menu" class="dropdown-menu dropdown-menu-right">'
-	 +	 '<li><a id="quality-1" class="opt" val="auto"><span class="glyphicon glyphicon-ok"></span> Auto</a>'
-	 +	 '</li><li><a id="quality-2" class="opt" val="240">'
-	 +	   '<span class="glyphicon glyphicon-ok"></span> 240 px</a>'
-	 +	 '</li><li><a id="quality-3" class="opt" val="360">'
-	 +	   '<span class="glyphicon glyphicon-ok"></span> 360 px</a>'
-	 +	 '</li><li><a id="quality-4" class="opt" val="480">'
-	 +	   '<span class="glyphicon glyphicon-ok"></span> 480 px'
-	 +	   '<span class="glyphicon glyphicon-sd-video icon-right"></span></a>'
-	 +	 '</li><li><a id="quality-5" class="opt" val="720">'
-	 +	   '<span class="glyphicon glyphicon-ok"></span> 720 px'
-	 +	   '<span class="glyphicon glyphicon-hd-video icon-right"></span></a>'
-	 +	 '</li><li><a id="quality-6" class="opt" val="1080">'
-	 +	   '<span class="glyphicon glyphicon-ok"></span> 1080 px'
-	 +	   '<span class="glyphicon glyphicon-hd-video icon-right"></span></a>'
-	 +	 '</li><li><a id="quality-7" class="opt" val="best">'
-	 +	   '<span class="glyphicon glyphicon-ok"></span> Highest</a></li></ul></div></div>'
-	 + '<div class="clearfix5"></div><div id="utc" class="pull-right" title="Universal time clock"></div>'
-	 + '<div class="btn-group">'
-	 +   '<button id="public-btn" class="btn btn-sm btn-default" title="Show list of public channels">'
-	 +     '<span class="glyphicon glyphicon-globe"></span> Channels</button></div></div>';
-$advoptswrap = $('<div id="advoptswrap" class="col-lg-12 col-md-12" />').insertAfter("#queuefail").html(html).hide();
-
-$("#quality-btn").html($("#quality-btn").html() + USEROPTS.default_quality + ' ▾');
-$("#quality-menu").find("a[val=" + USEROPTS.default_quality + "]").addClass('activated');
-
 
 // Synchtube Premium footer
 
 var arr = VERSION.split(".");
-if (arr.length == 3) arr[2] = '<span style="font-size:85%">' + arr[2] + '</span>';
+if (arr.length == 3) arr[2] = '<span class="smallfont">' + arr[2] + '</span>';
 VERSION = arr.join(".");
 
-var html = '<br />Synchtube Premium v. ' + VERSION + ', Copyright © 2016-2017 ZimnyLech · '
-	 + '<a href="https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js" target="_blank">Code</a> · '
-	 + '<img src="http://simplehitcounter.com/hit.php?uid=2187367" /><br />'
+var html = '<br />Channel powered by: <b>Synchtube Premium</b> v. ' + VERSION + ', Copyright © 2016-2017 ZimnyLech · '
+	 + '<a href="https://github.com/ZimnyTest/Premium" target="_blank">GitHub</a> · '
+	 + '<img src="http://simplehitcounter.com/hit.php?uid=2187367" title="Synchtube Premium load counter" /><br />'
 	 + '<a href="http://s06.flagcounter.com/more/rze9" target="_blank">'
-	 +   '<img id="spc" title="Flag Counter" src="http://s06.flagcounter.com/count/rze9/bg=FFFFFF/txt=000000/'
+	 +   '<img id="spc" src="http://s06.flagcounter.com/count/rze9/bg=FFFFFF/txt=000000/'
 	 +   'border=CCCCCC/columns=3/maxflags=12/viewers=0/labels=1/pageviews=1/" /></a>';
 $("footer .credit").html($("footer .credit").html() + html);
 
@@ -2501,7 +2499,7 @@ if (CustomFooterHTML != '') $("footer .credit").html($("footer .credit").html() 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 4] USER INTERFACE EVENTS ---------- */
+/* ---------- [SECTION 4] USER INTERFACE EVENTS ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -3470,7 +3468,7 @@ $("#plr-12").on("click", function() {
 $("#plr-13").on("click", function() {
 	if ($(this).hasClass('activated')) {
 		HIDDENVWRAP = false;
-		$("#layout-4, #layout-7, #layout-8, #layout-9, #layout-10, #videowrap, #plr-14, #plmode-btn").show();
+		$("#layout-4, #layout-7, #layout-8, #layout-9, #layout-10, #videowrap, #plr-14, #jukebox-btn").show();
 		$chatwrap.removeClass().addClass('col-lg-5 col-md-5');
 		if (!$expandChat.hasClass('label-success')) handleVideoResize();
 		if (PLAYER) PLAYER.setVolume(CURRENTVOL);
@@ -3479,7 +3477,7 @@ $("#plr-13").on("click", function() {
 		$chatwrap.removeClass().addClass('col-md-' + classe + ' col-lg-' + classe);
 	} else {
 		HIDDENVWRAP = true;
-		$("#layout-4, #layout-7, #layout-8, #layout-9, #layout-10, #videowrap, #plr-14, #plmode-btn").hide();
+		$("#layout-4, #layout-7, #layout-8, #layout-9, #layout-10, #videowrap, #plr-14, #jukebox-btn").hide();
 		$chatwrap.removeClass().addClass('col-lg-12 col-md-12');
 		if (PLAYER) {
 			PLAYER.getVolume(function(vol) {
@@ -3555,6 +3553,7 @@ $("#plr-17").on("click", function() {
 		MASCOTPOS = getOrDefault('SP_mascotpos', 'b-left');
 		$videowrap.find(".embed-responsive-16by9")
 		  .append('<img id="mascot" class="' + MASCOTPOS + '" src="' + MASCOT + '" />');
+		if (MASCOT == "custom") $("#mascot").attr('src', getOrDefault('SP_custommascoturl', ''));
 	}
 	$(this).toggleClass('activated');
 
@@ -3568,7 +3567,13 @@ $("#plr-17").on("click", function() {
 		for (var i = 0; i < len; i++) {
 			html += '<option value="' + arr[i][1] + '">' + arr[i][0] + '</option>'
 		}
-		html += '</select></div></div><div class="form-group">'
+		html += '<option value="custom">(Custom mascot)</option>'
+		     +  '</select></div></div><div class="form-group">'
+		     +    '<label class="control-label col-sm-5">Custom mascot URL</label>'
+		     +    '<div class="col-sm-7 config-col">'
+		     +      '<input id="custommascoturl" class="form-control" type="text" '
+		     +      'placeholder="Enter image URL" />'
+		     +  '</div></div><div class="form-group">'
 		     +    '<label class="control-label col-sm-5">Position on the player</label>'
 		     +    '<div class="col-sm-7 config-col">'
 		     +      '<select id="mascotpos" class="form-control">'
@@ -3580,12 +3585,26 @@ $("#plr-17").on("click", function() {
 		     +        '<option value="c-center">center</option></select>'
 		     +  '</div></div></form>';
 		body.html(html);
+		if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide();
 
-		$("#mascottype").val($("#mascot").attr('src'))
+		$("#mascottype").val(MASCOT)
 		  .on("change", function() {
 			MASCOT = $(this).val();
 			$("#mascot").attr('src', MASCOT);
+			if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide()
+			else {
+				$("#custommascoturl").parent().parent().show();
+				$("#mascot").attr('src', $("#custommascoturl").val());
+			}
 			setOpt('SP_mascot', MASCOT);
+		  });
+		$("#custommascoturl").val(getOrDefault('SP_custommascoturl', ''))
+		  .on("change", function() {
+			$("#mascot").attr('src', $(this).val());
+			setOpt('SP_custommascoturl', $(this).val());
+		  }).on("blur", function() {
+			$("#mascot").attr('src', $(this).val());
+			setOpt('SP_custommascoturl', $(this).val());
 		  });
 		$("#mascotpos").val(MASCOTPOS)
 		  .on("change", function() {
@@ -3604,434 +3623,12 @@ $("#plr-17").on("click", function() {
 });
 
 
-// Save note button events
-
-$("#notesave-btn").on("click", function() {
-	var val = $("#note-area").val();
-	var len = val.length;
-	if (len > 1000000) {
-		var str = 'Your notes have ' + len + ' characters.\n'
-			+ 'You have exceeded maximum length of text (1 million characters).';
-		alert(str);
-	} else setOpt('SP_notes', val);
-});
-
-
-// Add to favourites button events
-
-$("#addtofav-btn").on("click", function() {
-	if ($queue.find(".queue_entry").length < 1) return;
-	var uid = $(".queue_active").data("media");
-	FAVLINKS = getOrDefault('SP_favlinks', '{"links":[]}');
-	var arr = JSON.parse(FAVLINKS)["links"];
-	var len = arr.length;
-	if (len >= 200) {
-		var html = '<strong>Warning: the list is full</strong><br />You have reached maximum limit (200) '
-			 + 'of favourite links. Delete other items to add new.<br />'
-			 + '<button id="close-msg" class="btn btn-primary">Close</button>';
-		$('<div class="alert alert-warning" />').insertBefore("#queue-fav").html(html);
-		$("#close-msg").on("click", function() {
-			$(this).parent().remove();
-		});
-		return;
-	}
-	var newid = 1;
-	if (len > 0) newid = arr[len - 1]["id"] + 1;
-	$favsBtn.addClass('btn-success');
-	$(this).addClass('btn-success disabled');
-	var str = FAVLINKS.slice(0, -2);
-	if (len > 0) str += ', ';
-	str += '{"id":' + newid + ', "title":"' + uid.title.replace(/"/g, '\\"') + '", '
-	    +  '"link":"' + formatURL(uid) + '"}]}';
-	setOpt('SP_favlinks', FAVLINKS = str);
-	createFavsPanel();
-});
-
-
-// Reset favourites button events
-
-$("#fixfavs-btn").on("click", function() {
-	var str = 'Do you really want to reset (clear) list of your favourites?\n'
-		+ 'Note: use this feature if your links are broken and the list is not working properly.';
-	if (confirm(str)) {
-		$("#addtofav-btn").removeClass('btn-success disabled');
-		$favsBtn.removeClass('btn-success active');
-		$("#favscontrol").hide();
-		FAVLINKS = '{"links":[]}';
-		setOpt('SP_favlinks', FAVLINKS);
-	}
-});
-
-
 // Favourites button events
 
 $("#favs-btn").on("click", function() {
 	toggleElement($favscontrol);
 	$(this).toggleClass('active');
 	$(this).hasClass('active') ? createFavsPanel() : document.getElementById("queue-fav").innerHTML = '';
-});
-
-
-// Advanced options buttons events
-
-$("#advopts-btn").on("click", function() {
-	toggleElement($advoptswrap);
-	if ($(this).hasClass('active')) clearInterval(UTCCLOCK)
-	else {
-		UTCCLOCK = setInterval(function() {UTCTime()}, 1000);
-		UTCTime();
-	}
-	$(this).toggleClass('active');
-});
-
-$("#tools-btn").on("click", function() {
-	if (!TOOLSENABLED) setOpt('SP_toolsenabled', TOOLSENABLED = true);
-	createModal('Premium Admin Tools');
-	var arr = ['Chat Effects', 'CSS Tips', 'MOTD Tabs', 'Soundfilters', 'Media DB', 'Customization'];
-	createModalTabs(arr, "tools");
-
-	html = '<div class="panel panel-primary"><div class="panel-heading">'
-	     +   'Chat text colors for all users without accepted Premium app</div>'
-	     +   '<div class="panel-body"><div id="colors-check" class="centered"></div></div>'
-	     +   '<div class="panel-heading">Chat text effects for all users without accepted Premium app</div>'
-	     +   '<div class="panel-body"><div id="effects-check" class="centered"></div></div></div>';
-	$("#_c1").html(html);
-
-	if (!hasPermission("filteredit")) {
-		var html = 'Filter editing is blocked on this channel.<br />'
-			 + 'Change permissions if you want to check colors status or install colors.';
-		$("#colors-check").html('<p class="text-danger">' + html +'</p>');
-		var html = 'Filter editing is blocked on this channel.<br />'
-			 + 'Change permissions if you want to check effects status or install effects.';
-		$("#effects-check").html('<p class="text-danger">' + html +'</p>');
-	}
-	var callback = function(data) {
-		socket.listeners("chatFilters").splice(socket.listeners("chatFilters").indexOf(callback));
-		if (JSON.stringify(data).indexOf('"col:(.*?):"') < 0) {
-			$("#colors-check").html('');
-			$('<button class="btn btn-primary btn-sm">Install chat text colors</button>')
-			  .appendTo("#colors-check")
-			  .on("click", function() {
-				socket.emit("addFilter", {
-					name:'chat colors (premium)', source:'col:(.*?):', flags:'g',
-					replace:'<span style="color:\\1" class="chatcolor">', active:true
-				});
-				$("#colors-check").html('<p class="text-info">Colors installed.</p>');
-			  });
-		} else {
-			var html = 'Chat text colors are already visible for all users.';
-			$("#colors-check").html('<p class="text-info">' + html +'</p>');
-		}
-
-		var count = 0;
-		var json = JSON.stringify(data);
-		if (json.indexOf('":\\\\+(.+?)\\\\+:"') > -1) count++;
-		if (json.indexOf('":=(.+?)=:"') > -1) count++;
-		if (json.indexOf('":@@(.+?)@@:"') > -1) count++;
-		if (json.indexOf('":@(.+?)@:"') > -1) count++;
-		if (json.indexOf('":-(.+?)-:"') > -1) count++;
-		if (json.indexOf('":!(.+?)!:"') > -1) count++;
-		if (json.indexOf('":\\\\$(.+?)\\\\$:"') > -1) count++;
-		if (json.indexOf('":%(.+?)%:"') > -1) count++;
-		if (json.indexOf('":#(.+?)#:"') > -1) count++;
-		if (json.indexOf('":\\\\^(.+?)\\\\^:"') > -1) count++;
-
-		if (count < 1) {
-			$("#effects-check").html('');
-			$('<button class="btn btn-primary btn-sm">Install chat text effects</button>')
-			  .appendTo("#effects-check")
-			  .on("click", function() {
-				socket.emit("addFilter", {
-					name:'bold text (premium)', source:':\\+(.+?)\\+:', flags:'g',
-					replace:'<span style="font-weight:bold" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'italic text (premium)', source:':=(.+?)=:', flags:'g',
-					replace:'<span style="font-style:italic" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'dots-underlined text (premium)', source:':@@(.+?)@@:', flags:'g',
-					replace:'<span style="border-bottom:dotted 1px" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'underlined text (premium)', source:':@(.+?)@:', flags:'g',
-					replace:'<span style="text-decoration:underline" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'striked text (premium)', source:':-(.+?)-:', flags:'g',
-					replace:'<span class="txteffect"><s>\\1</s></span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'smaller text (premium)', source:':!(.+?)!:', flags:'g',
-					replace:'<span style="font-size:0.8em" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'small-caps text (premium)', source:':\\$(.+?)\\$:', flags:'g',
-					replace:'<span style="font-variant:small-caps" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'letter-spaced text (premium)', source:':%(.+?)%:', flags:'g',
-					replace:'<span style="letter-spacing:2px" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'monospaced text (premium)', source:':#(.+?)#:', flags:'g',
-					replace:'<span style="font-family:Menlo,Monaco,Consolas,'
-					 + '\'Courier New\',monospace" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'stitched text (premium)', source:':\\^(.+?)\\^:', flags:'g',
-					replace:'<span style="outline:1px dashed #98ABB9; outline-offset:-5px; '
-					 + 'background-color:#556068; box-shadow:2px 2px 2px #000; padding:5px; '
-					 + 'border-radius:2px; color:#EEE" class="txteffect">\\1</span>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'floating text (premium)', source:':\\/\\/(.+?)\\/\\/:', flags:'g',
-					replace:'<marquee behavior="scroll" scrollamount="18" class="txteffect">'
-					 + '\\1</marquee>',
-					active:true
-				});
-				socket.emit("addFilter", {
-					name:'bouncing text (premium)', source:':\\/(.+?)\\/:', flags:'g',
-					replace:'<marquee behavior="alternate" scrollamount="15" class="txteffect">'
-					 + '\\1</marquee>',
-					active:true
-				});
-				$("#effects-check").html('<p class="text-info">Effects installed.</p>');
-			  });
-		} else if (count < 10) {
-			var html = 'Chat text effects are installed partially or not installed properly on this '
-				 + 'channel.<br />Go to Chat Filters and delete all "premium" text effects '
-				 + 'to prepare proper installation.';
-			$("#effects-check").html('<p class="text-info">' + html +'</p>');
-		} else {
-			var html = 'Chat text effects are already visible for all users.';
-			$("#effects-check").html('<p class="text-info">' + html +'</p>');
-		}
-
-	};
-	socket.on("chatFilters", callback);
-	socket.emit("requestChatFilters");
-
-	html = '<div class="panel panel-primary"><div class="panel-heading">'
-	     +   'Custom navbar channel name for all users without accepted Premium app</div>'
-	     +   '<div class="panel-body">1. Copy code below and change <i>(name of your channel)</i> to proper name.'
-	     +     '<br />2. Paste code to your channel internal CSS or external CSS file.<br /><br />'
-	     +     '<code>.navbar-brand {font-size:0pt}</code><br />'
-	     +     '<code>.navbar-brand:before {content:"<i>(name of your channel)</i>"; font-size:14pt}</code>'
-	     +     '<br /><br />If channel name is not visible properly, try to change first line of above code to:'
-	     +     '<br /><br /><code>.navbar-brand {font-size:0pt !important; width:auto !important}</code><br />'
-	     +     '<br /></div><div class="panel-heading">Username color on chat</div>'
-	     +   '<div class="panel-body">1. Copy code below and change <i>(user name)</i> to proper user name, '
-	     +     'and <i>(CSS color)</i> to proper CSS color, repeat it for all selected users.<br />'
-	     +     '2. Paste code to your channel internal CSS or external CSS file.<br /><br />'
-	     +     '<code>div.chat-msg-<i>(user name)</i> .username {color:<i>(CSS color)</i>}</code><br /><br />'
-	     +   '</div><div class="panel-heading">Username avatar on chat</div>'
-	     +   '<div class="panel-body">1. Copy code below and change <i>(user name)</i> to proper user name, '
-	     +     'and <i>(avatar URL)</i> to proper image URL, repeat it for all selected users.<br />'
-	     +     '2. Paste code to your channel internal CSS or external CSS file.<br /><br />'
-	     +     '<code>.chat-msg-<i>(user name)</i> .username:before {</code><br />'
-	     +     '<code>background:url("<i>(avatar URL)</i>"); background-size:cover;</code><br />'
-	     +     '<code>height:30px; width:30px; margin-right:4px;</code><br />'
-	     +     '<code>content:""; display:inline-block; vertical-align:middle;</code><br /><code>}</code>'
-	     + '</div></div>';
-	$("#_c2").html(html);
-
-	html = 'You can turn your channel MOTD into a simple homepage with subpages.<br /><br />'
-	     + '<div class="panel panel-primary"><div class="panel-heading">MOTD Tabs application</div>'
-	     +   '<div class="panel-body">1. Copy code from the textarea below.<br />'
-	     +     '2. Change menu tab names, add more tabs or delete existed tabs if unnecessary.<br />'
-	     +     '3. Change HTML content of your tabs.<br />'
-	     +     '4. Set (or leave default) additional CSS (borders of HTML content, background, colors etc.) '
-	     +     'according to your wishes in: <code>motd-tabs</code> - styles of menu links to subpages, '
-	     +     '<code>motd-tabs-wrap</code> - subpages HTML container.<br />'
-	     +     '5. Set, as above, CSS application size or leave default values (400px height and 800px max-width, '
-	     +     'you can also set <i>max-width</i> in percents - 100% will make content full-width).<br />'
-	     +     '6. Paste prepared HTML code into channel MOTD editor.<br /><br />'
-	     +     '<textarea class="form-control" rows="12">'
-	     +       '<div>\n<ul id="motd-tabs" class="nav nav-pills" style="text-align:center; max-width:800px; '
-	     +       'margin:0px auto 5px">\n'
-	     +       '\t<!-- Below you can set menu links to subpages -->\n\n'
-	     +       '\t<li class="active"><a href="#1a" data-toggle="tab">Home</a></li>\n';
-	for (i = 2; i <=10; i++) {
-		html += '\t<li><a href="#' + i + 'a" data-toggle="tab">Tab #' + i + '</a></li>\n';
-	}
-	html += '\n</ul>\n<div id="motd-tabs-wrap" style="border:solid 2px #333; border-radius:8px; height:400px; '
-	     +  'max-width:800px; margin:0 auto; overflow:auto; padding:10px">\n'
-	     +  '\t<div id="motd-tabs-content" class="tab-content clearfix0">\n'
-	     +  '\t<!-- Below you can set subpages HTML content -->\n\n'
-	     +  '<div class="tab-pane active" id="1a">\n\tHTML content of Home tab.\n</div>\n';
-	for (i = 2; i <=10; i++) {
-		html += '<div class="tab-pane" id="' + i + 'a">\n\tHTML content of Tab #' + i + '.\n</div>\n';
-	}
-	html += '\n\t</div>\n</div>\n</div></textarea></div></div>';
-	$("#_c3").html(html);
-
-	html = 'Beside of text filters or displaying emotes you can set sound files, played after sending '
-	     + 'certain text or code to chat.<br />'
-	     + '<span class="text-danger">Warning! Browsers support *.ogg files best. Some browsers may have '
-	     +   'problems with *.mp3 files as soundfilters.</span><br /><br />'
-	     + '<div class="panel panel-primary"><div class="panel-heading">Preparing the code</div>'
-	     +   '<div class="panel-body"><code>SoundFiltersArray = {</code><br />'
-	     +     '<code>\'habemus\': \'https://dl.dropboxusercontent.com/s/3w1jahgffowjltz/hp.ogg\',</code><br />'
-	     +     '<code>\':nyaa:\': \'https://dl.dropboxusercontent.com/s/gzsxqypc6qa7del/nyaa.ogg\',</code><br />'
-	     +     '<code>\'text_or_code\': \'sound_file_URL\',</code><br />'
-	     +     '<code>};</code><br /><br />'
-	     +     'Copy sample code above and add your own items, set proper codes and links.'
-	     +   '</div><div class="panel-heading">Installing code</div>'
-	     +   '<div class="panel-body">Search for the <code>SoundFiltersArray = {</code> in the code file and paste '
-	     +     'prepared array of sounds.<br /><br />'
-	     +     'Under the chat will appear a new button to control chat sounds. Every user has also possibility '
-	     +     'to disable this button and soundfilters in the Premium Settings (navbar "Layout" menu).'
-	     + '</div></div>';
-	$("#_c4").html(html);
-
-	html = 'You can create custom channel Media Database. It will appear in the "Add video" panel.<br /><br />'
-	     + '<div class="panel panel-primary"><div class="panel-heading">Preparing the code</div>'
-	     +   '<div class="panel-body">' + prepareMediaDBHelp() + '</div>'
-	     +   '<div class="panel-heading">Installing database</div>'
-	     +   '<div class="panel-body">You can do it in two ways.<br /><br />'
-	     +     'A. External file (recommended): save prepared code as .js file and upload it to your web hosting '
-	     +     '(Dropbox, Google Drive, your own server, etc.). Next, add <code>db</code> parameter to your '
-	     +     'current Premium script location, with database file URL as a value, like this:<br />'
-	     +     '<code>https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js?db=<i>URL</i></code><br />'
-	     +     'Paste prepared link, as in the example above, to External Javascript channel option '
-	     +     '(change <code><i>URL</i></code> to direct link of your .js file).<br /><br />'
-	     +     'B. Internal code (not recommended if the database is large - it will significantly increase '
-	     +     'Premium file size): add database code to your custom Premium script file, but before [REGION 3] '
-	     +     '(not at the end of the file - database will not load).</div></div>';
-	$("#_c5").html(html);
-
-	html = 'It is possible to customize some basic Premium Settings for your channel.<br /><br />'
-	     + '<div class="panel panel-primary"><div class="panel-heading">Synchtube Premium customization</div>'
-	     +   '<div class="panel-body">1. Open code file and go to <code>BASIC CUSTOMIZATION</code> section.<br />'
-	     +     '2. Change selected variables according to your wishes.<br />'
-	     +     '3. Save .js file to your web hosting (Dropbox, Google Drive, your own server, etc.).<br />'
-	     +     '4. Paste direct link to your own file into External Javascript channel option.</div></div>';
-	$("#_c6").html(html);
-});
-
-$("#clear-btn").on("click", function() {
-	if (confirm('Are you sure to clear the chat window for all users?')) socket.emit("chatMsg", {msg:'/clear'});
-});
-
-$("#autoclear-btn").on("click", function() {
-	if ($(this).hasClass('btn-danger')) {
-		$(this).html('Autoclear');
-		clearInterval(CLEARING);
-	} else {
-		$(this).html('Autoclear is ON!');
-		CLEARING = setInterval(function() {socket.emit("chatMsg", {msg:'/clear'})}, 250);
-	}
-	$(this).toggleClass('btn-danger');
-});
-
-$("#antiafk-btn").on("click", function() {
-	if ($(this).hasClass('btn-warning')) clearInterval(ANTIAFK)
-	else {
-		ANTIAFK = setInterval(function() {
-			if (findUserlistItem(CLIENT.name).data().meta.afk) socket.emit("chatMsg", {msg:'/afk'});
-		}, 2000);
-	}
-	$(this).toggleClass('btn-warning');
-});
-
-$("#afk-btn").on("click", function() {
-	socket.emit("chatMsg", {msg:'/afk'});
-});
-
-$("#plmode-btn").on("click", function() {
-	var queuewrap = $queue.parent();
-	if ($(this).hasClass('btn-warning')) {
-		if ($("#navbar-collapsed").length < 1) $nav.show();
-		$("footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
-		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").show();
-		$("#resize-video-smaller, #resize-video-larger, #plr-13").show();
-		handleRank();
-		$chatwrap.after(queuewrap.detach());
-		!SYNCH ? $videowrap.before($chatwrap.detach()) : $videowrap.after($chatwrap.detach());
-		if (SCROLLNAVBAR) scrollableNavbar();
-		$("#mainpage").removeClass('plmode');
-		queuewrap.removeClass().addClass('col-md-12 col-lg-12');
-		scrollChatToTop();
-	} else {
-		$("nav, footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
-		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").hide();
-		$("#resize-video-smaller, #resize-video-larger, #clear-btn, #autoclear-btn, #plr-13").hide();
-		queuewrap.after($chatwrap.detach());
-		!SYNCH ? $videowrap.before(queuewrap.detach()) : $videowrap.after(queuewrap.detach());
-		if (SCROLLNAVBAR) fixedNavbar();
-		$("#mainpage").addClass('plmode');
-		var match = document.getElementById("rightpane").className.match(/col-md-(\d+)/);
-		var classe1 = 12 - parseInt(match[1], 10);
-		queuewrap.removeClass().addClass('col-md-' + classe1 + ' col-lg-' + classe1);
-		window.scrollTo(0, 0);
-	}
-	$(this).toggleClass('btn-warning');
-	if (SCROLLCHAT) scrollChat();
-	scrollQueue();
-});
-
-$("#quality-menu").find("a").on("click", function() {
-	$("#quality-menu").find(".opt").removeClass('activated');
-	$(this).addClass('activated');
-	refreshPlayer();
-	USEROPTS.default_quality = $(this).attr('val');
-	var text = USEROPTS.default_quality;
-	if (text == "best") text = 'highest';
-	$("#quality-btn").html('<span class="glyphicon glyphicon-film"></span> ' + text + ' ▾');
-});
-
-$("#public-btn").on("click", function() {
-	$("#channel-list").remove();
-	if ($(this).hasClass('btn-warning')) $(this).removeClass('btn-warning')
-	else {
-		$.get('/', function(data) {
-			var html = $(data).find("table");
-			if (html) {
-				$('<div id="channel-list" />').appendTo("#advoptswrap > div").html(html)
-				  .append('<div class="clearfix5" />');
-			}
-		});
-		$(this).addClass('btn-warning');
-	}
-});
-
-
-// Filter playlist input and buttons events
-
-$("#plfilter").on("keydown", function(ev) {
-	if (ev.keyCode == 13) {
-		($(this).val() == "") ? $("#whole_playlist").trigger("click") : $("#filter_playlist").trigger("click");
-	}
-});
-
-$("#filter_playlist").on("click", function() {
-	var val = $("#plfilter").val();
-	if (val == "") return;
-	$queue.find("li").each(function() {
-		var added = $(this).attr('title').split("by: ")[1];
-		(val != added) ? $(this).hide() : $(this).show();
-	});
-});
-
-$("#whole_playlist").on("click", function() {
-	$queue.find("li").each(function() {
-		$(this).show();
-	});
-});
-
-$("#close_plfilter").on("click", function() {
-	$("#pls-8").trigger("click");
 });
 
 
@@ -4831,6 +4428,426 @@ $("#chat-21").on("click", function() {
 });
 
 
+// Filter playlist input and buttons events
+
+$("#plfilter").on("keydown", function(ev) {
+	if (ev.keyCode == 13) {
+		($(this).val() == "") ? $("#whole_playlist").trigger("click") : $("#filter_playlist").trigger("click");
+	}
+});
+
+$("#filter_playlist").on("click", function() {
+	var val = $("#plfilter").val();
+	if (val == "") return;
+	$queue.find("li").each(function() {
+		var added = $(this).attr('title').split("by: ")[1];
+		(val != added) ? $(this).hide() : $(this).show();
+	});
+});
+
+$("#whole_playlist").on("click", function() {
+	$queue.find("li").each(function() {
+		$(this).show();
+	});
+});
+
+$("#close_plfilter").on("click", function() {
+	$("#pls-8").trigger("click");
+});
+
+
+// Add to favourites button events
+
+$("#addtofav-btn").on("click", function() {
+	if ($queue.find(".queue_entry").length < 1) return;
+	var uid = $(".queue_active").data("media");
+	FAVLINKS = getOrDefault('SP_favlinks', '{"links":[]}');
+	var arr = JSON.parse(FAVLINKS)["links"];
+	var len = arr.length;
+	if (len >= 200) {
+		var html = '<strong>Warning: the list is full</strong><br />You have reached maximum limit (200) '
+			 + 'of favourite links. Delete other items to add new.<br />'
+			 + '<button id="close-msg" class="btn btn-primary">Close</button>';
+		$('<div class="alert alert-warning" />').insertBefore("#queue-fav").html(html);
+		$("#close-msg").on("click", function() {
+			$(this).parent().remove();
+		});
+		return;
+	}
+	var newid = 1;
+	if (len > 0) newid = arr[len - 1]["id"] + 1;
+	$favsBtn.addClass('btn-success');
+	$(this).addClass('btn-success disabled');
+	var str = FAVLINKS.slice(0, -2);
+	if (len > 0) str += ', ';
+	str += '{"id":' + newid + ', "title":"' + uid.title.replace(/"/g, '\\"') + '", '
+	    +  '"link":"' + formatURL(uid) + '"}]}';
+	setOpt('SP_favlinks', FAVLINKS = str);
+	createFavsPanel();
+});
+
+
+// Reset favourites button events
+
+$("#fixfavs-btn").on("click", function() {
+	var str = 'Do you really want to reset (clear) list of your favourites?\n'
+		+ 'Note: use this feature if your links are broken and the list is not working properly.';
+	if (confirm(str)) {
+		$("#addtofav-btn").removeClass('btn-success disabled');
+		$favsBtn.removeClass('btn-success active');
+		$("#favscontrol").hide();
+		FAVLINKS = '{"links":[]}';
+		setOpt('SP_favlinks', FAVLINKS);
+	}
+});
+
+
+// Advanced options buttons events
+
+$("#advopts-btn").on("click", function() {
+	toggleElement($advoptswrap);
+	if ($(this).hasClass('active')) clearInterval(UTCCLOCK)
+	else {
+		UTCCLOCK = setInterval(function() {UTCTime()}, 1000);
+		UTCTime();
+	}
+	$(this).toggleClass('active');
+});
+
+$("#tools-btn").on("click", function() {
+	if (!TOOLSENABLED) setOpt('SP_toolsenabled', TOOLSENABLED = true);
+	createModal('Premium Admin Tools');
+	var arr = ['Chat Effects', 'CSS Tips', 'MOTD Tabs', 'Soundfilters', 'Media DB', 'Customization'];
+	createModalTabs(arr, "tools");
+
+	html = '<div class="panel panel-primary"><div class="panel-heading">'
+	     +   'Chat text colors for all users without accepted Premium app</div>'
+	     +   '<div class="panel-body"><div id="colors-check" class="centered"></div></div>'
+	     +   '<div class="panel-heading">Chat text effects for all users without accepted Premium app</div>'
+	     +   '<div class="panel-body"><div id="effects-check" class="centered"></div></div></div>';
+	$("#_c1").html(html);
+
+	if (!hasPermission("filteredit")) {
+		var html = 'Filter editing is blocked on this channel.<br />'
+			 + 'Change permissions if you want to check colors status or install colors.';
+		$("#colors-check").html('<p class="text-danger">' + html +'</p>');
+		var html = 'Filter editing is blocked on this channel.<br />'
+			 + 'Change permissions if you want to check effects status or install effects.';
+		$("#effects-check").html('<p class="text-danger">' + html +'</p>');
+	}
+	var callback = function(data) {
+		socket.listeners("chatFilters").splice(socket.listeners("chatFilters").indexOf(callback));
+		if (JSON.stringify(data).indexOf('"col:(.*?):"') < 0) {
+			$("#colors-check").html('');
+			$('<button class="btn btn-primary btn-sm">Install chat text colors</button>')
+			  .appendTo("#colors-check")
+			  .on("click", function() {
+				socket.emit("addFilter", {
+					name:'chat colors (premium)', source:'col:(.*?):', flags:'g',
+					replace:'<span style="color:\\1" class="chatcolor">', active:true
+				});
+				$("#colors-check").html('<p class="text-info">Colors installed.</p>');
+			  });
+		} else {
+			var html = 'Chat text colors are already visible for all users.';
+			$("#colors-check").html('<p class="text-info">' + html +'</p>');
+		}
+
+		var count = 0;
+		var json = JSON.stringify(data);
+		if (json.indexOf('":\\\\+(.+?)\\\\+:"') > -1) count++;
+		if (json.indexOf('":=(.+?)=:"') > -1) count++;
+		if (json.indexOf('":@@(.+?)@@:"') > -1) count++;
+		if (json.indexOf('":@(.+?)@:"') > -1) count++;
+		if (json.indexOf('":-(.+?)-:"') > -1) count++;
+		if (json.indexOf('":!(.+?)!:"') > -1) count++;
+		if (json.indexOf('":\\\\$(.+?)\\\\$:"') > -1) count++;
+		if (json.indexOf('":%(.+?)%:"') > -1) count++;
+		if (json.indexOf('":#(.+?)#:"') > -1) count++;
+		if (json.indexOf('":\\\\^(.+?)\\\\^:"') > -1) count++;
+
+		if (count < 1) {
+			$("#effects-check").html('');
+			$('<button class="btn btn-primary btn-sm">Install chat text effects</button>')
+			  .appendTo("#effects-check")
+			  .on("click", function() {
+				socket.emit("addFilter", {
+					name:'bold text (premium)', source:':\\+(.+?)\\+:', flags:'g',
+					replace:'<span style="font-weight:bold" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'italic text (premium)', source:':=(.+?)=:', flags:'g',
+					replace:'<span style="font-style:italic" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'dots-underlined text (premium)', source:':@@(.+?)@@:', flags:'g',
+					replace:'<span style="border-bottom:dotted 1px" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'underlined text (premium)', source:':@(.+?)@:', flags:'g',
+					replace:'<span style="text-decoration:underline" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'striked text (premium)', source:':-(.+?)-:', flags:'g',
+					replace:'<span class="txteffect"><s>\\1</s></span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'smaller text (premium)', source:':!(.+?)!:', flags:'g',
+					replace:'<span style="font-size:0.8em" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'small-caps text (premium)', source:':\\$(.+?)\\$:', flags:'g',
+					replace:'<span style="font-variant:small-caps" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'letter-spaced text (premium)', source:':%(.+?)%:', flags:'g',
+					replace:'<span style="letter-spacing:2px" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'monospaced text (premium)', source:':#(.+?)#:', flags:'g',
+					replace:'<span style="font-family:Menlo,Monaco,Consolas,'
+					 + '\'Courier New\',monospace" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'stitched text (premium)', source:':\\^(.+?)\\^:', flags:'g',
+					replace:'<span style="outline:1px dashed #98ABB9; outline-offset:-5px; '
+					 + 'background-color:#556068; box-shadow:2px 2px 2px #000; padding:5px; '
+					 + 'border-radius:2px; color:#EEE" class="txteffect">\\1</span>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'floating text (premium)', source:':\\/\\/(.+?)\\/\\/:', flags:'g',
+					replace:'<marquee behavior="scroll" scrollamount="18" class="txteffect">'
+					 + '\\1</marquee>',
+					active:true
+				});
+				socket.emit("addFilter", {
+					name:'bouncing text (premium)', source:':\\/(.+?)\\/:', flags:'g',
+					replace:'<marquee behavior="alternate" scrollamount="15" class="txteffect">'
+					 + '\\1</marquee>',
+					active:true
+				});
+				$("#effects-check").html('<p class="text-info">Effects installed.</p>');
+			  });
+		} else if (count < 10) {
+			var html = 'Chat text effects are installed partially or not installed properly on this '
+				 + 'channel.<br />Go to Chat Filters and delete all "premium" text effects '
+				 + 'to prepare proper installation.';
+			$("#effects-check").html('<p class="text-info">' + html +'</p>');
+		} else {
+			var html = 'Chat text effects are already visible for all users.';
+			$("#effects-check").html('<p class="text-info">' + html +'</p>');
+		}
+
+	};
+	socket.on("chatFilters", callback);
+	socket.emit("requestChatFilters");
+
+	html = '<div class="panel panel-primary"><div class="panel-heading">'
+	     +   'Custom navbar channel name for all users without accepted Premium app</div>'
+	     +   '<div class="panel-body">1. Copy code below and change <i>(name of your channel)</i> to proper name.'
+	     +     '<br />2. Paste code to your channel internal CSS or external CSS file.<br /><br />'
+	     +     '<code>.navbar-brand {font-size:0pt}</code><br />'
+	     +     '<code>.navbar-brand:before {content:"<i>(name of your channel)</i>"; font-size:14pt}</code>'
+	     +     '<br /><br />If channel name is not visible properly, try to change first line of above code to:'
+	     +     '<br /><br /><code>.navbar-brand {font-size:0pt !important; width:auto !important}</code><br />'
+	     +     '<br /></div><div class="panel-heading">Username color on chat</div>'
+	     +   '<div class="panel-body">1. Copy code below and change <i>(user name)</i> to proper user name, '
+	     +     'and <i>(CSS color)</i> to proper CSS color, repeat it for all selected users.<br />'
+	     +     '2. Paste code to your channel internal CSS or external CSS file.<br /><br />'
+	     +     '<code>div.chat-msg-<i>(user name)</i> .username {color:<i>(CSS color)</i>}</code><br /><br />'
+	     +   '</div><div class="panel-heading">Username avatar on chat</div>'
+	     +   '<div class="panel-body">1. Copy code below and change <i>(user name)</i> to proper user name, '
+	     +     'and <i>(avatar URL)</i> to proper image URL, repeat it for all selected users.<br />'
+	     +     '2. Paste code to your channel internal CSS or external CSS file.<br /><br />'
+	     +     '<code>.chat-msg-<i>(user name)</i> .username:before {</code><br />'
+	     +     '<code>background:url("<i>(avatar URL)</i>"); background-size:cover;</code><br />'
+	     +     '<code>height:30px; width:30px; margin-right:4px;</code><br />'
+	     +     '<code>content:""; display:inline-block; vertical-align:middle;</code><br /><code>}</code>'
+	     + '</div></div>';
+	$("#_c2").html(html);
+
+	html = 'You can turn your channel MOTD into a simple homepage with subpages.<br /><br />'
+	     + '<div class="panel panel-primary"><div class="panel-heading">MOTD Tabs application</div>'
+	     +   '<div class="panel-body">1. Copy code from the textarea below.<br />'
+	     +     '2. Change menu tab names, add more tabs or delete existed tabs if unnecessary.<br />'
+	     +     '3. Change HTML content of your tabs.<br />'
+	     +     '4. Set (or leave default) additional CSS (borders of HTML content, background, colors etc.) '
+	     +     'according to your wishes in: <code>motd-tabs</code> - styles of menu links to subpages, '
+	     +     '<code>motd-tabs-wrap</code> - subpages HTML container.<br />'
+	     +     '5. Set, as above, CSS application size or leave default values (400px height and 800px max-width, '
+	     +     'you can also set <i>max-width</i> in percents - 100% will make content full-width).<br />'
+	     +     '6. Paste prepared HTML code into channel MOTD editor.<br /><br />'
+	     +     '<textarea class="form-control" rows="12">'
+	     +       '<div>\n<ul id="motd-tabs" class="nav nav-pills" style="text-align:center; max-width:800px; '
+	     +       'margin:0px auto 5px">\n'
+	     +       '\t<!-- Below you can set menu links to subpages -->\n\n'
+	     +       '\t<li class="active"><a href="#1a" data-toggle="tab">Home</a></li>\n';
+	for (i = 2; i <=10; i++) {
+		html += '\t<li><a href="#' + i + 'a" data-toggle="tab">Tab #' + i + '</a></li>\n';
+	}
+	html += '\n</ul>\n<div id="motd-tabs-wrap" style="border:solid 2px #333; border-radius:8px; height:400px; '
+	     +  'max-width:800px; margin:0 auto; overflow:auto; padding:10px">\n'
+	     +  '\t<div id="motd-tabs-content" class="tab-content clearfix0">\n'
+	     +  '\t<!-- Below you can set subpages HTML content -->\n\n'
+	     +  '<div class="tab-pane active" id="1a">\n\tHTML content of Home tab.\n</div>\n';
+	for (i = 2; i <=10; i++) {
+		html += '<div class="tab-pane" id="' + i + 'a">\n\tHTML content of Tab #' + i + '.\n</div>\n';
+	}
+	html += '\n\t</div>\n</div>\n</div></textarea></div></div>';
+	$("#_c3").html(html);
+
+	html = 'Beside of text filters or displaying emotes you can set sound files, played after sending '
+	     + 'certain text or code to chat.<br />'
+	     + '<span class="text-danger">Warning! Browsers support *.ogg files best. Some browsers may have '
+	     +   'problems with *.mp3 files as soundfilters.</span><br /><br />'
+	     + '<div class="panel panel-primary"><div class="panel-heading">Preparing the code</div>'
+	     +   '<div class="panel-body"><code>SoundFiltersArray = {</code><br />'
+	     +     '<code>\'habemus\': \'https://dl.dropboxusercontent.com/s/3w1jahgffowjltz/hp.ogg\',</code><br />'
+	     +     '<code>\':nyaa:\': \'https://dl.dropboxusercontent.com/s/gzsxqypc6qa7del/nyaa.ogg\',</code><br />'
+	     +     '<code>\'text_or_code\': \'sound_file_URL\',</code><br />'
+	     +     '<code>};</code><br /><br />'
+	     +     'Copy sample code above and add your own items, set proper codes and links.'
+	     +   '</div><div class="panel-heading">Installing code</div>'
+	     +   '<div class="panel-body">Search for the <code>SoundFiltersArray = {</code> in the code file and paste '
+	     +     'prepared array of sounds.<br /><br />'
+	     +     'Under the chat will appear a new button to control chat sounds. Every user has also possibility '
+	     +     'to disable this button and soundfilters in the Premium Settings (navbar "Layout" menu).'
+	     + '</div></div>';
+	$("#_c4").html(html);
+
+	html = 'You can create custom channel Media Database. It will appear in the "Add video" panel.<br /><br />'
+	     + '<div class="panel panel-primary"><div class="panel-heading">Preparing the code</div>'
+	     +   '<div class="panel-body">' + prepareMediaDBHelp() + '</div>'
+	     +   '<div class="panel-heading">Installing database</div>'
+	     +   '<div class="panel-body">You can do it in two ways.<br /><br />'
+	     +     'A. External file (recommended): save prepared code as .js file and upload it to your web hosting '
+	     +     '(Dropbox, Google Drive, your own server, etc.). Next, add <code>db</code> parameter to your '
+	     +     'current Premium script location, with database file URL as a value, like this:<br />'
+	     +     '<code>https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js?db=<i>URL</i></code><br />'
+	     +     'Paste prepared link, as in the example above, to External Javascript channel option '
+	     +     '(change <code><i>URL</i></code> to direct link of your .js file).<br /><br />'
+	     +     'B. Internal code (not recommended if the database is large - it will significantly increase '
+	     +     'Premium file size): add database code to your custom Premium script file, but before [SECTION 3] '
+	     +     '(not at the end of the file - database will not load).</div></div>';
+	$("#_c5").html(html);
+
+	html = 'It is possible to customize some basic Premium Settings for your channel.<br /><br />'
+	     + '<div class="panel panel-primary"><div class="panel-heading">Synchtube Premium customization</div>'
+	     +   '<div class="panel-body">1. Open code file and go to <code>BASIC CUSTOMIZATION</code> section.<br />'
+	     +     '2. Change selected variables according to your wishes.<br />'
+	     +     '3. Save .js file to your web hosting (Dropbox, Google Drive, your own server, etc.).<br />'
+	     +     '4. Paste direct link to your own file into External Javascript channel option.</div></div>';
+	$("#_c6").html(html);
+});
+
+$("#clear-btn").on("click", function() {
+	if (confirm('Are you sure to clear the chat window for all users?')) socket.emit("chatMsg", {msg:'/clear'});
+});
+
+$("#autoclear-btn").on("click", function() {
+	if ($(this).hasClass('btn-danger')) {
+		$(this).html('Autoclear');
+		clearInterval(CLEARING);
+	} else {
+		$(this).html('Autoclear is ON!');
+		CLEARING = setInterval(function() {socket.emit("chatMsg", {msg:'/clear'})}, 250);
+	}
+	$(this).toggleClass('btn-danger');
+});
+
+$("#antiafk-btn").on("click", function() {
+	if ($(this).hasClass('btn-warning')) clearInterval(ANTIAFK)
+	else {
+		ANTIAFK = setInterval(function() {
+			if (findUserlistItem(CLIENT.name).data().meta.afk) socket.emit("chatMsg", {msg:'/afk'});
+		}, 2000);
+	}
+	$(this).toggleClass('btn-warning');
+});
+
+$("#afk-btn").on("click", function() {
+	socket.emit("chatMsg", {msg:'/afk'});
+});
+
+$("#jukebox-btn").on("click", function() {
+	var queuewrap = $queue.parent();
+	if ($(this).hasClass('btn-warning')) {
+		if ($("#navbar-collapsed").length < 1) $nav.show();
+		$("footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
+		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").show();
+		$("#resize-video-smaller, #resize-video-larger, #plr-13").show();
+		handleRank();
+		$chatwrap.after(queuewrap.detach());
+		!SYNCH ? $videowrap.before($chatwrap.detach()) : $videowrap.after($chatwrap.detach());
+		if (SCROLLNAVBAR) scrollableNavbar();
+		$("#mainpage").removeClass('plmode');
+		queuewrap.removeClass().addClass('col-md-12 col-lg-12');
+		scrollChatToTop();
+		$queue.removeAttr('style');
+		if ($queue.hasClass('expanded-disabled')) {
+			$expandPlaylist.addClass('label-success');
+			$queue.addClass('expanded').removeClass('expanded-disabled');
+		}
+	} else {
+		$("nav, footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
+		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").hide();
+		$("#resize-video-smaller, #resize-video-larger, #clear-btn, #autoclear-btn, #plr-13").hide();
+		queuewrap.after($chatwrap.detach());
+		!SYNCH ? $videowrap.before(queuewrap.detach()) : $videowrap.after(queuewrap.detach());
+		if (SCROLLNAVBAR) fixedNavbar();
+		$("#mainpage").addClass('plmode');
+		var match = document.getElementById("rightpane").className.match(/col-md-(\d+)/);
+		var classe1 = 12 - parseInt(match[1], 10);
+		queuewrap.removeClass().addClass('col-md-' + classe1 + ' col-lg-' + classe1);
+		if ($expandPlaylist.hasClass('label-success')) {
+			$expandPlaylist.removeClass('label-success');
+			$queue.removeClass('expanded').addClass('expanded-disabled');
+		}
+		var ht = $videowrap.outerHeight() - $plmeta.outerHeight();
+		$queue.attr('style', 'max-height:' + ht + 'px !important');
+		window.scrollTo(0, 0);
+	}
+	$(this).toggleClass('btn-warning');
+	if (SCROLLCHAT) scrollChat();
+	scrollQueue();
+});
+
+$("#quality-menu").find("a").on("click", function() {
+	$("#quality-menu").find(".opt").removeClass('activated');
+	$(this).addClass('activated');
+	refreshPlayer();
+	USEROPTS.default_quality = $(this).attr('val');
+	var text = USEROPTS.default_quality;
+	if (text == "best") text = 'highest';
+	$("#quality-btn").html('<span class="glyphicon glyphicon-film"></span> ' + text + ' ▾');
+});
+
+$("#public-btn").on("click", function() {
+	$("#channel-list").remove();
+	if ($(this).hasClass('btn-warning')) $(this).removeClass('btn-warning')
+	else {
+		$.get('/', function(data) {
+			var html = $(data).find("table");
+			if (html) {
+				$('<div id="channel-list" />').appendTo("#advoptswrap > div").html(html)
+				  .append('<div class="clearfix5" />');
+			}
+		});
+		$(this).addClass('btn-warning');
+	}
+});
+
+
 // Playlist labels events
 
 $scrollToCurrent.on("click", function() {
@@ -4859,9 +4876,23 @@ $hidePlaylist.on("click", function() {
 });
 
 
+
+// Save notes button events
+
+$("#notesave-btn").on("click", function() {
+	var val = $("#note-area").val();
+	var len = val.length;
+	if (len > 1000000) {
+		var str = 'Your notes have ' + len + ' characters.\n'
+			+ 'You have exceeded maximum length of text (1 million characters).';
+		alert(str);
+	} else setOpt('SP_notes', val);
+});
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 5] ORIGINAL SYNCHTUBE API EXTENSION ---------- */
+/* ---------- [SECTION 5] ORIGINAL SYNCHTUBE API EXTENSION ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -4970,7 +5001,7 @@ CyTube.tabCompleteMethods['Cycle options'] = function(input, position, options, 
 	context.tabIndex = 0;
 	return {
 		text:input.substring(0, start) + matches[0] + ' ' + input.substring(position),
-		emote: matches[0], newPosition: start + matches[0].length + 1
+		emote:matches[0], newPosition: start + matches[0].length + 1
 	};
 };
 
@@ -5615,7 +5646,7 @@ $(document).on('keydown', function(e) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 6] IMGUR API ---------- */
+/* ---------- [SECTION 6] IMGUR API ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -5734,7 +5765,7 @@ uploadinput.onchange = function() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 7] OEKAKI API ---------- */
+/* ---------- [SECTION 7] OEKAKI API ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -5835,7 +5866,7 @@ $('<button id="oekaki-btn" class="btn btn-sm btn-default btn-chatctrl" title="Oe
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ---------- [REGION 8] CSS AND FINAL LAYOUT ---------- */
+/* ---------- [SECTION 8] CSS AND FINAL LAYOUT ---------- */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -5895,6 +5926,7 @@ var css = '.bigtitle {\n'
 	+ '}\n'
 	+ '.scrolled {max-height:calc(100vh - 250px); overflow-y:auto}\n'
 	+ '.server-msg-reconnect:after {content:" to: /r/' + window.location.href.split("/").pop() + '"}\n'
+	+ '.smallfont {font-size:85%}\n'
 	+ '.widecm {min-width:260px}\n'
 	+ 'select {cursor:pointer}\n'
 	+ '#navbar-up, #navbar-unpin {margin-left:10px; margin-right:5px}\n'
@@ -6150,7 +6182,7 @@ var css = '.autoscroll {overflow-y:auto !important}\n'
 	+ '#pollwrap.tmode div.active:not(.dismissed) {left:400px !important}\n'
 	+ '#pollwrap.tmode2 div.active:not(.dismissed) {left:50px !important}\n'
 	+ '#pollwrap.tmode div.dismissed, #pollwrap.tmode div.muted {display:none !important}\n'
-	+ '#pollwrap.tmode2 div.dismissed, #pollwrap.tmode2 div.muted {display:none !important}\n'
+	+ '#pollwrap.tmode2 div.dismissed, #pollwrap.tmode2 div.muted {display:none !important}\n';
 
 if (window.location.href.indexOf("//synchtu.be/") < 0) synchlogo = 'none';
 var _bg = $(".navbar-brand").css('background-image');
@@ -6385,7 +6417,7 @@ if (CLIENT.rank > 2) {
 }
 
 
-// Load emotes to cache on start if enabled option
+// Load emotes to cache on start (if enabled)
 
 if (EMOTESCACHE) {
 	var len = CHANNEL.emotes.length;
