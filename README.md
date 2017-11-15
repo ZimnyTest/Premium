@@ -2,6 +2,7 @@
 <p align="center">
   <img src="https://dl.dropboxusercontent.com/s/1plmshru4ocjrg2/synchtube_2.png" alt="Synchtube" title="Synchtube">
 </p>
+
 ---
 ## About
 **Premium** is a powerful JavaScript application for [Synchtube](https://synchtu.be/) (or any server based on CyTube) channels. It adds to your channel many missing features, functions, and enhancements.
