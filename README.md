@@ -1,10 +1,12 @@
 # Premium
+---
 ## About
 **Premium** is a powerful JavaScript application for [Synchtube](https://synchtu.be/) (or any server based on CyTube) channels. It adds to your channel many missing features, functions, and enhancements.
 ## Installation
 1. Log as an admin to your Synchtube / CyTube room, and go to: Channel Settings > Admin Settings
 2. Paste following URL to "External Javascript": `https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js`<br />
 3. *Installation finished! No configuration is needed.*
+---
 ## Features
 ### General overwiew
 * User-oriented - gives single user almost infinite possibilities to set layout and look of the channel.
