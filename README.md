@@ -1,4 +1,4 @@
-# Premium
+# Synchtube Premium
 
 <p align="center">
   <img src="https://dl.dropboxusercontent.com/s/oj5dew5l2wq3gbz/synchtube_.png">
@@ -148,6 +148,9 @@
 * Channels button - displays list of public channels
 * UTC time shown in advanced options panel
 * Favourites links panel - up to 200 links to save, with YouTube preview and 3 modes of sorting (oldest firest/ newest first/ alphabetically)
+---
+## Hosting
+...
 ## Changelog
 ### v2.10 - *[2017-??-??]*
 * First release on Github.
