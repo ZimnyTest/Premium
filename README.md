@@ -1,6 +1,6 @@
 # Synchtube Premium
 <p align="center">
-  <img src="https://dl.dropboxusercontent.com/s/1plmshru4ocjrg2/synchtube_2.png" alt="Synchtube" title="Synchtube">
+  <img src="https://dl.dropboxusercontent.com/s/1plmshru4ocjrg2/synchtube_2.png" alt="Synchtube" title="Synchtube" style="box-shadow: 0px 0px 30px #000">
 </p>
 
 ---
