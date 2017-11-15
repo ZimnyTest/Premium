@@ -1,4 +1,5 @@
 # Premium
+<p align="center">![Synchtube logo](https://dl.dropboxusercontent.com/s/oj5dew5l2wq3gbz/synchtube_.png)</p>
 ---
 ## About
 **Premium** is a powerful JavaScript application for [Synchtube](https://synchtu.be/) (or any server based on CyTube) channels. It adds to your channel many missing features, functions, and enhancements.
