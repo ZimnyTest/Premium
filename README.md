@@ -10,6 +10,8 @@
 1. Log as an admin to your Synchtube / CyTube / etc. room, and go to: Channel Settings > Admin Settings
 2. Paste following URL to "External Javascript": `https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js`<br />
 3. *Installation finished! No configuration is needed.*
+## Screenshots
+Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS.md) page to see example screens of Synchtube Premium.
 ---
 ## Features
 ### General overwiew
