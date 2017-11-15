@@ -263,6 +263,7 @@ SCROLLNAVBAR	= getOrDefault('SP_scrollnavbar',	false);
 SHORTHANDS	= getOrDefault('SP_shorthands',		'{"codes":[]}');
 SHOWCONTRIBS	= getOrDefault('SP_showcontribs',	false);
 SHOWIMAGES	= getOrDefault('SP_showimages',		false);
+SHOWMASCOT	= getOrDefault('SP_showmascot',		false);
 SHOWOEKAKI	= getOrDefault('SP_showoekaki',		false);
 SHOWVIDEOS	= getOrDefault('SP_showvideos',		false);
 SINGLECOLUMN	= getOrDefault('SP_singlecolumn',	false);
@@ -945,10 +946,10 @@ function prepareMediaDBHelp() {
 	     +   'to <code>\\\'</code>, to avoid conflict with database structure.</span>';
 }
 
-// Preview YT video from the favourites list
+// Preview YT video
 
 function previewVideo(id) {
-	createModal('Preview link');
+	createModal('Preview video');
 	var player = $('<iframe id="previewFrame" width="500" height="281" frameborder="0" />').appendTo(body)
 	  .attr('src', 'https://www.youtube.com/embed/' + id + '?wmode=transparent&enablejsapi')
 	PLAYER.getVolume(function(vol) {
@@ -1630,6 +1631,7 @@ function radioMode() {
 	}
 	$body.addClass('radio-mode');
 	$videowrapHeader.addClass("radiotitle");
+	document.getElementById("plr-12").click();
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").hide();
 	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-1, #plr-2, #plr-11, #plr-13, #plr-14").hide();
@@ -2351,10 +2353,25 @@ if (CHATSTYLE == "matrix") {
 $("#chatopts-menu").find("li[group=2]").hide();
 
 
+// Filter playlist control panel
+
+var html = '<div class="vertical-spacer"></div><div class="input-group">'
+	 +   '<input class="form-control" id="plfilter" placeholder="Enter Username" type="text">'
+	 +   '<span class="input-group-btn"><button class="btn btn-default" id="filter_playlist" '
+	 +     'title="Filter playlist for items added by a specific user">Filter</button></span>'
+	 +   '<span class="input-group-btn"><button class="btn btn-default" id="whole_playlist" '
+	 +     'title="Show whole playlist">Show All</button></span>'
+	 +   '<span class="input-group-btn"><button class="btn btn-default" id="close_plfilter" '
+	 +     'title="Close panel">×</button></span></div>';
+$plfiltercontrol = $('<div id="plfiltercontrol" class="col-lg-12 col-md-12 pl" />')
+  .insertAfter("#queuefail").html(html).hide();
+
+
 // Advanced options control panel
 
 var html = '<div class="well"><div class="btn-group">'
-	 +   '<button id="tools-btn" class="btn btn-sm btn-default" title="Premium Admin Tools">Tools</button>'
+	 +   '<button id="tools-btn" class="btn btn-sm btn-default" title="Premium Admin Tools">'
+	 +     '<span class="glyphicon glyphicon-tasks"></span> Tools</button>'
 	 +   '<button id="clear-btn" class="btn btn-sm btn-default" title="Clear chat">/clear</button>'
 	 +   '<button id="autoclear-btn" class="btn btn-sm btn-default" title="Toggle Autoclear function '
 	 +   '(automatically deletes chat flood)">Autoclear</button>'
@@ -2403,20 +2420,6 @@ var html = '<div class="vertical-spacer"></div><div class="centered">'
 	 +     'Reset</button>'
 	 + '</div><ul id="queue-fav" class="videolist col-lg-12 col-md-12"></ul>';
 $favscontrol = $('<div id="favscontrol" class="col-lg-12 col-md-12 pl" />').insertAfter("#queuefail").html(html).hide();
-
-
-// Filter playlist control panel
-
-var html = '<div class="vertical-spacer"></div><div class="input-group">'
-	 +   '<input class="form-control" id="plfilter" placeholder="Enter Username" type="text">'
-	 +   '<span class="input-group-btn"><button class="btn btn-default" id="filter_playlist" '
-	 +     'title="Filter playlist for items added by a specific user">Filter</button></span>'
-	 +   '<span class="input-group-btn"><button class="btn btn-default" id="whole_playlist" '
-	 +     'title="Show whole playlist">Show All</button></span>'
-	 +   '<span class="input-group-btn"><button class="btn btn-default" id="close_plfilter" '
-	 +     'title="Close panel">×</button></span></div>';
-$plfiltercontrol = $('<div id="plfiltercontrol" class="col-lg-12 col-md-12 pl" />')
-  .insertAfter("#queuefail").html(html).hide();
 
 
 // Playlist container ID
@@ -3532,8 +3535,10 @@ $("#plr-16").on("click", function() {
 });
 
 $("#plr-17").on("click", function() {
-	if ($(this).hasClass('activated')) $("#mascot").remove()
-	else {
+	if ($(this).hasClass('activated')) {
+		$("#mascot").remove();
+		setOpt('SP_showmascot', SHOWMASCOT = false);
+	} else {
 		var arr = [
 			['Swinging Miku', DROPBOX + 'slv73jrurvhkzpb/1.gif'],
 			['Raving Miku', DROPBOX + 'k1f6a5h4anqbnz1/2.gif'],
@@ -3554,73 +3559,76 @@ $("#plr-17").on("click", function() {
 		$videowrap.find(".embed-responsive-16by9")
 		  .append('<img id="mascot" class="' + MASCOTPOS + '" src="' + MASCOT + '" />');
 		if (MASCOT == "custom") $("#mascot").attr('src', getOrDefault('SP_custommascoturl', ''));
+		setOpt('SP_showmascot', SHOWMASCOT = true);
+
+		$("#mascot").on("click", function() {
+			createModal('Mascot Settings');
+
+			var html = '<form class="form-horizontal"><div class="form-group">'
+				 +   '<label class="control-label col-sm-5">Mascot type</label>'
+				 +   '<div class="col-sm-7 config-col"><select id="mascottype" class="form-control">';
+			var len = arr.length;
+			for (var i = 0; i < len; i++) {
+				html += '<option value="' + arr[i][1] + '">' + arr[i][0] + '</option>'
+			}
+			html += '<option value="custom">(Custom mascot)</option>'
+			     +  '</select></div></div><div class="form-group">'
+			     +    '<label class="control-label col-sm-5">Custom mascot URL</label>'
+			     +    '<div class="col-sm-7 config-col">'
+			     +      '<input id="custommascoturl" class="form-control" type="text" '
+			     +      'placeholder="Enter image URL" />'
+			     +  '</div></div><div class="form-group">'
+			     +    '<label class="control-label col-sm-5">Position on the player</label>'
+			     +    '<div class="col-sm-7 config-col">'
+			     +      '<select id="mascotpos" class="form-control">'
+			     +        '<option value="b-left">bottom left</option>'
+			     +        '<option value="b-center">bottom center</option>'
+			     +        '<option value="b-right">bottom right</option>'
+			     +        '<option value="t-left">top left</option>'
+			     +        '<option value="t-right">top right</option>'
+			     +        '<option value="c-center">center</option></select>'
+			     +  '</div></div></form>';
+			body.html(html);
+			if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide();
+
+			$("#mascottype").val(MASCOT)
+			  .on("change", function() {
+				MASCOT = $(this).val();
+				$("#mascot").attr('src', MASCOT);
+				if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide()
+				else {
+					$("#custommascoturl").parent().parent().show();
+					$("#mascot").attr('src', $("#custommascoturl").val());
+				}
+				setOpt('SP_mascot', MASCOT);
+			  });
+			$("#custommascoturl").val(getOrDefault('SP_custommascoturl', ''))
+			  .on("change", function() {
+				$("#mascot").attr('src', $(this).val());
+				setOpt('SP_custommascoturl', $(this).val());
+			  }).on("blur", function() {
+				$("#mascot").attr('src', $(this).val());
+				setOpt('SP_custommascoturl', $(this).val());
+			  });
+			$("#mascotpos").val(MASCOTPOS)
+			  .on("change", function() {
+				MASCOTPOS = $(this).val();
+				$("#mascot").removeClass().addClass(MASCOTPOS);
+				setOpt('SP_mascotpos', MASCOTPOS);
+			});
+
+			$('<button class="btn btn-default pull-left">Hide Mascot</button>').prependTo(footer)
+			  .on("click", function() {
+				if ($("#plr-17").hasClass('activated')) $(this).html('Show Mascot')
+				else $(this).html('Hide Mascot');
+				document.getElementById("plr-17").click();
+			  });
+		});
 	}
 	$(this).toggleClass('activated');
-
-	$("#mascot").on("click", function() {
-		createModal('Mascot Settings');
-
-		var html = '<form class="form-horizontal"><div class="form-group">'
-			 +   '<label class="control-label col-sm-5">Mascot type</label>'
-			 +   '<div class="col-sm-7 config-col"><select id="mascottype" class="form-control">';
-		var len = arr.length;
-		for (var i = 0; i < len; i++) {
-			html += '<option value="' + arr[i][1] + '">' + arr[i][0] + '</option>'
-		}
-		html += '<option value="custom">(Custom mascot)</option>'
-		     +  '</select></div></div><div class="form-group">'
-		     +    '<label class="control-label col-sm-5">Custom mascot URL</label>'
-		     +    '<div class="col-sm-7 config-col">'
-		     +      '<input id="custommascoturl" class="form-control" type="text" '
-		     +      'placeholder="Enter image URL" />'
-		     +  '</div></div><div class="form-group">'
-		     +    '<label class="control-label col-sm-5">Position on the player</label>'
-		     +    '<div class="col-sm-7 config-col">'
-		     +      '<select id="mascotpos" class="form-control">'
-		     +        '<option value="b-left">bottom left</option>'
-		     +        '<option value="b-center">bottom center</option>'
-		     +        '<option value="b-right">bottom right</option>'
-		     +        '<option value="t-left">top left</option>'
-		     +        '<option value="t-right">top right</option>'
-		     +        '<option value="c-center">center</option></select>'
-		     +  '</div></div></form>';
-		body.html(html);
-		if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide();
-
-		$("#mascottype").val(MASCOT)
-		  .on("change", function() {
-			MASCOT = $(this).val();
-			$("#mascot").attr('src', MASCOT);
-			if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide()
-			else {
-				$("#custommascoturl").parent().parent().show();
-				$("#mascot").attr('src', $("#custommascoturl").val());
-			}
-			setOpt('SP_mascot', MASCOT);
-		  });
-		$("#custommascoturl").val(getOrDefault('SP_custommascoturl', ''))
-		  .on("change", function() {
-			$("#mascot").attr('src', $(this).val());
-			setOpt('SP_custommascoturl', $(this).val());
-		  }).on("blur", function() {
-			$("#mascot").attr('src', $(this).val());
-			setOpt('SP_custommascoturl', $(this).val());
-		  });
-		$("#mascotpos").val(MASCOTPOS)
-		  .on("change", function() {
-			MASCOTPOS = $(this).val();
-			$("#mascot").removeClass().addClass(MASCOTPOS);
-			setOpt('SP_mascotpos', MASCOTPOS);
-		});
-
-		$('<button class="btn btn-default pull-left">Hide Mascot</button>').prependTo(footer)
-		  .on("click", function() {
-			if ($("#plr-17").hasClass('activated')) $(this).html('Show Mascot')
-			else $(this).html('Hide Mascot');
-			document.getElementById("plr-17").click();
-		  });
-	});
 });
+
+if (SHOWMASCOT) document.getElementById("plr-17").click();
 
 
 // Favourites button events
@@ -4783,11 +4791,30 @@ $("#afk-btn").on("click", function() {
 $("#jukebox-btn").on("click", function() {
 	$body.toggleClass('jukebox-mode');
 	var queuewrap = $queue.parent();
-	if ($(this).hasClass('btn-warning')) {
+	if (!$(this).hasClass('btn-warning')) {
+		$("nav, footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
+		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").hide();
+		$("#resize-video-smaller, #resize-video-larger, #clear-btn, #autoclear-btn, #afk-btn, #plr-13").hide();
+		queuewrap.after($chatwrap.detach());
+		!SYNCH ? $videowrap.before(queuewrap.detach()) : $videowrap.after(queuewrap.detach());
+		if (SCROLLNAVBAR) fixedNavbar();
+		$("#mainpage").addClass('plmode');
+		var match = document.getElementById("rightpane").className.match(/col-md-(\d+)/);
+		var classe1 = 12 - parseInt(match[1], 10);
+		queuewrap.removeClass().addClass('col-md-' + classe1 + ' col-lg-' + classe1);
+		if ($expandPlaylist.hasClass('label-success')) $queue.removeClass('expanded');
+		var ht = $videowrap.outerHeight() - $plmeta.outerHeight();
+		$queue.attr('style', 'max-height:' + ht + 'px !important');
+		window.scrollTo(0, 0);
+		$(window).bind('resize.jukebox', function(e) {
+			var ht = $videowrap.outerHeight() - $plmeta.outerHeight();
+			$queue.attr('style', 'max-height:' + ht + 'px !important');
+		});
+	} else {
 		if ($("#navbar-collapsed").length < 1) $nav.show();
 		$("footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
 		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").show();
-		$("#resize-video-smaller, #resize-video-larger, #plr-13").show();
+		$("#resize-video-smaller, #resize-video-larger, #afk-btn, #plr-13").show();
 		handleRank();
 		$chatwrap.after(queuewrap.detach());
 		!SYNCH ? $videowrap.before($chatwrap.detach()) : $videowrap.after($chatwrap.detach());
@@ -4796,33 +4823,8 @@ $("#jukebox-btn").on("click", function() {
 		queuewrap.removeClass().addClass('col-md-12 col-lg-12');
 		scrollChatToTop();
 		$queue.removeAttr('style');
-		if ($queue.hasClass('expanded-disabled')) {
-			$expandPlaylist.addClass('label-success');
-			$queue.addClass('expanded').removeClass('expanded-disabled');
-		}
+		if ($expandPlaylist.hasClass('label-success')) $queue.addClass('expanded');
 		$(window).unbind('resize.jukebox');
-	} else {
-		$("nav, footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
-		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").hide();
-		$("#resize-video-smaller, #resize-video-larger, #clear-btn, #autoclear-btn, #plr-13").hide();
-		queuewrap.after($chatwrap.detach());
-		!SYNCH ? $videowrap.before(queuewrap.detach()) : $videowrap.after(queuewrap.detach());
-		if (SCROLLNAVBAR) fixedNavbar();
-		$("#mainpage").addClass('plmode');
-		var match = document.getElementById("rightpane").className.match(/col-md-(\d+)/);
-		var classe1 = 12 - parseInt(match[1], 10);
-		queuewrap.removeClass().addClass('col-md-' + classe1 + ' col-lg-' + classe1);
-		if ($expandPlaylist.hasClass('label-success')) {
-			$expandPlaylist.removeClass('label-success');
-			$queue.removeClass('expanded').addClass('expanded-disabled');
-		}
-		var ht = $videowrap.outerHeight() - $plmeta.outerHeight();
-		$queue.attr('style', 'max-height:' + ht + 'px !important');
-		window.scrollTo(0, 0);
-		$(window).bind('resize.jukebox', function(e) {
-			var ht = $videowrap.outerHeight() - $plmeta.outerHeight();
-			$queue.attr('style', 'max-height:' + ht + 'px !important');
-		});
 	}
 	$(this).toggleClass('btn-warning');
 	if (SCROLLCHAT) scrollChat();
@@ -6198,23 +6200,35 @@ if (window.location.href.indexOf("//synchtu.be/") < 0) synchlogo = 'none';
 var _bg = $(".navbar-brand").css('background-image');
 if (_bg != "none") synchlogo = _bg;
 if (MiniLogoURL != "") synchlogo = 'url("' + MiniLogoURL + '")';
-if (ChannelNamePadding != "") {
-	if ((typeof (ChannelNamePadding * 1) !== "number") || (ChannelNamePadding * 1) < 16) ChannelNamePadding = 61;
-} else {
+
+if (synchlogo == "none") var _pl = 15
+else {
 	var _pd = $(".navbar-brand").css('padding-left');
-	ChannelNamePadding = (_pd != "none") ? _pd.replace('px', '') : 15;
+	var _pl = (_pd != "none") ? _pd.replace('px', '') : 61;
 }
-if (synchlogo == "none") ChannelNamePadding = 15;
+
 css += '.navbar-brand {background-image:none !important; font-size:0pt !important; padding-left:15px !important}\n'
     +  '.navbar-brand.logo {\n'
     +  '  background-image:' + synchlogo + ' !important; background-repeat:no-repeat !important;\n'
     +  '  background-position:15px center !important; background-size:auto 36px !important;\n'
-    +  '  padding-left:' + ChannelNamePadding + 'px !important;\n'
+    +  '  padding-left:' + _pl + 'px !important;\n'
     +  '}\n';
 var _name = (ChannelName == "") ? '/r/' + window.location.href.split('/').pop() : ChannelName;
 css += '.navbar-brand:before {content:"' + _name + '" !important; font-size:14pt !important}\n';
 
 $("head").append('<style id="hardcss" type="text/css">' + css + '</style>');
+
+
+// Dynamically set channel name padding, according to custom mini logo proportions
+
+if (_bg != "none" || MiniLogoURL != "") {
+	var _img = document.createElement('img');
+	_img.src = synchlogo.slice(4, -1).replace(/"/g, "").replace(/'/g, "");
+	_img.addEventListener('load', function() {
+		var _pl = Math.round(this.naturalWidth / this.naturalHeight * 36 + 25);
+		$("#hardcss").html($("#hardcss").html() + '.navbar-brand.logo {padding-left:' + _pl + 'px !important}');
+	});
+}
 
 
 // Set optional User CSS
