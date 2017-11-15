@@ -209,7 +209,7 @@ if (typeof LOADED !== "undefined" || $("body").hasClass('chatOnly')) document.lo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Get default layout settings of the first-timers
+// Get default layout settings for the first-timers
 
 _USERTHEME	= document.getElementById("usertheme").getAttribute("href");
 _COMPACT	= ['fluid', 'synchtube-fluid'].indexOf(USEROPTS.layout) < 0 ? true : false;
@@ -1661,7 +1661,7 @@ function radioMode() {
 		  .prependTo("#videocontrols")
 		  .on("click", function() {
 			HIDDENVWRAP = !HIDDENVWRAP;
-			if ($(this).hasClass('btn-success')) $("#plr-12").trigger("click");
+			if ($(this).hasClass('btn-success')) document.getElementById("plr-12").click();
 			$("#videowrap .embed-responsive-16by9, #plr-1, #plr-11, #plr-15, #plr-16").toggle();
 			$("#plr-5").parent().parent().toggle();
 			if (!NOPLAYER) $("#fullscreenbtn").toggle();
@@ -1704,7 +1704,7 @@ function radioMode() {
 	cssbtn = $('<button id="css-btn" class="btn btn-danger pointer" title="Theme & User CSS" />')
 	  .appendTo("body").append('<span class="glyphicon glyphicon-adjust" />')
 	  .on("click", function() {
-		$("#layout-2").trigger("click");
+		document.getElementById("layout-2").click();
 	  });
 	GQI = setInterval(function() {getQueueInfo()}, 3000);
 	setOpt('SP_radiomode', true);
@@ -1718,7 +1718,7 @@ function closeRadioMode() {
 	$body.removeClass('radio-mode');
 	$videowrapHeader.removeClass("radiotitle");
 	if ($expandChat.hasClass('label-success')) $expandChat.removeClass('label-success');
-	$("#plr-12").trigger("click");
+	document.getElementById("plr-12").click();
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").show();
 	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-btn, #plr-1, #plr-2, #plr-11, #plr-13").show();
@@ -1934,7 +1934,7 @@ if (CustomWelcomeText != "" && CLIENT.rank > 0) {
 
 // Collpse MOTD on load (if enabled)
 
-if (COLLAPSEMOTD && $("#motd").css("display") != "none") $("#togglemotd").trigger("click");
+if (COLLAPSEMOTD && $("#motd").css("display") != "none") document.getElementById("togglemotd").click();
 
 // Optional Premium announcement
 
@@ -1967,7 +1967,7 @@ if (CHATHIDESCROLL) $("#messagebuffer, #userlist").addClass('autoscroll');
 
 // Collapse userlist on load (if enabled)
 
-if (COLLAPSEULIST && $("#userlist").css("display") != "none") $("#usercount").trigger("click");
+if (COLLAPSEULIST && $("#userlist").css("display") != "none") document.getElementById("usercount").click();
 
 // Separate userlist items (if enabled)
 
@@ -2540,7 +2540,7 @@ $navbarUnpin.on("click", function() {
 // Layout dropdown menu events
 
 $("#layout-1").on("click", function() {
-	$layoutMenu.parent().removeClass('open');
+	$layoutMenu.removeClass('open');
 	createModal('Premium Settings');
 	createModalTabs(['Basic', 'Advanced', 'Show/Hide', 'Filters', 'Media DB', 'HTML'], "options");
 
@@ -2732,8 +2732,8 @@ $("#layout-1").on("click", function() {
 		var tabs = Math.ceil(CHANNEL.emotes.length / EMOTESPERPAGE);
 		if (VISIBLETAB["emotes"] > tabs) VISIBLETAB["emotes"] = 1;
 		if ($("#chat-f3").hasClass('activated')) {
-			$("#closechatpanel").trigger("click");
-			$("#chat-f3").trigger("click");
+			document.getElementById("closechatpanel").click();
+			document.getElementById("chat-f3").click();
 		}
 		setOpt('SP_emotesperpage', EMOTESPERPAGE);
 	});
@@ -2956,7 +2956,7 @@ $("#layout-1").on("click", function() {
 });
 
 $("#layout-2").on("click", function() {
-	$layoutMenu.parent().removeClass('open');
+	$layoutMenu.removeClass('open');
 	createModal('Theme & User CSS');
 
 	var html = '<form class="form-horizontal"><div class="form-group">'
@@ -3497,7 +3497,7 @@ $("#plr-14").on("click", function() {
 		$("#layout-8, #layout-9, #layout-10, #titlerow, #videowrap, #plcontrol").show();
 		$("#videocontrols > button, #plr-menu > li:not(.rpl)").show();
 		$("#fullscreenbtn, #plr-17, #plr-13").show();
-		$("#plr-11").trigger("click");
+		document.getElementById("plr-11").click();
 		if (SINGLECOLUMN || LARGECHAT || LARGEPLAYER) setTimeout(function() {$("#plr-13").hide()}, 500);
 		if ($favsBtn.hasClass('active')) $favscontrol.show();
 		var tmp = $('<div class="embed-responsive embed-responsive-16by9" />').appendTo($videowrap);
@@ -3515,7 +3515,7 @@ $("#plr-14").on("click", function() {
 		$("#fullscreenbtn, #favscontrol, #plr-13, #plr-17").hide();
 		$("#plr-17").removeClass('activated');
 	}
-	$("#plr-6").trigger("click");
+	document.getElementById("plr-6").click();
 	$(this).toggleClass('activated');
 });
 
@@ -3617,7 +3617,7 @@ $("#plr-17").on("click", function() {
 		  .on("click", function() {
 			if ($("#plr-17").hasClass('activated')) $(this).html('Show Mascot')
 			else $(this).html('Hide Mascot');
-			$("#plr-17").trigger("click");
+			document.getElementById("plr-17").click();
 		  });
 	});
 });
@@ -3925,7 +3925,7 @@ $("#chat-f3").on("click", function() {
 		$('<button id="switchtounicode" class="btn btn-default" />').html('Unicode')
 		  .appendTo(hgr)
 		  .on("click", function() {
-			$("#chat-f4").trigger("click");
+			document.getElementById("chat-f4").click();
 		  });
 		$('<button id="closechatpanel" class="btn btn-default" title="Close panel" />').html('×')
 		  .appendTo(hgr)
@@ -4006,7 +4006,7 @@ $("#chat-f4").on("click", function() {
 		$('<button id="switchtoemotes" class="btn btn-default" />').html('Emotes')
 		  .appendTo(hgr)
 		  .on("click", function() {
-			$("#chat-f3").trigger("click");
+			document.getElementById("chat-f3").click();
 		  });
 		$('<button id="closechatpanel" class="btn btn-default" title="Close panel" />').html('×')
 		  .appendTo(hgr)
@@ -4432,7 +4432,8 @@ $("#chat-21").on("click", function() {
 
 $("#plfilter").on("keydown", function(ev) {
 	if (ev.keyCode == 13) {
-		($(this).val() == "") ? $("#whole_playlist").trigger("click") : $("#filter_playlist").trigger("click");
+		if ($(this).val() == "") document.getElementById("whole_playlist").click()
+		else document.getElementById("filter_playlist").click();
 	}
 });
 
@@ -4452,7 +4453,7 @@ $("#whole_playlist").on("click", function() {
 });
 
 $("#close_plfilter").on("click", function() {
-	$("#pls-8").trigger("click");
+	document.getElementById("pls-8").click();
 });
 
 
@@ -4780,6 +4781,7 @@ $("#afk-btn").on("click", function() {
 });
 
 $("#jukebox-btn").on("click", function() {
+	$body.toggleClass('jukebox-mode');
 	var queuewrap = $queue.parent();
 	if ($(this).hasClass('btn-warning')) {
 		if ($("#navbar-collapsed").length < 1) $nav.show();
@@ -4798,6 +4800,7 @@ $("#jukebox-btn").on("click", function() {
 			$expandPlaylist.addClass('label-success');
 			$queue.addClass('expanded').removeClass('expanded-disabled');
 		}
+		$(window).unbind('resize.jukebox');
 	} else {
 		$("nav, footer, #navbar-collapsed, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
 		$("#leftcontrols > button, #leftcontrols > div, #leftpane-inner, #sitefooter").hide();
@@ -4816,6 +4819,10 @@ $("#jukebox-btn").on("click", function() {
 		var ht = $videowrap.outerHeight() - $plmeta.outerHeight();
 		$queue.attr('style', 'max-height:' + ht + 'px !important');
 		window.scrollTo(0, 0);
+		$(window).bind('resize.jukebox', function(e) {
+			var ht = $videowrap.outerHeight() - $plmeta.outerHeight();
+			$queue.attr('style', 'max-height:' + ht + 'px !important');
+		});
 	}
 	$(this).toggleClass('btn-warning');
 	if (SCROLLCHAT) scrollChat();
@@ -5529,14 +5536,13 @@ $("#getplaylist").unbind()
 	createModal('Playlist URLs');
 	$(".modal-dialog-nonfluid").removeClass('modal-dialog-nonfluid non-fluid');
 	var data = $('<textarea rows="10" class="form-control" />').val(formatRawList()).appendTo(body);
-	var rlist = $('<button class="btn btn-default btn-success pull-left glinks">Raw Links</button>')
-	  .appendTo(footer)
+	$('<button class="btn btn-default btn-success pull-left glinks">Raw Links</button>').appendTo(footer)
 	  .on("click", function() {
 		data.val(formatRawList());
 		$(".glinks").removeClass('btn-success');
 		$(this).addClass('btn-success');
 	  });
-	var tlist = $('<button class="btn btn-default pull-left glinks">Plain Text</button>').appendTo(footer)
+	$('<button class="btn btn-default pull-left glinks">Plain Text</button>').appendTo(footer)
 	  .on("click", function() {
 		var list = [];
 		var i = 0;
@@ -5549,7 +5555,7 @@ $("#getplaylist").unbind()
 		$(".glinks").removeClass('btn-success');
 		$(this).addClass('btn-success');
 	  });
-	var hlist = $('<button class="btn btn-default pull-left glinks">HTML Code</button>').appendTo(footer)
+	$('<button class="btn btn-default pull-left glinks">HTML Code</button>').appendTo(footer)
 	  .on("click", function() {
 		var list = [];
 		$queue.find("li").each(function() {
@@ -5563,7 +5569,7 @@ $("#getplaylist").unbind()
 		$(".glinks").removeClass('btn-success');
 		$(this).addClass('btn-success');
 	  });
-	var olist = $('<button class="btn btn-default pull-left glinks">Ordered List</button>').appendTo(footer)
+	$('<button class="btn btn-default pull-left glinks">Ordered List</button>').appendTo(footer)
 	  .on("click", function() {
 		var list = [];
 		$queue.find("li").each(function() {
@@ -5575,7 +5581,7 @@ $("#getplaylist").unbind()
 		$(".glinks").removeClass('btn-success');
 		$(this).addClass('btn-success');
 	  });
-	var dlist = $('<button class="btn btn-default pull-left glinks">Array Format</button>').appendTo(footer)
+	$('<button class="btn btn-default pull-left glinks">Array Format</button>').appendTo(footer)
 	  .on("click", function() {
 		var list = [];
 		$queue.find("li").each(function() {
@@ -5990,6 +5996,8 @@ var css = '.bigtitle {\n'
 	+ '#queue img {margin-top:5px; margin-right:5px}\n'
 	+ '#plmeta .label {margin-left:2px}\n'
 	+ '#scroll-to-chat {margin-right:15px}\n'
+	+ 'body.jukebox-mode #scroll-to-chat, body.jukebox-mode #expand-playlist {display:none}\n'
+	+ 'body.jukebox-mode #hide-playlist {margin-right:15px}\n'
 	+ '#oekaki-well, #notepad-well, #avatarspanel, #customhtmlwrap {margin-top:10px; margin-bottom:10px}\n'
 	+ '#spoekaki {margin:0 auto; max-width:400px}\n'
 	+ '#spoekaki canvas {height:235px}\n'
@@ -6031,7 +6039,7 @@ if (USERTHEME.indexOf('/css/themes') < 0) {
 }
 
 
-// Base64 encoded default Synchtube logo
+// Base64 encoded Synchtube logo
 
 var synchlogo = 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAKGklEQVRYw7WYbWwcxR3GfzO7ey+5O8532MQ2jgGTOG4icgWsEKVIUBVCmzRBCRKq2oYIPoBE1dBUuEV8IBIfgKZ8oKgSwRVSiQhqq4Baq6HfqiKFNI1p4oTEThRSknNIndhn+3zvuzsz/eC74/yS0KrtSKPd2bud55nn/zL/HfHEE09w+fJl+7HHHutNpVKrbrzxRowx1JoQAmDOs/9VE0KQyWQ4ceLE8L59+z5ub2/3BWANDAz86M477+yLRqPNlmWZGgEpJUopPM8jFAphjPmvidUWWGtKKZHP5yeOHz/+8y1btrxm7d+//55169b9IpFItEoppRBCCiGklFKm02m5e/du2d/fL33fl6tXr5ZCCAn8210IId955x155MgReffdd8tGjBpOOByONjU13dHb23tIplKpr0QikRatdV2BWn/zzTf58MMPCYVCvPzyy5w/fx7btusrbexSSoQQdQUbx0ePHuXQoUP1/87H0VoTiURaUqnUV+xkMimklAtMobUmnU5z11138fTTT/PCCy+QzWYZGhqis7OTiYkJpJT4vo8xhpmZGZYuXcqyZcuYmJjg1KlTtLa2snLlSoQQKKU4fvw4iUSCW2+9dQGelJJkMinsGsv5trUsi1Qqxf79+4lEIrz77rtks1l27NhBX18f7733Ht3d3aTTaY4dO0axWOTee+/lpZde4rnnnuOjjz7ihhtuYO/evTiOwyeffMKTTz5Jd3c3b731FsFgcA5ejYesMZ0vozGGrVu3YlkWb7zxBkuWLCGZTBIKhRgZGWF0dJT29nZKpRI9PT1s2LCBS5cucfHiRQYHB3n22WexLIujR49ijGHFihVs3ryZS5cuUS6XF2DWA2kxIsYYlFJ0dXWxc+dOBgYGGBgYIBqN0tHRwcmTJ8nn83Xpk8kkyWQSAN/30Vpz22238fzzz7N+/XqUUsTjcZqbm7kWXl2h6+UYz/PYunUrGzZsYO/evWSzWZYvX86xY8dQStHe3k5jMDTKb9s2jzzyCKlUalEl5rd6MFyLqeu67NmzhwMHDvD444+TTqcZHh5mxYoVjI6OEo1GSSaTi04uhMDzPPr7+zl8+DBSygVErqnQtXwIYGhoiIMHDzI+Po7neeRyOTo7OwkGg3R0dLBkyZIFq7RtGykl6XSa/v5+hoaG6oSuR+ZLfchxHB5++GFOnDjBrl276OrqYtWqVbS0tJBIJLjlllsIBAIEg0ECgUD9vr29nd7eXvbs2YPneaxduxbHcQgEAti2TSgUuq5C9nz7N+ahbdu2cfvtt3P16lXWrFnDsmXL+PzzzwmHw3R1dWFZFn19fdi2jeM4bNy4kUQiwSuvvMLJkydpa2ujp6eHeDyO53lEIhHuuecewuHwon5njMGuDebnIWMMlmXR29uL4zgAZLNZXn/9dfL5PD09PRhj6O7uXrCQ5uZmHnjggXoW7urqQimFMYa2trZ6ICzm1PZ8O87zTrTWuJ6HkJJiqcTU9DQ/fOYZ7lizBtf3F41OjAGtG1nOzm8MunpdLMrmmGwBY6A8NUVlZgbtumjPQ3seP/3e95DA1aNHZyc2BlMFl1KCEBghQEosx0HYNtJxEI6DFQwSiMUIxeOI/4SQ77qM/eUvuIODOIUCQmvEbATUEhcSvpi09q4QmOpzAygh0LNM0UKgpcSPRAisXUvrffdhV13h+oSE4MqhQ5gPPiDZCNpgRuaFcY2U0RpRVWlOazRtscjMH//IVcui7etfry/mmoS8UonS3/5G3HXxmpqgqWnu5OUyTEzM9QNjIBSCm26CTAZKpYWkGlpIKWYGB3HXrcOpbrKLExICL5/HTE7iVSq0rF9P2/btGKVmxbEs8qdOceFnP8NUKnVQoxSxnh46d+0i/ctfkhscRFjWNQlhDGZiAi+fxw4GZ8eNhGoMhRC4+Twqn8fzfaaPH8evVGh58EFC7e1cPnCA4j/+QSmbBa0RloX2fTCGJcZghcMopSgXCgjHQVZJaaUwSiGkRFgWAvBzObx8nnBDDb9oYvQKBdxiEen7lIeHmRweZklPD3YiweWDB3Gnpmj51rfwMhlyp07R/NBD5E+fxnXd2bCORIh94xu4k5PkT54EY4isWkU8laJ0+TLTR45gymU8Y2atwdysXU+MNSlVqYRfLuNqPRsxDdWkpzXKsujYsoWZM2fIffoptzz6KOnf/pbc2bMgJW2bNhFubUW7Ln9/5hlCra2s3r0bXSrhNDVx8Xe/48Kvf42nFH6ptGA/W7CX+eUynuviel69a2MwzJYjnufVM7BXNZdSCr96n/797zm/bx+BpiasRIJEby/GdRn88Y8Z/+tfafna1zDBIF6lgl8uX38vE9UclB8fx65mVyElXrmM0ZpCJoM3M4P2fbxSiXwmg9GaSj5PcXoaozXTn36KFQ5jtKacy2EsC4Qg0NY261eOQ3F6msLUFL7rzomwOYRqXwPK95lMp7Fct24yt1DAKMX06CiV6WmU61LJ55keHUUrRXFykpl//hOjNbmrV7Grm+fM2BjlbJbw0qXc0deHsCyy584xeeEChWyWzuoHwrXD3hhkMIgnJV4tDwK6mnldoFIdq+oYwK/eG8CrXqndWxbZzz7jg+9+F+N5YAy5bBZlWchg8MsLNCsUwnMcKlXwyjxCNWBlDJ6UICV+FZzq7141P3nG4Pk+ynW5cv48t27ZwroXX8REo3i2PWva+QXaHBtqjROLocLhOhm3SqgGVtEapRQ3rlxJ7w9+QDiZxDcGD5C2zfKHHmL5N7+JAQqFAlfPnSPS2krvU0+xYutW7KYmiq6LCodxolHMvJpczmfoxGKIWGyOQsVcjkImQ1lrcsUil44dI9rZiYnFmLxwgXKpRNl1yY2NEers5Ob77+fi4cNcuXCBoQMHOPfnP/PVnTvRlsWHr77KTKGAiMdxYrEv96FANEqwvZ3y+fOz8mnNn158kUAkwuTYGL7v84ef/IRwPE7uyhWali2jMDGBXyrxq02bmBkbIxSP4xWL5MfHAXh3xw7iHR2Us1lmxsYwQOjmmwlUFZpD6IvtpVqxhUIs37SJi4ODVMplBFAaHa07OEAlk2Eyk0EAM2fO1J9nR0ZmS4+pqTlVQiWfJ3vmTH3sVDHsUKhOqNbsqakpEwwG64cIRmu6N2/GLZUY+s1vyI+Po31/tis11+bXOpppPIiQEmnbWJaFdBxiN93EV7/zHbq//e05ZJRSTE1NGXtkZGQkFouNx+PxtrpjBQKkvv99ujdupDQ5iV+poCoVlOuiqlGjff8LctWJF5AIBrGqVzsQwA6FCCeThBKJ+h5We69QKIyPjIyMCMB6++23f7R69eq+SCTSLISoL1tUj1QaVz5HiMX1YYFujV8X8wp8Y4woFAoTp0+f/vmOHTteE9u3b+fKlSv2tm3beleuXLkqHo//X47vFresIJvNcvbs2eH333//46VLl/r/AheLFour7JxgAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE3LTEwLTI1VDE5OjQ4OjU3KzAyOjAwSng3kQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNy0xMC0yNVQxOTo0ODo1NyswMjowMDsljy0AAAAASUVORK5CYII=")';
 
@@ -6050,12 +6058,14 @@ var css = '.autoscroll {overflow-y:auto !important}\n'
 	+ '.modal-open.nobackdrop {overflow-x:hidden !important; overflow-y:auto !important}\n'
 	+ '.modal-backdrop.nobackdrop {background:none !important}\n'
 	+ '.mX {\n'
-	+ '  -webkit-transform:scaleX(-1); -moz-transform:scaleX(-1); transform:scaleX(-1);\n'
-	+ '  -ms-transform:scaleX(-1); -o-transform:scaleX(-1);\n'
+	+ '  -webkit-transform:scaleX(-1) !important; -moz-transform:scaleX(-1) !important;\n'
+	+ '  transform:scaleX(-1) !important; -ms-transform:scaleX(-1) !important;\n'
+	+ '  -o-transform:scaleX(-1) !important;\n'
 	+ '}\n'
 	+ '.mY {\n'
-	+ '  -webkit-transform:scaleY(-1); -moz-transform:scaleY(-1); transform:scaleY(-1);\n'
-	+ '  -ms-transform:scaleY(-1); -o-transform:scaleY(-1);\n'
+	+ '  -webkit-transform:scaleY(-1) !important; -moz-transform:scaleY(-1) !important;\n'
+	+ '  transform:scaleY(-1) !important; -ms-transform:scaleY(-1) !important;\n'
+	+ '  -o-transform:scaleY(-1) !important;\n'
 	+ '}\n'
 	+ '.noscroll {overflow:hidden !important}\n'
 	+ '.numbered {\n'
@@ -6309,7 +6319,7 @@ socket.on("changeMedia", function() {
 socket.on("channelCSSJS", function() {
 	CHANCSS = $("#chancss").length > 0 ? $("#chancss").html() : '';
 	CHANEXTERNALCSS = $("#chanexternalcss").length > 0 ? $("#chanexternalcss").attr('href') : '';
-	if (IGNORECSS) $("#chanexternalcss, #chancss").remove();
+	if (IGNORECSS || IGNORETHISCSS.split(",").indexOf(CHANNEL.name) > -1) $("#chanexternalcss, #chancss").remove();
 	if ($("#usertheme2").length > 0) $("head").append($("#usertheme2").detach());
 	$("head").append($("#hardcss").detach());
 	setAdditionalCSS();
