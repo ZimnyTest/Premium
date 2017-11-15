@@ -54,15 +54,12 @@ setTimeout(function() {if (typeof LOADED === "undefined") addServerMessage(msg)}
 // ***** BASIC CUSTOMIZATION ***** //
 
 /*
-You don't have to set or change any variable below - all of them have default values.
-Absolutely DO NOT DELETE any given variable, or the script may not work.
+For advanced script admins. Absolutely DO NOT DELETE any given variable, or the API may not work.
 
 # FaviconURL		| URL of an optional channel favicon
 # ChannelName		| custom channel name instead of default server name
 # MiniLogoURL		| custom mini logo in the navigation bar
 			| height: 36px (logo will be automatically resized)
-# ChannelNamePadding	| channel name left padding in px (width of the mini logo + 25 for the best effect)
-			| don't change default "61" value, if you left empty "MiniLogoURL" variable
 # CustomWelcomeText	| custom navigation bar "Welcome" message
 # WelcomeSoundFile	| URL of an optional welcome sound file played on load
 			| recommended: .ogg file (best support by browsers)
@@ -94,8 +91,6 @@ FaviconURL		= 'https://pl.vichan.net/static/icons/vichan.png';
 ChannelName		= '';
 
 MiniLogoURL		= '';
-
-ChannelNamePadding	= '61';
 
 CustomWelcomeText	= '';
 
@@ -6407,9 +6402,6 @@ if (WelcomeSoundFile != "" && PLAYWELCOME) {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 // Message if script is succesfully loaded
 
 LOADED = true;
@@ -6473,7 +6465,10 @@ if (EMOTESCACHE) {
 }
 
 
-// Optional additional external script
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Append optional external script
 
 if (ExternalScriptURL != "") $.getScript(ExternalScriptURL);
 
