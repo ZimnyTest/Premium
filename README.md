@@ -86,7 +86,7 @@ Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS
 * "Scroll chat panel to top" button
 * Colors button with selectable 30 chat text colors, using proper code in the chatline any HTML color is possible
 * Oeakaki - drawing board, uses modified external application, lets user draw a simple picture and returns link to uploaded file (to imgur.com)
-* Pseudo-random, info, fun and playlist handling commands - 16 commands started with "!"
+* Pseudo-random, info, fun and playlist handling commands - 17 commands started with "!" (including searching for gifs on giphy.com)
 * Layout and channel handling commands - 24 commands started with "/"
 * 12 chatline codes for text effects
 * Up to 10 available shorthands (form "//0" to "//9") for defined long texts or code sequences
