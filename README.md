@@ -154,13 +154,13 @@
 ## Hosting
 Default Synchtube Premium file, together with other separated files (that cannot be included into main code - additional themes, animated mascots, external Oekaki API), is hosted on Dropbox. Some features use external APIs (imgur.com, giphy.com) and obviously are dependent on behaviour of those servers.
 ## Changelog
-### v2.10 - *[2017-??-??]*
+#### v2.10 - *[2017-??-??]*
 * First release on GitHub.
-### v2.0 - *[2017-01-15]*
+#### v2.0 - *[2017-01-15]*
 * Heavily modified, reviewed and largely extended new version.
-### v1.5 - *[2016-11-04]*
+#### v1.5 - *[2016-11-04]*
 * First public version available for other users.
-### v1.0 - *[2016-04-02]*
+#### v1.0 - *[2016-04-02]*
 * First version used only on my channels.
 ## Feedback
 Please open a GitHub Issue.
