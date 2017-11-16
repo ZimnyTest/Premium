@@ -41,12 +41,6 @@ Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS
 * Glue layout elements to the edge of the screen
 * Browser's tab title: page title/ current media title/ channel ID/ number of chat messages
 * Displaying/hiding various layout elements
-* Theme/skin selector, 5 default plus 9 additional themes
-* Ignore channels' CSS
-* Ignore only this channel CSS
-* User CSS code
-* 9 optional background patterns
-* 14 optional Google fonts
 * Compact layout
 * Single column layout
 * Old Synchtube layout (player on left, chat on right)
@@ -55,6 +49,13 @@ Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS
 * Large player, no chat
 * Theatre mode (only big screen plus chat on the side)
 * Radio mode (radio-like layout)
+#### Theme customization
+* Theme/skin selector, 5 default plus 9 additional themes
+* Ignore channels' CSS
+* Ignore only this channel CSS
+* User CSS code
+* 9 optional background patterns
+* 14 optional Google fonts
 #### Navigation bar
 * Make navbar scrollable
 * Collapse navigation bar
