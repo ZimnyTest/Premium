@@ -46,7 +46,7 @@
 * Channel MOTD on bottom
 * Large chat, no player
 * Large player, no chat
-* Theatre mode (only big media player plus chat on the side)
+* Theatre mode (only large media player plus chat on the side)
 * Radio mode (radio-like layout with hidden video player)
 #### Theme customization
 * Theme/skin selector, 5 default plus 9 additional themes
@@ -80,7 +80,7 @@
 * Premium Notifiactions with selectable mode: don't show neither/ show only "user joined/disconnected"/ show only "now playing"/ show both
 * Ignore chat colors and/or text effects with selectable mode: ignore only colors/ ignore only effects/ ignore both colors and effects
 * Custom chat filters (simplified regular expressions)
-* Chat panel expanding (to screen height)
+* "Toggle chat expanding" (to screen height) clickable label
 * "Scroll to playlist" clickable label
 * "Scroll chat panel to top" clickable label
 * Colors button with selectable 30 chat text colors, in addition, any HTML color is possible (typing proper code in the chatline)
@@ -96,13 +96,13 @@
 * Clear user's chat window
 * Upload to imgur - lets user select an image from disk and returns link to uploaded file
 * Convert links to images (image is displayed directly on chat, instead of link)
-* Convert media to images (player with video or music file is displayed directly on chat instead, of link)
+* Convert media to images (player with video or music file is displayed directly on chat, instead of link)
 * NicoNico mode (chat messages displayed on the player)
 * White background chat
-* Separate chat messages (messages separated with lines)
+* Separate chat messages (messages separated with horizontal lines)
 * Ignore avatars and name colors
 * Ignore emotes (displaying only emote text codes instead of images)
-* Adjustable chat font size
+* Adjustable chat font size (in percents)
 * Leader status menu item (quick toggling of self-leader status)
 * Hide AFK users (AFKers will be hidden on the userlist)
 * Hide timestamps
@@ -114,7 +114,7 @@
 * AntiAFK button - prevents user from AFK status
 * Buttons for "/clear" and "/afk" commands
 #### Player
-* Hide player until next, possible custom covering image
+* Hide player until next, possible player covering custom image
 * Full-width title bar
 * Hide progress bar
 * Show time left
@@ -136,26 +136,26 @@
 * Hide buttons
 * Video quality selector
 * Improved retrieve playlist links button - 5 options: raw links/ plain text/ HTML code/ ordered list/ array format
-* "Scroll playlist to current item" button
-* Expand playlist (playlist displayed without scrollbar)
-* Hide playlist
-* "Scroll to chat" button
+* "Scroll playlist to current item" clickable label
+* "Expand playlist" (playlist displayed without scrollbar) clickable label
+* "Hide playlist" clickable label
+* "Scroll to chat" clickable label
 #### Other
 * Personal notepad (up to 1M characters)
 * Personal media database (requires external .js file)
 * Custom HTML in empty space under the chat
 * 17 keyboard shortcuts (using "left alt" button)
 * Premium admin tools - chat effects, CSS tips, MOTD tabs, soundfilters, media database, customization
-* Playlist mode button
+* Jukebox mode button
 * Channels button - displays list of public channels
 * UTC time shown in advanced options panel
 * Favourites links panel - up to 200 links to save, with YouTube preview and 3 modes of sorting (oldest firest/ newest first/ alphabetically)
 ---
 ## Hosting
-...
+Default Synchtube Premium file, together with other separated files (that cannot be included into main code - additional themes, animated mascots, external Oekaki API), is hosted on Dropbox. Some features use external APIs (imgur.com, giphy.com) and obviously are dependent on behaviour of those servers.
 ## Changelog
 ### v2.10 - *[2017-??-??]*
-* First release on Github.
+* First release on GitHub.
 ### v2.0 - *[2017-01-15]*
 * Heavily modified, reviewed and largely extended new version.
 ### v1.5 - *[2016-11-04]*
