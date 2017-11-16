@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.alpha 5
-# Release date:		2017-11-15
+# Version:		2.10.alpha 6
+# Release date:		2017-11-16
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyTest/SynchtubePremium
@@ -319,7 +319,7 @@ VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "u
 // Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
-VERSION		= '2.10.alpha 5';
+VERSION		= '2.10.alpha 6';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -388,6 +388,7 @@ BackgroundsArray = [
 	['Damask',	DROPBOX + '8cl7edsnhh1ncun/damask.jpg'],
 	['Denim',	DROPBOX + 'li4q7xkxj75ev6v/denim.jpg'],
 	['Hibiscus',	DROPBOX + 'wd6wgisowlrxpfi/hibiscus.jpg'],
+	['Orient',	DROPBOX + '0abr666cp2m7do7/orient.jpg'],
 	['Tiles',	DROPBOX + 'wsypfghvl8s39dz/checked.png'],
 	['Triangles',	DROPBOX + 'fptdsrtetoo7zoe/triangles.png'],
 	['Zigzag',	DROPBOX + 'pptzler9mnf6ake/zigzag.jpg'],
