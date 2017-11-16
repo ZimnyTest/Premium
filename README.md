@@ -5,13 +5,11 @@
 
 ---
 ## About
-**Synchtube Premium** is a powerful JavaScript application for [Synchtube](https://synchtu.be/) (or any server based on CyTube) channels. It adds to your channel many missing features, functions, and enhancements.
+**Synchtube Premium** is a powerful JavaScript application for [Synchtube](https://synchtu.be/) (or any other server based on CyTube) channels. It adds to your channel many missing features, functions, and enhancements.
 ## Installation
 1. Log as an admin to your Synchtube / CyTube / etc. room, and go to: Channel Settings > Admin Settings
 2. Paste following URL to "External Javascript": `https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js`<br />
-3. *Installation finished! No configuration is needed.*
-## Screenshots
-Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS.md) page to see example images of Synchtube Premium.
+3. *Installation finished! No configuration is required.*
 
 ---
 ## Features
@@ -22,19 +20,20 @@ Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS
 * Ready-to-use - doesn't require any configuration to work.
 * Relatively small filesize - only 275 kB of code.
 #### General features
-* User settings stored in cookies/localStorage, applied for all Premium channels
-* Synchtube logo in the navbar (only for Synchtube server)
+* User settings stored in cookies/localStorage, applied for all rooms powered by Synchtube Premium (you don't have to configure each channel separately)
+* Synchtube logo in the navigation bar (only for Synchtube server)
 * Channel ID instead of default server name
 * Extended "Layout" menu in the navigation bar
 * Media progress bar (can be disabled by a user)
-* Premium credits added to footer
-* Elements added to default layout:
-  * 2 navigation bar handling icons
+* Synchtube Premium credits added to footer
+* Additional chat notifications
+* List of all new elements added to default layout:
+  * 2 navigation bar icons
   * 3 chat header and 4 playlist footer labels
   * "Colors" menu button next to "Emote List"
   * Chat controls - group of 4/5 buttons
   * Menu button added to playlist controls
-  * 2 menu buttons and "Favourites panel" button added to player controls
+  * 2 menu buttons and "favourites list" button added to player controls
 ### List of user options and functions
 #### General layout
 * Modal windows without fading background
@@ -47,17 +46,17 @@ Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS
 * Channel MOTD on bottom
 * Large chat, no player
 * Large player, no chat
-* Theatre mode (only big screen plus chat on the side)
-* Radio mode (radio-like layout)
+* Theatre mode (only big media player plus chat on the side)
+* Radio mode (radio-like layout with hidden video player)
 #### Theme customization
 * Theme/skin selector, 5 default plus 9 additional themes
 * Ignore channels' CSS
-* Ignore only this channel CSS
-* User CSS code
+* Ignore only this channel CSS (separated option for each channel)
+* User CSS code (up to 100k characters)
 * 9 optional background patterns
 * 14 optional Google fonts
 #### Navigation bar
-* Make navbar scrollable
+* Make navigation bar scrollable
 * Collapse navigation bar
 * Transparent navigation bar (opaque on mouseover)
 #### MOTD
@@ -79,17 +78,17 @@ Go to [Screenshots](https://github.com/ZimnyTest/Premium/blob/master/SCREENSHOTS
 * Handy emotes panel (expanded on mouseover) with selectable number of emotes per page: 25/ 50/ 100/ 200/ 500
 * Emotes tab completion preview with selectable position: don't show preview/ bottom left/ bottom right/ top left/ top right
 * Premium Notifiactions with selectable mode: don't show neither/ show only "user joined/disconnected"/ show only "now playing"/ show both
-* Ignore chat colors and/or effets with selectable mode: ignore only colors/ ignore only effects/ ignore both colors and effects
+* Ignore chat colors and/or text effects with selectable mode: ignore only colors/ ignore only effects/ ignore both colors and effects
 * Custom chat filters (simplified regular expressions)
-* Chat panel expanding (to full-height)
-* "Scroll to playlist" button
-* "Scroll chat panel to top" button
-* Colors button with selectable 30 chat text colors, using proper code in the chatline any HTML color is possible
-* Oeakaki - drawing board, uses modified external application, lets user draw a simple picture and returns link to uploaded file (to imgur.com)
+* Chat panel expanding (to screen height)
+* "Scroll to playlist" clickable label
+* "Scroll chat panel to top" clickable label
+* Colors button with selectable 30 chat text colors, in addition, any HTML color is possible (typing proper code in the chatline)
+* Oeakaki - simple drawing board, uses modified external application, lets user draw a simple picture and returns link to uploaded file (to imgur.com)
 * Pseudo-random, info, fun and playlist handling commands - 17 commands started with "!" (including searching for gifs on giphy.com)
 * Layout and channel handling commands - 24 commands started with "/"
 * 12 chatline codes for text effects
-* Up to 10 available shorthands (form "//0" to "//9") for defined long texts or code sequences
+* Up to 10 available shorthands (form "//0" to "//9") for long texts or code sequences defined by user
 * List of user chat messages in current session
 * List of chat messages in current session that mentioned user's name, with possibility to save up to 200 mentions
 * Unicode characters panel (expanded on mouseover) with single symbols, diacritic letters and text emojis
