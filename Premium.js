@@ -87,6 +87,7 @@ For advanced admins (own hosting required). Absolutely DO NOT DELETE any given v
 # FactsArray		| list of optional funny facts about users for undocummented "!fact" command
 			| don't use usernames, user will be randomly selected from the userlist
 # ImgurClientID		| imgur client ID for images upload (leave default ID if you don't have one)
+# GiphyAPIKey		| giphy API key for images search (leave default key if you don't have one)
 # ExternalScriptURL	| URL of an optional, additional external JavaScript file
 */
 
@@ -188,6 +189,8 @@ FactsArray		= [
 ];
 
 ImgurClientID		= 'a11c2b9fbdd104a';
+
+GiphyAPIKey		= 'dc6zaTOxFJmzC';
 
 ExternalScriptURL	= '';
 
@@ -3742,6 +3745,8 @@ $("#chat-f1").on("click", function() {
 	     +        '(e.g. <i>!pick japan,korea,china</i>)</td></tr>'
 	     +      '<tr><td><code>!ask</code></td><td>ask yes-no type question<br />'
 	     +        '(e.g. <i>!ask Am I stupid?</i>)</td></tr>'
+	     +      '<tr><td><code>!gif</code></td><td>search for gif on giphy.com<br />'
+	     +        '(e.g. <i>!gif anime</i>)</td></tr>'
 	     +      '<tr><td><code>!dice</code></td><td>roll a dice</td></tr>'
 	     +      '<tr><td><code>!roll</code></td><td>roll a 6-digit number</td></tr>'
 	     +      '<tr><td><code>!time</code></td><td>display current local time</td></tr>'
@@ -5186,6 +5191,18 @@ function prepareMessage(msg) {
 		} else if (msg.indexOf('!ask ') == 0) {
 			if (AnswersArray.length < 1) AnswersArray = ['yes', 'no'];
 			msg = AnswersArray[Math.round(Math.random() * (AnswersArray.length - 1))];
+		} else if (msg.indexOf('!gif ') == 0) {
+			var q = msg.split('!gif ')[1];
+			var url = 'https://api.giphy.com/v1/gifs/search?api_key=' + GiphyAPIKey + '&q='
+				+ encodeURIComponent(q);
+			$.getJSON(url, function(data) {
+				if(data.data.length > 0) { 
+					var nr = Math.floor(Math.random() * data.data.length);
+					var res = data.data[nr].images.original.url;
+				} else var res = '↳ No gifs found for "' + q + '"'; 
+				socket.emit("chatMsg", {msg:res});
+			});
+			COMMAND = false;
 		} else if (msg.indexOf('!dice') == 0) {
 			checkCommandsAbuse();
 			if (COMMAND) msg = Math.floor(Math.random() * 6) + 1;
