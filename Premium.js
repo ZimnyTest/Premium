@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.alpha 6
-# Release date:		2017-11-16
+# Version:		2.10.beta 1
+# Release date:		2017-11-17
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyTest/SynchtubePremium
@@ -322,7 +322,7 @@ VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "u
 // Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
-VERSION		= '2.10.alpha 6';
+VERSION		= '2.10.beta 1';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -757,8 +757,13 @@ function handleMediaChange() {
 			// backwards compatibility
 			PLAYERHISTORY = PLAYERHISTORY.replace(/\|\|\+\|\|/g, ",").replace(/a>,<a/g, "a>" + rnd + "<a");
 			var arr = PLAYERHISTORY.length > 0 ? PLAYERHISTORY.split(rnd) : [];
+			var nr = 0;
+			while (nr > -1) {
+				nr = arr.indexOf(html);
+				if (nr > -1) arr.splice(nr, 1);
+			}
 			arr.unshift(html);
-			if (arr.length > 100) arr = arr.slice(0, 100);
+			if (arr.length > 200) arr = arr.slice(0, 200);
 			setOpt('SP_playerhistory', arr.join(","));
 		}
 		if (TABMODE == 1) pageTitle();
@@ -1746,13 +1751,13 @@ function closeRadioMode() {
 
 function scrollableNavbar() {
 	document.getElementById("navbar-unpin")
-	  .innerHTML = '<span class="glyphicon glyphicon-pushpin" title="Make navbar static"></span>';
+	  .innerHTML = '<span class="glyphicon glyphicon-pushpin" title="Make navigation bar static"></span>';
 	$(".navbar-fixed-top, #mainpage").addClass('snav');
 }
 
 function fixedNavbar() {
 	document.getElementById("navbar-unpin")
-	  .innerHTML = '<span class="glyphicon glyphicon-open" title="Make navbar scrollable"></span>';
+	  .innerHTML = '<span class="glyphicon glyphicon-open" title="Make navigation bar scrollable"></span>';
 	$(".navbar-fixed-top, #mainpage").removeClass('snav');
 }
 
@@ -1884,7 +1889,7 @@ if (_SINGLECOLUMN) undoHDLayout();
 
 if (GLUELAYOUT) $body.addClass('glued');
 
-// Navbar transparency (if enabled)
+// Navigation bar transparency (if enabled)
 
 if (TRANSPARENTNAV) $nav.addClass('transparent');
 
@@ -1893,7 +1898,7 @@ if (TRANSPARENTNAV) $nav.addClass('transparent');
 $("nav .navbar-brand").attr('href', document.URL);
 
 
-// Navbar extended "Layout" dropdown menu
+// Navigation bar extended "Layout" dropdown menu
 
 var html = '<li><a id="layout-1">Premium Settings</a></li>'
 	 + '<li><a id="layout-2" class="opt"><span class="glyphicon glyphicon-ok"></span>Theme & User CSS</a></li>'
@@ -1914,15 +1919,15 @@ $layoutMenu = $('#nav-collapsible a[onclick*="chatOnly"]').parent().parent().add
   .parent().addClass('layout-menu');
 
 
-// Navbar handling icons
+// Navigation bar icons
 
 $navbarUp = $('<div id="navbar-up" class="pull-right pointer navbar-text" />').appendTo("#nav-collapsible")
   .html('<span class="glyphicon glyphicon-chevron-up" title="Collapse navigation bar"></span>');
 $navbarUnpin = $('<div id="navbar-unpin" class="pull-right pointer navbar-text" />').appendTo("#nav-collapsible")
-  .html('<span class="glyphicon glyphicon-open" title="Make navbar scrollable"></span>');
+  .html('<span class="glyphicon glyphicon-open" title="Make navigation bar scrollable"></span>');
 
 
-// Optional custom navbar welcome text
+// Optional custom navigation bar welcome text
 
 if (CustomWelcomeText != "" && CLIENT.rank > 0) {
 	$("#welcome").html($("#welcome").html().replace(/Welcome/, CustomWelcomeText));
@@ -2515,7 +2520,7 @@ $("#useroptions .modal-footer button:nth-child(1)").on("click", function() {
 });
 
 
-// Navbar mode icons events
+// Navigation bar mode icons events
 
 $navbarUp.on("click", function() {
 	$nav.hide();
@@ -2756,9 +2761,7 @@ $("#layout-1").on("click", function() {
 		}
 		setOpt('SP_ignorechatmode', IGNORECHATMODE);
 	});
-	$("#hideplayerurl").on("change", function() {
-		setOpt('SP_hideplayerurl', HIDEPLAYERURL = $("#hideplayerurl").val());
-	}).on("blur", function() {
+	$("#hideplayerurl").on("change blur", function() {
 		setOpt('SP_hideplayerurl', HIDEPLAYERURL = $("#hideplayerurl").val());
 	});
 	$("#imageurlaccept").on("click", function() {
@@ -2886,9 +2889,7 @@ $("#layout-1").on("click", function() {
 	$("#filters-area").val(CUSTOMFILTERS);
 	if (EXECFILTERS) $("#exec-filters").prop('checked', true);
 
-	$("#filters-area").on("change", function() {
-		setOpt('SP_customfilters', CUSTOMFILTERS = $("#filters-area").val());
-	}).on("blur", function() {
+	$("#filters-area").on("change blur", function() {
 		setOpt('SP_customfilters', CUSTOMFILTERS = $("#filters-area").val());
 	});
 	$("#exec-filters").on("click", function() {
@@ -2920,9 +2921,7 @@ $("#layout-1").on("click", function() {
 	$("#exec-db").on("click", function() {
 		setOpt('SP_execdb', EXECDB = $("#exec-db").prop('checked'));
 	});
-	$("#customdburl").on("change", function() {
-		setOpt('SP_customdburl', CUSTOMDBURL = $("#customdburl").val());
-	}).on("blur", function() {
+	$("#customdburl").on("change blur", function() {
 		setOpt('SP_customdburl', CUSTOMDBURL = $("#customdburl").val());
 	});
 
@@ -2943,10 +2942,8 @@ $("#layout-1").on("click", function() {
 	$("#exec-html").on("click", function() {
 		setOpt('SP_exechtml', EXECHTML = $("#exec-html").prop('checked'));
 	});
-	$("#customhtml").on("change", function() {
+	$("#customhtml").on("change blur", function() {
 		setOpt('SP_customhtml',CUSTOMHTML = $("#customhtml").val());
-	}).on("blur", function() {
-		setOpt('SP_customhtml', CUSTOMHTML = $("#customhtml").val());
 	});
 
 	$('<div class="text-info pull-left">Changes are applied automatically.</div>').appendTo(footer);
@@ -3060,20 +3057,18 @@ $("#layout-2").on("click", function() {
 	var text = 'Type or paste your CSS code here, and check "Execute User CSS Code" option above';
 	cssarea = $('<textarea id="css-area" class="form-control" rows="10" />').attr('placeholder', text)
 	  .val(USERCSS).appendTo(body)
-	  .on("blur", function() {
+	  .on("change blur", function() {
 		USERCSS = cssarea.val();
 		if (EXECCSS && USERCSS != "") {
 			if ($("#usercss").length < 1) $("head").append('<style id="usercss" type="text/css" />');
 			$("#usercss").html(USERCSS);
 		} else $("#usercss").remove();
-		setOpt('SP_usercss', USERCSS);
-	  }).on("change", function() {
-		USERCSS = cssarea.val();
-		if (EXECCSS && USERCSS != "") {
-			if ($("#usercss").length < 1) $("head").append('<style id="usercss" type="text/css" />');
-			$("#usercss").html(USERCSS);
-		} else $("#usercss").remove();
-		setOpt('SP_usercss', USERCSS);
+		var len = USERCSS.length;
+		if (len > 100000) {
+			var str = 'Your CSS code have ' + len + ' characters.\n'
+				+ 'You have exceeded maximum length of code (100\'000 characters).';
+			alert(str);
+		} else setOpt('SP_usercss', USERCSS);
 	  });
 
 	var html = '<div class="form-group"><label class="control-label col-sm-5">Background pattern</label>'
@@ -3208,7 +3203,7 @@ $("#pls-1").on("click", function() {
 		     +    LASTPLAYED[i] + '</td></tr>';
 	}
 	html += '</table><br /><strong>History of your plays</strong> '
-	     +  '(from last 100, items from current session are ignored):<br /><br />'
+	     +  '(max. last 200 unique, items from current session are ignored):<br /><br />'
 	     +  '<table class="table table-striped table-condensed"><thead><th>Num.</th><th>Title</th></thead>';
 	PLAYERHISTORY = getOrDefault('SP_playerhistory', '');
 	var rnd = Math.random().toString();
@@ -3597,10 +3592,7 @@ $("#plr-17").on("click", function() {
 				setOpt('SP_mascot', MASCOT);
 			  });
 			$("#custommascoturl").val(getOrDefault('SP_custommascoturl', ''))
-			  .on("change", function() {
-				$("#mascot").attr('src', $(this).val());
-				setOpt('SP_custommascoturl', $(this).val());
-			  }).on("blur", function() {
+			  .on("change blur", function() {
 				$("#mascot").attr('src', $(this).val());
 				setOpt('SP_custommascoturl', $(this).val());
 			  });
@@ -3875,10 +3867,22 @@ $("#chat-f2").on("click", function() {
 	];
 	createModalTabs(arr, "messages");
 
+	$("#_b1, #_b2, #_b3").on("click", function() {
+		if ($(this).attr('id') == "_b3") info.show()
+		else info.hide();
+	});
+
 	var html = 'List of your chat messages in current session.<br /><br />'
 		 + '<table class="table table-striped table-condensed"><thead><th>Num.</th><th>Message</th></thead>';
 	var len = CHATHIST.length;
-	for (var i = 0; i < len; i++) html += '<tr><td>' + (i + 1) + '.</td><td>' + CHATHIST[i] + '</td></tr>';
+	var num = 0;
+	for (i in CHATHIST) {
+		var msg = CHATHIST[i];
+		if (msg != "") {
+			num ++;
+			html += '<tr><td>' + num + '.</td><td>' + msg + '</td></tr>';
+		}
+	}
 	html += '</table>';
 	$("#_c1").html(html);
 
@@ -3891,10 +3895,10 @@ $("#chat-f2").on("click", function() {
 	html += '</table>';
 	$("#_c2").html(html);
 
-	var html = 'History of your saved mentions (from latest, max. 200 messages).<br /><br />'
+	var html = 'History of your auto-saved mentions (from latest, max. 200 messages).<br /><br />'
 		 + '<div class="form-group"><div class="col-sm-12 config-col">'
 		 +   '<label class="checkbox-inline"><input id="save-mentions" type="checkbox">'
-		 +   '<span> Enable mentions saving</span></label></div></div><br /><br />'
+		 +   '<span> Enable mentions auto-saving</span></label></div></div><br /><br />'
 		 + '<table id="saved-mentions" class="table table-striped table-condensed"></table>';
 	$("#_c3").html(html);
 	rebuildSavedMentions(-1);
@@ -3904,7 +3908,8 @@ $("#chat-f2").on("click", function() {
 		setOpt('SP_savementions', SAVEMENTIONS = $("#save-mentions").prop('checked'));
 	});
 
-	$('<div class="text-info pull-left">Changes are applied automatically.</div>').appendTo(footer);
+	info = $('<div class="text-info pull-left">Changes are applied automatically.</div>').appendTo(footer);
+	if (VISIBLETAB["messages"] != 3) info.hide();
 });
 
 $("#chat-f3").on("click", function() {
@@ -4137,14 +4142,7 @@ $("#chat-f7").on("click", function() {
 		if (CUSTOMPING && CUSTOMPINGFILE != "") $("#chat-f7").addClass('activated');
 		setOpt('SP_customping', CUSTOMPING);
 	});
-	$("#custom-ping-file").on("blur", function() {
-		CUSTOMPINGFILE = $("#custom-ping-file").val();
-		CHATSOUND = new Audio((CUSTOMPING && CUSTOMPINGFILE != "") ? CUSTOMPINGFILE : '/boop.wav');
-		CHATSOUND.volume = CUSTOMPINGLVL;
-		$("#chat-f7").removeClass('activated');
-		if (CUSTOMPING && CUSTOMPINGFILE != "") $("#chat-f7").addClass('activated');
-		setOpt('SP_custompingfile', CUSTOMPINGFILE);
-	}).on("change", function() {
+	$("#custom-ping-file").on("change blur", function() {
 		CUSTOMPINGFILE = $("#custom-ping-file").val();
 		CHATSOUND = new Audio((CUSTOMPING && CUSTOMPINGFILE != "") ? CUSTOMPINGFILE : '/boop.wav');
 		CHATSOUND.volume = CUSTOMPINGLVL;
@@ -4658,7 +4656,7 @@ $("#tools-btn").on("click", function() {
 	socket.emit("requestChatFilters");
 
 	html = '<div class="panel panel-primary"><div class="panel-heading">'
-	     +   'Custom navbar channel name for all users without accepted Premium app</div>'
+	     +   'Custom navigation bar channel name for all users without accepted Premium app</div>'
 	     +   '<div class="panel-body">1. Copy code below and change <i>(name of your channel)</i> to proper name.'
 	     +     '<br />2. Paste code to your channel internal CSS or external CSS file.<br /><br />'
 	     +     '<code>.navbar-brand {font-size:0pt}</code><br />'
@@ -4726,7 +4724,7 @@ $("#tools-btn").on("click", function() {
 	     +   '<div class="panel-body">Search for the <code>SoundFiltersArray = {</code> in the code file and paste '
 	     +     'prepared array of sounds.<br /><br />'
 	     +     'Under the chat will appear a new button to control chat sounds. Every user has also possibility '
-	     +     'to disable this button and soundfilters in the Premium Settings (navbar "Layout" menu).'
+	     +     'to disable this button and soundfilters in the Premium Settings (navigation bar "Layout" menu).'
 	     + '</div></div>';
 	$("#_c4").html(html);
 
@@ -4889,7 +4887,7 @@ $("#notesave-btn").on("click", function() {
 	var len = val.length;
 	if (len > 1000000) {
 		var str = 'Your notes have ' + len + ' characters.\n'
-			+ 'You have exceeded maximum length of text (1 million characters).';
+			+ 'You have exceeded maximum length of text (1\'000\'000 characters).';
 		alert(str);
 	} else setOpt('SP_notes', val);
 });
@@ -5061,7 +5059,7 @@ function chatTabComplete() {
 _dataBuffer = addChatMessage;
 addChatMessage = function(data) {
 	if (data.msg.indexOf('↳ ') == 0) {
-		data.username = '\$bot\$';
+		data.username = '[bot]';
 		data.meta.addClass = 'action';
 		data.meta.addClassToNameAndTimestamp = 'action';
 	};
@@ -5161,7 +5159,9 @@ function formatChatMessage(data, last) {
 	CHATUNRNUM = FOCUSED ? 0 : CHATUNRNUM + 1;
 	if (TABMODE == 3) pageTitle();
 	if (ment) {
-		var html = '/r/' + CHANNEL.name + ' → ' + div.html();
+		var d = new Date();
+		var html = '/r/' + CHANNEL.name + ' · ' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/'
+			 + d.getDate() + ' → ' + div.html();
 		CHATMENTIONS.push(html);
 		if (SAVEMENTIONS) {
 			MENTIONHISTORY = getOrDefault('SP_mentionhistory', '');
@@ -5196,7 +5196,7 @@ function prepareMessage(msg) {
 			var url = 'https://api.giphy.com/v1/gifs/search?api_key=' + GiphyAPIKey + '&q='
 				+ encodeURIComponent(q);
 			$.getJSON(url, function(data) {
-				if(data.data.length > 0) { 
+				if (data.data.length > 0) { 
 					var nr = Math.floor(Math.random() * data.data.length);
 					var res = data.data[nr].images.original.url;
 				} else var res = '↳ No gifs found for "' + q + '"'; 
@@ -5818,11 +5818,11 @@ function uploadOekaki(pic) {
 }
 
 function oekaki() {
-	$.getScript("https://dl.dropboxusercontent.com/s/sbuj4e1z3dh87z1/oekaki.js", function() {
+	$.getScript(DROPBOX + "sbuj4e1z3dh87z1/oekaki.js", function() {
 		OETSTAMP = 0;
 		$("#spoekaki").html('');
 		$('<link id="oekakicss" rel="stylesheet" type="text/css" />').appendTo("head")
-		  .attr('href', 'https://dl.dropboxusercontent.com/s/syendmytcl4rgzt/oekaki.css');
+		  .attr('href', DROPBOX + 'syendmytcl4rgzt/oekaki.css');
 		var spoekaki = new DrawingBoard.Board('spoekaki', {
 			controls:['Color', 'DrawingMode', 'Size', 'Navigation'],
 			webStorage:"local",
@@ -5917,6 +5917,7 @@ var css = '.bigtitle {\n'
 	+ '.maxwidth {width:100% !important}\n'
 	+ '.miniature {max-width:120px; max-height:90px}\n'
 	+ '.modal .channel-emote {max-width:50px !important; max-height:50px !important}\n'
+	+ '.modal .embedimg, .modal .embedvid {max-width:100px !important; max-height:100px !important}\n'
 	+ '.modal .panel-body > div:nth-child(1) .checkbox-inline, .modal .elements-inline {padding-top:0px}\n'
 	+ '.modal-btn-xs {margin-right:4px}\n'
 	+ '.nav-cog {margin-right:8px}\n'
@@ -6432,8 +6433,8 @@ if (CLIENT.rank > 2) {
 		addServerMessage(html);
 		addServerMessage('Message above won\'t show again after entering "Tools".');
 	}
-	if (CHANNEL.opts.externaljs != "https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js") {
-		$.getScript("https://dl.dropboxusercontent.com/s/295oy7nkr9nv2re/check.js", function() {
+	if (CHANNEL.opts.externaljs.indexOf('https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js') < 0) {
+		$.getScript(DROPBOX + "295oy7nkr9nv2re/check.js", function() {
 			var arr = VERSION.split(".");
 			var ver = arr[0] + "." + arr[1];
 			if (typeof CURRENT_VERSION !== "undefined" && ver != CURRENT_VERSION) {
