@@ -91,7 +91,7 @@ For advanced admins (own hosting required). Absolutely DO NOT DELETE any given v
 # ExternalScriptURL	| URL of an optional, additional external JavaScript file
 */
 
-FaviconURL		= 'https://pl.vichan.net/static/icons/vichan.png';
+FaviconURL		= '';
 
 ChannelName		= '';
 
@@ -99,7 +99,7 @@ MiniLogoURL		= '';
 
 CustomWelcomeText	= '';
 
-WelcomeSoundFileURL	= 'https://dl.dropbox.com/s/8c38jikbba5mmgo/witamy.ogg';
+WelcomeSoundFileURL	= '';
 
 MOTDAlteredElement	= '';
 
@@ -126,67 +126,9 @@ AnswersArray		= [
 	'no', 'definitely no', 'ask again', 'I will not answer'
 ];
 
-SoundFiltersArray	= {
-	'habemus': 'https://dl.dropboxusercontent.com/s/3w1jahgffowjltz/hp.ogg',
-	'miau': 'https://dl.dropboxusercontent.com/s/gzsxqypc6qa7del/nyaa.ogg',
-	'coo': 'https://dl.dropboxusercontent.com/s/lmmev37kgvgd635/coo.ogg',
-	'nie dali': 'https://dl.dropboxusercontent.com/s/o5mmhts5sbs997f/niedali.ogg',
-	'kek': 'https://dl.dropboxusercontent.com/s/65nbuiwzbh6xwkn/lel.ogg',
-	'thak': 'https://dl.dropboxusercontent.com/s/ymn610oze4th5f2/thak.ogg',
-	'co robić': 'https://dl.dropboxusercontent.com/s/sco5tk45chtex1c/corobic.ogg',
-	'dość!': 'https://dl.dropboxusercontent.com/s/galolj9812s9jbv/dosc.ogg',
-	'he he he': 'https://dl.dropboxusercontent.com/s/6ihtinav2txrsbn/hehehe.ogg',
-	':ddf:': 'https://dl.dropboxusercontent.com/s/5dbb4vblqd3brc3/ddf.ogg',
-	':fuckyou:': 'https://dl.dropboxusercontent.com/s/d132j4n8qjipm85/fy.ogg',
-};
+SoundFiltersArray	= {};
 
-FactsArray		= [
-	'rozpierdolił pasiekę', 'przechodzi na czerwonym przez ulicę', 'nie spuszcza wody w toaletach publicznych',
-	'po sikaniu nie myje rąk po czym wita się ze wszystkimi współpracownikami',
-	'pisał sam sobie zwolnienia z wuefu', 'nie je śniadania',
-	'mimo obietnic złożonych matce, zaraz po wyjściu z domu zdejmował czapkę i chował do tornistra',
-	'podczas grillowania w parku oddawał mocz w krzakach',
-	'gdy miał 13 lat upił tacie pianę z piwa gdy nie patrzył', 'trzaska drzwiami',
-	'będąc niepełnoletnim kupił w kiosku 3 sztuki papierosów po czym przestraszył się i spuścił je w klozecie',
-	'nie podmywa się po sraniu', 'ciągnął koleżanki za warkoczyki w przedszkolu', 'kradnie prąd z klatki schodowej',
- 	'podkrada spinacze sąsiadom', 'specjalnie wpisuje błędna kapczę', 'kradnie sprzęty biurowe',
-	'nie myje po sobie naczyń', 'przejeżdża na pomarańczowym', 'zajebał mi szlugi',
-	'umyślnie podawał kolegom na sprawdzianach złe rozwiązania',
-	'dzwonił pod wszystkie numery domofonem po czym uciekał gdzie pieprz rośnie', 'gwałcił małe dzieci',
-	'zraczył polskie szony', 'wyjada wszystkie czekoladki z kalendarza adwentowego pierwszego grudnia',
-	'rysuje pożyczone płyty', 'kupuje dziewczęce majteczki na Allegro',
-	'gra dalej na komputerze, mimo że powiedział mamie "Już kończę!" 2 godziny temu',
-	'gwałci małe dzieci i mówi że policja nicz nie może zrobicz',
-	'obserwuje to szkalowanie i poda was wszystkich do sądu za obrazę majestatu', 'spojleruje chińskie bajki',
-	'pluje do wody święconej', 'prosi kolegę o jednego czipsa i bierze pół paczki', 'popiera PiS', 'ogląda kucyki',
-	'nigdy się nie zgadza żeby kasjerka oddała grosika kiedy indziej', 'nie wie jak wyłączyć biblię',
-	'wpadł w /fz/ i nie wie jak wyjść', 'jeździ na wakacje do Zgierza',
-	'objada się pampuchami a potem wygląda tak jak wygląda', 'twoja stara',
-	'uszkodził towar w sklepie po czym pospiesznie wyszedł', 'rozjebał paśnik', 'oblizuje talerz po bułce',
-	'używa układu klawiatury 214', 'skopiował swój lolifolder na VHS', 'nie szanuje swojej siostry',
-	'odpadł w 1/6 Ligi Mistrzów', 'zaspokoił Elfika32 w cewkę moczową', 'popiera ZUS',
-	'oblicza cotangensy Ojcu Rydzykowi', 'nie wie że Yuri ma wielką dupe', 'śmieje się z Puchałke',
-	'jeździ amerykańskim autem xD', 'używa Linuxa', 'proszony o polecenie chińskiej bajki rekomenduje Boku no Pico',
-	'robi bonbe dupom', 'inicjuje gównoburze', 'jeździ pociągiem na wstecznym', 'ma dywan na ścianie',
-	'zjedz mielone', 'popiera Korwina', 'samowolnie oddalał się z lekcji biologii',
-	'puszcza głośne wiatry i mówi że to w trawie coś piszczy', 'zepsuł swojej mamie kwietnik, a winę zwalił na psa',
-	'niszczy runo leśne', 'dał na tacę 10 zł i zażądał 9 reszty', 'wyjada ser z chizborgirów',
-	'kupił mecz i przegrał', 'tasuje pod doujiny z Apple Bloom', 'przeszkadza innym dzieciom w leżakowaniu',
-	'głosi kazania z ambony myśliwskiej', 'czyta mangi od przodu', 'wszedł do internetu i nie umie wyjść',
-	'wywrócił globus na lewą stronę', 'kradnie wanny z działek', 'pierze w rzece',
-	'trząsł stołem w czasie gry w bierki', 'wyjada dziury w serze', 'strzela z łuku do kur',
-	'maluje jajka w Wigilię', 'śmieci na MS AGH i zwala na studentów',
-	'zabierał dzieciom samochody z gum Turbo i śmiał się przy tym jak zbir', 'używa zasilacza Codegen',
-	'wyłącza komputer zanim wyświetla się komunikat o możliwości bezpiecznego wyłączenia',
-	'ściąga spodnie z torrentów', 'nie wie gdzie się podziały tamte prywatki',
-	'powiedział kasjerce, że w siatce jest pięć bułek. Było sześć.', 'nasrał własnej matce pod drzwiami',
-	'przyklepuje groszek ziemniakami', 'kupuje koncentrat zamiast keczupu Mikado',
-	'obnaża się w miejscach publicznych. Zapytany, dlaczego to robi, wznosi wzrok ku niebu, wzrusza ramionami i z '
-	+ 'charakterystycznym dla niego, niewzruszonym optymizmem mówi: "wielkie mi mecyje".',
-	'postawił serwer. Na dywanie.', 'kradnie pączki Patrycji',
-	'nie wykupował obiadów w szkolnej stołówce, a potem przy okienku twierdził, że zgubił karteczkę',
-	'poszedł do ZOO i go małpy wyśmiały', 'łapał w podstawówce koleżanki za siusię'
-];
+FactsArray		= [];
 
 ImgurClientID		= 'a11c2b9fbdd104a';
 
@@ -5322,7 +5264,7 @@ function prepareMessage(msg) {
 		} else if (msg.indexOf('!fact') == 0 && FactsArray.length > 0) {
 			checkCommandsAbuse();
 			if (COMMAND) {
-				if (typeof UsersArray === "undefined") UsersArray = ["czaks","JP2"];
+				if (typeof UsersArray === "undefined") UsersArray = [];
 				$(".userlist_item span:nth-child(2)").each(function() {
 					UsersArray.push($(this).html());
 				});
