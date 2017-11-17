@@ -48,7 +48,7 @@ START = new Date().getTime();
 var msg = 'Synchtube Premium error! Application hasn\'t been loaded properly, some functions may not work. '
 	+ 'If there\'s a problem with media player, try to refresh the page. '
 	+ 'Otherwise, ask channel administrator, or disable script access.';
-setTimeout(function() {if (typeof LOADED === "undefined") addServerMessage(msg)}, 10000);
+setTimeout(function() {if (typeof LOADED === "undefined") addChatNotification(msg)}, 10000);
 
 // Reload after unexpected site error (if API was already loaded), to prevent duplication of the elements
 // It fixes also incompability with enabled "Chat Only" layout
@@ -375,7 +375,7 @@ $plmeta			= $("#plmeta");
 # BRIGHTNESS, MEDIADBLOAD, OEKAKILOAD, OETSTAMP
 
 # List of interval global variables loaded dynamically:
-# ANTIAFK, CLEARING, GQI, MEDIACLOCK, PBAR, TIMELEFTCLOCK, UTCCLOCK
+# ANTIAFK, CLEARING, MEDIACLOCK, PBAR, TIMELEFTCLOCK, UQI, UTCCLOCK
 */
 
 
@@ -390,7 +390,7 @@ $plmeta			= $("#plmeta");
 
 // Add private premium message to chat
 
-function addServerMessage(html) {
+function addChatNotification(html) {
 	setTimeout(function() {
 		$('<div class="chat-msg- serverinfo"><span class="action scriptanswer">▮ ' + html + '</span></div>')
 		  .appendTo($messagebuffer)
@@ -410,12 +410,19 @@ function checkCommandsAbuse() {
 	var time = new Date().getTime();
 	if (COMMANDSTSTAMPS.length > 4) {
 		if (time - COMMANDSTSTAMPS[0] < 60000) {
-			addServerMessage('Warning: abuse of the random-type commands (5 times per minute allowed)');
+			addChatNotification('Warning: abuse of the random-type commands (5 times per minute allowed)');
 			COMMAND = false;
 		}
 		COMMANDSTSTAMPS.shift();
 	}
 	COMMANDSTSTAMPS.push(time);
+}
+
+// Create all user profile images panel
+
+function createAvatarsPanel() {
+	$avatarswrap = $('<div id="avatarswrap" class="col-lg-12 col-md-12 leftareas" />').insertAfter($notepadwrap);
+	$avatarspanel = $('<div id="avatarspanel" class="well" />').appendTo($avatarswrap);
 }
 
 // Create panel of favourite media links
@@ -444,26 +451,26 @@ function createFavsPanel() {
 	var len = arr.length;
 	html += '<li id="freeslots-meta" class="queue_entry">'
 	     +    '<div id="favs-sort" class="btn-group">'
-	     +      '<button id="sort-old" class="btn btn-sm btn-default" title="Sort: oldest first (default)">'
+	     +      '<button id="sort-old-btn" class="btn btn-sm btn-default" title="Sort: oldest first (default)">'
 	     +        '<span class="glyphicon glyphicon-arrow-down"></span></button>'
-	     +      '<button id="sort-new" class="btn btn-sm btn-default" title="Sort: newest first">'
+	     +      '<button id="sort-new-btn" class="btn btn-sm btn-default" title="Sort: newest first">'
 	     +        '<span class="glyphicon glyphicon-arrow-up"></span></button>'
-	     +      '<button id="sort-az" class="btn btn-sm btn-default" title="Sort alphabetically">A-Z</button>'
+	     +      '<button id="sort-az-btn" class="btn btn-sm btn-default" title="Sort alphabetically">A-Z</button>'
 	     +    '</div><div id="freeslots">'
 	     +      len + ' item' + ((len != 1) ? 's' : '') + ' | ' + (200 - len) + ' free slot'
 	     +      ((len != 199) ? 's' : '') + ' available</div></li>';
 	document.getElementById("queue-fav").innerHTML = html;
-	$("#sort-" + FAVSORTMODE).addClass('active');
+	$("#sort-" + FAVSORTMODE + "-btn").addClass('active');
 
-	$("#sort-old").on("click", function() {
+	$("#sort-old-btn").on("click", function() {
 		setOpt('SP_favsortmode', FAVSORTMODE = "old");
 		createFavsPanel();
 	});
-	$("#sort-new").on("click", function() {
+	$("#sort-new-btn").on("click", function() {
 		setOpt('SP_favsortmode', FAVSORTMODE = "new");
 		createFavsPanel();
 	});
-	$("#sort-az").on("click", function() {
+	$("#sort-az-btn").on("click", function() {
 		setOpt('SP_favsortmode', FAVSORTMODE = "az");
 		createFavsPanel();
 	});
@@ -523,7 +530,8 @@ function createModal(title) {
 	modal = $('<div class="modal-content" />').appendTo(dialog)
 		  .append('<div class="modal-header">' + html + '</div>');
 	body = $('<div class="modal-body scrolled" />').appendTo(modal);
-	var html = '<button id="close-modal" type="button" data-dismiss="modal" class="btn btn-default">Close</button>';
+	var html = '<button id="close-modal-btn" type="button" data-dismiss="modal" class="btn btn-default">Close'
+		 + '</button>';
 	footer = $('<div class="modal-footer">' + html + '</div>').appendTo(modal);
 	if (typeof NOBACKDROP === "undefined") NOBACKDROP = getOrDefault('SP_nobackdrop', false);
 	if (NOBACKDROP) $(".modal, .modal-open, .modal-backdrop").addClass('nobackdrop');
@@ -611,24 +619,6 @@ function getTimePos() {
 		if (PLAYER.soundcloud) return PLAYER.soundcloud.currentTime;
 	} else if (PLAYER && PLAYER.player && PLAYER.player.currentTime) return PLAYER.player.currentTime()
 	else return -0.01;
-}
-
-// Get media info in Radio Mode
-
-function getQueueInfo() {
-	newplaylistheader.html($("#usercount").html());
-	var html = '';
-	var item = $(".queue_active");
-	if (NowPlaying == "") NowPlaying = 'Now playing';
-	html += '<div class="row"><div class="col-lg-2 col-sm-4">' + NowPlaying + ': </div>'
-	     +    '<div class="col-lg-10 col-sm-8">' + (item.length > 0 ? item.data("media").title : '---')
-	     +      ' [' + (item.length > 0 ? item.data("media").duration : '--:--') + ']</div></div>';
-	var item = $(".queue_active").next();
-	if (PlayingNext == "") PlayingNext = 'Playing next';
-	html += '<div class="row"><div class="col-lg-2 col-sm-4">' + PlayingNext + ': </div>'
-	     +    '<div class="col-lg-10 col-sm-8">' + (item.length > 0 ? item.data("media").title : '---')
-	     +      ' [' + (item.length > 0 ? item.data("media").duration : '--:--') + ']</div></div>';
-	newplaylist.html(html);
 }
 
 // Get variable from channel external JS file URL
@@ -818,7 +808,7 @@ function nowPlaying() {
 	if (NowPlaying == "") NowPlaying = 'Now playing';
 	var html = NowPlaying + ': ' + uid.title + ' [' + uid.duration + ']';
 	if ($favsBtn.hasClass('btn-success')) html += ' <span class="glyphicon glyphicon-thumbs-up"></span>';
-	if (!NOPLAYER) addServerMessage(html);
+	if (!NOPLAYER) addChatNotification(html);
 }
 
 // Update user online time
@@ -1102,13 +1092,6 @@ function setPlayerBrightness() {
 	$("#plr-bright").css('background-color', 'rgba(' + col + ',' + col + ',' + col + ',' + op + ')');
 }
 
-// Display all user profile images
-
-function showAvatarsPanel() {
-	$avatarswrap = $('<div id="avatarswrap" class="col-lg-12 col-md-12 leftareas" />').insertAfter($notepadwrap);
-	$avatarspanel = $('<div id="avatarspanel" class="well" />').appendTo($avatarswrap);
-}
-
 // Display contributors usernames on the playlist
 
 function showContributors() {
@@ -1229,6 +1212,24 @@ function toggleDBCategory(num) {
 
 function toggleElement(div) {
 	$(div).css('display') == "none" ? $(div).show() : $(div).hide();
+}
+
+// Update media info in Radio Mode
+
+function updateQueueInfo() {
+	newplaylistheader.html($("#usercount").html());
+	var html = '';
+	var item = $(".queue_active");
+	if (NowPlaying == "") NowPlaying = 'Now playing';
+	html += '<div class="row"><div class="col-lg-2 col-sm-4">' + NowPlaying + ': </div>'
+	     +    '<div class="col-lg-10 col-sm-8">' + (item.length > 0 ? item.data("media").title : '---')
+	     +      ' [' + (item.length > 0 ? item.data("media").duration : '--:--') + ']</div></div>';
+	var item = $(".queue_active").next();
+	if (PlayingNext == "") PlayingNext = 'Playing next';
+	html += '<div class="row"><div class="col-lg-2 col-sm-4">' + PlayingNext + ': </div>'
+	     +    '<div class="col-lg-10 col-sm-8">' + (item.length > 0 ? item.data("media").title : '---')
+	     +      ' [' + (item.length > 0 ? item.data("media").duration : '--:--') + ']</div></div>';
+	newplaylist.html(html);
 }
 
 // Display UTC time
@@ -1576,7 +1577,7 @@ function radioMode() {
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").hide();
 	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-1, #plr-2, #plr-11, #plr-13, #plr-14").hide();
-	$("#plr-15, #plr-16, #fullscreenbtn, #advopts-btn, #favs-btn, #jukebox-btn").hide();
+	$("#plr-15, #plr-16, #fullscreenbtn, #addopts-btn, #favs-btn, #jukebox-btn").hide();
 	$("#plr-5").parent().parent().hide();
 	$("#playlistrow, #leftpane, #oekakiwrap, #notepadwrap, #rightpane, #sitefooter").hide();
 	if (NOPLAYER) $("#plr-btn").hide();
@@ -1600,7 +1601,7 @@ function radioMode() {
 		})
 	});
 	if (!NOPLAYER) {
-		togglevid = $('<button id="togglevid" class="btn btn-default btn-sm" />').html('Player')
+		togglevidBtn = $('<button id="togglevid-btn" class="btn btn-default btn-sm" />').html('Player')
 		  .prependTo("#videocontrols")
 		  .on("click", function() {
 			HIDDENVWRAP = !HIDDENVWRAP;
@@ -1611,14 +1612,14 @@ function radioMode() {
 			$(this).toggleClass('btn-success');
 	 	 });
 	}
-	togglepl = $('<button id="togglepl" class="btn btn-default btn-sm" />').html('Playlist')
+	toggleplBtn = $('<button id="togglepl-btn" class="btn btn-default btn-sm" />').html('Playlist')
 	  .prependTo("#videocontrols")
 	  .on("click", function() {
-		$("#advopts-btn, #favs-btn, #playlistrow, #rightpane, #plcontrol").toggle();
+		$("#addopts-btn, #favs-btn, #playlistrow, #rightpane, #plcontrol").toggle();
 		$(this).toggleClass('btn-success');
 		scrollQueue();
 	  });
-	togglechat = $('<button id="togglechat" class="btn btn-default btn-sm" />').html('Chat')
+	togglechatBtn = $('<button id="togglechat-btn" class="btn btn-default btn-sm" />').html('Chat')
 	  .prependTo("#videocontrols")
 	  .on("click", function() {
 		if (!SYNCH) $chatwrap.insertAfter($videowrap);
@@ -1649,14 +1650,15 @@ function radioMode() {
 	  .on("click", function() {
 		document.getElementById("layout-2").click();
 	  });
-	GQI = setInterval(function() {getQueueInfo()}, 3000);
+	UQI = setInterval(function() {updateQueueInfo()}, 3000);
 	setOpt('SP_radiomode', true);
-	getQueueInfo();
+	updateQueueInfo();
 }
 
 function closeRadioMode() {
 	HIDDENVWRAP = false;
-	$("#radioheaderwrap, #mediastats, #newplaylistwrap, #togglevid, #togglepl, #togglechat, #close-btn").remove();
+	$("#radioheaderwrap, #mediastats, #newplaylistwrap, #togglevid-btn").remove();
+	$("#togglepl-btn, #togglechat-btn, #close-btn").remove();
 	$("#switch-btn, #css-btn, #radioslider").remove();
 	$body.removeClass('radio-mode');
 	$videowrapHeader.removeClass("radiotitle");
@@ -1665,7 +1667,7 @@ function closeRadioMode() {
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").show();
 	$("#newpollbtn, #oekaki-btn, #notepad-btn, #plcontrol, #plr-btn, #plr-1, #plr-2, #plr-11, #plr-13").show();
-	$("#plr-14, #plr-15, #plr-16, #fullscreenbtn, #advopts-btn, #favs-btn, #jukebox-btn").show();
+	$("#plr-14, #plr-15, #plr-16, #fullscreenbtn, #addopts-btn, #favs-btn, #jukebox-btn").show();
 	$("#plr-5").parent().parent().show();
 	$("#playlistrow, #leftpane, #rightpane, #sitefooter").show();
 	if ($("#oekaki-btn").hasClass('btn-success')) $oekakiwrap.show();
@@ -1683,7 +1685,7 @@ function closeRadioMode() {
 	if (LARGECHAT) largeChat();
 	if (LARGEPLAYER) largePlayer();
 	setOpt('SP_radiomode', false);
-	clearInterval(GQI);
+	clearInterval(UQI);
 	handleVideoResize();
 	scrollChatToTop();
 	scrollQueue();
@@ -1973,7 +1975,7 @@ if (typeof MediaDatabase !== "undefined" || getURLVar("db") != "" || (EXECDB && 
 
 // Playlist options dropdown menu
 
-var html = '<button id="plsbtn" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" '
+var html = '<button id="pls-btn" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" '
 	 + 'title="Playlist controls"><span class="glyphicon glyphicon-cog"></span> ▾</button>'
 	 + '<ul id="pls-menu" class="dropdown-menu noclose">'
 	 +   '<li group="1"><a id="pls-1">List of Last Played</a></li>'
@@ -2093,9 +2095,9 @@ if (TIMELEFT) {
 $("#plr-menu").find("li[group=2]").hide();
 
 
-// Advanced options button
+// Additional options button
 
-$advoptsBtn = $('<button id="advopts-btn" class="btn btn-sm btn-default" title="Advanced options" />')
+$addoptsBtn = $('<button id="addopts-btn" class="btn btn-sm btn-default" title="Additional options" />')
   .html('<span class="glyphicon glyphicon-flash"></span> ▾').insertBefore("#mediarefresh");
 
 
@@ -2308,7 +2310,7 @@ $plfiltercontrol = $('<div id="plfiltercontrol" class="col-lg-12 col-md-12 pl" /
   .insertAfter("#queuefail").html(html).hide();
 
 
-// Advanced options control panel
+// Additional options control panel
 
 var html = '<div class="well"><div class="btn-group">'
 	 +   '<button id="tools-btn" class="btn btn-sm btn-default" title="Premium Admin Tools">'
@@ -2346,7 +2348,7 @@ var html = '<div class="well"><div class="btn-group">'
 	 + '<div class="btn-group">'
 	 +   '<button id="public-btn" class="btn btn-sm btn-default" title="Show list of public channels">'
 	 +     '<span class="glyphicon glyphicon-globe"></span> Channels</button></div></div>';
-$advoptswrap = $('<div id="advoptswrap" class="col-lg-12 col-md-12" />').insertAfter("#queuefail").html(html).hide();
+$addoptswrap = $('<div id="addoptswrap" class="col-lg-12 col-md-12" />').insertAfter("#queuefail").html(html).hide();
 
 $("#quality-btn").html($("#quality-btn").html() + USEROPTS.default_quality + ' ▾');
 $("#quality-menu").find("a[val=" + USEROPTS.default_quality + "]").addClass('activated');
@@ -2415,7 +2417,7 @@ $("#note-area").val(getOrDefault('SP_notes', ''));
 // Avatars panel (if enabled)
 
 if (AVATARSLIST) {
-	showAvatarsPanel();
+	createAvatarsPanel();
 	refreshAvatarsList();
 	if (THEATREMODE) $avatarswrap.hide();
 }
@@ -2571,10 +2573,10 @@ $("#layout-1").on("click", function() {
 		setOpt('SP_hideindicator', HIDEINDICATOR);
 	});
 	$("#avatarslist").on("click", function() {
-		$avatarswrap.remove();
+		if (AVATARSLIST) $avatarswrap.remove();
 		AVATARSLIST = $("#avatarslist").prop('checked');
 		if (AVATARSLIST) {
-			showAvatarsPanel();
+			createAvatarsPanel();
 			refreshAvatarsList();
 		}
 		setOpt('SP_avatarslist', AVATARSLIST);
@@ -2676,7 +2678,7 @@ $("#layout-1").on("click", function() {
 		var tabs = Math.ceil(CHANNEL.emotes.length / EMOTESPERPAGE);
 		if (VISIBLETAB["emotes"] > tabs) VISIBLETAB["emotes"] = 1;
 		if ($("#chat-f3").hasClass('activated')) {
-			document.getElementById("closechatpanel").click();
+			document.getElementById("closechatpanel-btn").click();
 			document.getElementById("chat-f3").click();
 		}
 		setOpt('SP_emotesperpage', EMOTESPERPAGE);
@@ -3141,7 +3143,7 @@ $("#pls-1").on("click", function() {
 		links.push(link);
 		html += '<tr><td>' + (len - i + 1) + '.</td><td>'
 		     +    '<button class="btn btn-xs btn-default pull-left modal-btn-xs" title="Click to copy link" '
-		     +    'onClick="pasteFav(\'' + link + '\'); $(\'#close-modal\').trigger(\'click\')">+</button>'
+		     +    'onClick="pasteFav(\'' + link + '\'); $(\'#close-modal-btn\').trigger(\'click\')">+</button>'
 		     +    LASTPLAYED[i] + '</td></tr>';
 	}
 	html += '</table><br /><strong>History of your plays</strong> '
@@ -3160,7 +3162,7 @@ $("#pls-1").on("click", function() {
 			html += '<tr><td>' + j + '.</td><td>'
 			     +    '<button class="btn btn-xs btn-default pull-left modal-btn-xs" '
 			     +    'title="Click to copy link" onClick="pasteFav(\'' + link + '\'); '
-			     +    '$(\'#close-modal\').trigger(\'click\')">+</button>' + arr[i] + '</td></tr>';
+			     +    '$(\'#close-modal-btn\').trigger(\'click\')">+</button>' + arr[i] + '</td></tr>';
 		}
 	}
 	html += '</table>';
@@ -3873,12 +3875,12 @@ $("#chat-f3").on("click", function() {
 		  });
 		cpheader = $('<div id="cpheader" />').appendTo(chatpanel);
 		var hgr = $('<div id="chatpanelcontrol" class="btn-group pull-right" />').appendTo(cpheader);
-		$('<button id="switchtounicode" class="btn btn-default" />').html('Unicode')
-		  .appendTo(hgr)
+		$('<button id="switchtounicode-btn" class="btn btn-default" title="Switch to unicode" />')
+		  .html('Unicode').appendTo(hgr)
 		  .on("click", function() {
 			document.getElementById("chat-f4").click();
 		  });
-		$('<button id="closechatpanel" class="btn btn-default" title="Close panel" />').html('×')
+		$('<button id="closechatpanel-btn" class="btn btn-default" title="Close panel" />').html('×')
 		  .appendTo(hgr)
 		  .on("click", function() {
 			$chatline.focus();
@@ -3954,12 +3956,12 @@ $("#chat-f4").on("click", function() {
 		  });
 		cpheader = $('<div id="cpheader" />').appendTo(chatpanel);
 		var hgr = $('<div id="chatpanelcontrol" class="btn-group pull-right" />').appendTo(cpheader);
-		$('<button id="switchtoemotes" class="btn btn-default" />').html('Emotes')
+		$('<button id="switchtoemotes-btn" class="btn btn-default" title="Switch to emotes" />').html('Emotes')
 		  .appendTo(hgr)
 		  .on("click", function() {
 			document.getElementById("chat-f3").click();
 		  });
-		$('<button id="closechatpanel" class="btn btn-default" title="Close panel" />').html('×')
+		$('<button id="closechatpanel-btn" class="btn btn-default" title="Close panel" />').html('×')
 		  .appendTo(hgr)
 		  .on("click", function() {
 			$chatline.focus();
@@ -3973,7 +3975,7 @@ $("#chat-f4").on("click", function() {
 		for (i = 0; i < 3; i++) {
 			var text = caps[i];
 			var btn = $('<button class="btn btn-sm btn-default emotesbtn" group="' + i + '" />')
-			  .appendTo(emotesbtngroup).html(text)
+			  .attr('title', text).appendTo(emotesbtngroup).html(text)
 			  .on("click", function() {
 				$(".emotesbtn").removeClass('active');
 				$(this).addClass('active');
@@ -4057,24 +4059,24 @@ $("#chat-f7").on("click", function() {
 	     +  '</div><div class="form-group">'
 	     +    '<label class="control-label col-sm-4">Ping Volume</label>'
 	     +    '<div class="col-sm-8 config-col"><div class="btn-group">'
-	     +      '<button id="ping-down" class="btn btn-sm btn-default" title="Ping volume down" type="button">'
+	     +      '<button id="ping-down-btn" class="btn btn-sm btn-default" title="Ping volume down" type="button">'
 	     +        '<span class="glyphicon glyphicon-minus"></span></button>'
-	     +      '<button id="ping-mute" class="btn btn-sm btn-default" title="Mute ping sound" type="button">'
+	     +      '<button id="ping-mute-btn" class="btn btn-sm btn-default" title="Mute ping sound" type="button">'
 	     +        '<span class="glyphicon glyphicon-refresh"></span> volume level: '
 	     +        '<span id="ping-volume-level">100</span>%</button>'
-	     +      '<button id="ping-up" class="btn btn-sm btn-default" title="Ping volume up" type="button">'
+	     +      '<button id="ping-up-btn" class="btn btn-sm btn-default" title="Ping volume up" type="button">'
 	     +        '<span class="glyphicon glyphicon-plus"></span></button></div></div>'
 	     +  '</div><div class="form-group">'
 	     +    '<label class="control-label col-sm-4">Play ping file</label>'
 	     +    '<div class="col-sm-8 config-col">'
-	     +      '<button id="ping-play" class="btn btn-sm btn-default" title="Play ping file" type="button">'
+	     +      '<button id="ping-play-btn" class="btn btn-sm btn-default" title="Play ping file" type="button">'
 	     +        '<span class="glyphicon glyphicon-play"></span></button></div></div></form>';
 	body.html(html);
 
 	if (CUSTOMPING) $("#custom-ping").prop('checked', true);
 	$("#custom-ping-file").val(CUSTOMPINGFILE);
 	document.getElementById("ping-volume-level").innerHTML = Math.round(CUSTOMPINGLVL * 100);
-	if (CUSTOMPINGLVL == 0) $("#ping-mute").addClass('btn-danger');
+	if (CUSTOMPINGLVL == 0) $("#ping-mute-btn").addClass('btn-danger');
 
 	$("#custom-ping").on("click", function() {
 		CUSTOMPING = $("#custom-ping").prop('checked');
@@ -4092,44 +4094,44 @@ $("#chat-f7").on("click", function() {
 		if (CUSTOMPING && CUSTOMPINGFILE != "") $("#chat-f7").addClass('activated');
 		setOpt('SP_custompingfile', CUSTOMPINGFILE);
 	});
-	$("#ping-down").on("click", function() {
+	$("#ping-down-btn").on("click", function() {
 		CUSTOMPINGLVL = Math.ceil(Math.round((CUSTOMPINGLVL - 0.05) * 100) / 5) * 0.05;
 		if (CUSTOMPINGLVL <= 0) {
 			CUSTOMPINGLVL = 0;
-			$("#ping-mute").attr('title', 'Unmute ping sound').addClass('btn-danger');
+			$("#ping-mute-btn").attr('title', 'Unmute ping sound').addClass('btn-danger');
 		}
 		CHATSOUND.volume = CUSTOMPINGLVL;
 		document.getElementById("ping-volume-level").innerHTML = Math.round(CUSTOMPINGLVL * 100);
 		setOpt('SP_custompinglvl', CUSTOMPINGLVL);
 	});
-	$("#ping-mute").on("click", function() {
+	$("#ping-mute-btn").on("click", function() {
 		if (!$(this).hasClass('btn-danger')) {
 			CURRENTPINGVOL = CUSTOMPINGLVL;
 			CUSTOMPINGLVL = 0;
 			CHATSOUND.volume = 0;
-			$("#ping-down").addClass('disabled');
+			$("#ping-down-btn").addClass('disabled');
 			$(this).attr('title', 'Unmute ping sound');
 		} else {
 			if (typeof CURRENTPINGVOL === "undefined") CURRENTPINGVOL = 1;
 			CUSTOMPINGLVL = CURRENTPINGVOL;
 			CHATSOUND.volume = CURRENTPINGVOL;
-			$("#ping-down").removeClass('disabled');
+			$("#ping-down-btn").removeClass('disabled');
 			$(this).attr('title', 'Mute ping sound');
 		}
 		$(this).toggleClass('btn-danger');
 		document.getElementById("ping-volume-level").innerHTML = Math.round(CUSTOMPINGLVL * 100);
 		setOpt('SP_custompinglvl', CUSTOMPINGLVL);
 	});
-	$("#ping-up").on("click", function() {
+	$("#ping-up-btn").on("click", function() {
 		CUSTOMPINGLVL = Math.floor(Math.round((CUSTOMPINGLVL + 0.05) * 100) / 5) * 0.05;
 		if (CUSTOMPINGLVL > 1) CUSTOMPINGLVL = 1;
 		CHATSOUND.volume = CUSTOMPINGLVL;
-		$("#ping-down").removeClass('disabled');
-		$("#ping-mute").attr('title', 'Mute ping sound').removeClass('btn-danger');
+		$("#ping-down-btn").removeClass('disabled');
+		$("#ping-mute-btn").attr('title', 'Mute ping sound').removeClass('btn-danger');
 		document.getElementById("ping-volume-level").innerHTML = Math.round(CUSTOMPINGLVL * 100);
 		setOpt('SP_custompinglvl', CUSTOMPINGLVL);
 	});
-	$("#ping-play").on("click", function() {
+	$("#ping-play-btn").on("click", function() {
 		CHATSOUND.play();
 	});
 
@@ -4177,10 +4179,10 @@ $("#chat-3").on("click", function() {
 	$(this).toggleClass('activated');
 	if (!PLAYERTEXT) {
 		$videowrap.find(".embed-responsive-16by9").prepend('<div id="player-chat-wrap" />');
-		addServerMessage('NicoNico mode is now on - chat messages will be displayed on the player');
+		addChatNotification('NicoNico mode is now on - chat messages will be displayed on the player');
 	} else {
 		$("#player-chat-wrap").remove();
-		addServerMessage('NicoNico mode is now off');
+		addChatNotification('NicoNico mode is now off');
 	}
 	setOpt('SP_playertext', PLAYERTEXT = !PLAYERTEXT);
 });
@@ -4303,7 +4305,7 @@ $("#chat-15").on("click", function() {
 			$(this).removeClass('activated');
 		} else {
 			$("#chatopts-outer").removeClass('open');
-			addServerMessage('Warning! You have no permission to resign from Leader status.');
+			addChatNotification('Warning! You have no permission to resign from Leader status.');
 		}
 	} else {
 		socket.emit("assignLeader", {name:CLIENT.name});
@@ -4412,9 +4414,9 @@ $("#addtofav-btn").on("click", function() {
 	if (len >= 200) {
 		var html = '<strong>Warning: the list is full</strong><br />You have reached maximum limit (200) '
 			 + 'of favourite links. Delete other items to add new.<br />'
-			 + '<button id="close-msg" class="btn btn-primary">Close</button>';
+			 + '<button id="close-msg-btn" class="btn btn-primary">Close</button>';
 		$('<div class="alert alert-warning" />').insertBefore("#queue-fav").html(html);
-		$("#close-msg").on("click", function() {
+		$("#close-msg-btn").on("click", function() {
 			$(this).parent().remove();
 		});
 		return;
@@ -4447,10 +4449,10 @@ $("#fixfavs-btn").on("click", function() {
 });
 
 
-// Advanced options buttons events
+// Additional options buttons events
 
-$("#advopts-btn").on("click", function() {
-	toggleElement($advoptswrap);
+$("#addopts-btn").on("click", function() {
+	toggleElement($addoptswrap);
 	if ($(this).hasClass('active')) clearInterval(UTCCLOCK)
 	else {
 		UTCCLOCK = setInterval(function() {UTCTime()}, 1000);
@@ -4784,7 +4786,7 @@ $("#public-btn").on("click", function() {
 		$.get('/', function(data) {
 			var html = $(data).find("table");
 			if (html) {
-				$('<div id="channel-list" />').appendTo("#advoptswrap > div").html(html)
+				$('<div id="channel-list" />').appendTo("#addoptswrap > div").html(html)
 				  .append('<div class="clearfix5" />');
 			}
 		});
@@ -5135,6 +5137,7 @@ function prepareMessage(msg) {
 			msg = AnswersArray[Math.round(Math.random() * (AnswersArray.length - 1))];
 		} else if (msg.indexOf('!gif ') == 0) {
 			var q = msg.split('!gif ')[1];
+			if (GiphyAPIKey == "") GiphyAPIKey = 'dc6zaTOxFJmzC';
 			var url = 'https://api.giphy.com/v1/gifs/search?api_key=' + GiphyAPIKey + '&q='
 				+ encodeURIComponent(q);
 			$.getJSON(url, function(data) {
@@ -5199,23 +5202,23 @@ function prepareMessage(msg) {
 		} else if (msg.indexOf('!add ') == 0) {
 			if (hasPermission("playlistadd")) {
 				var parsed = parseMediaLink(msg.split('!add ')[1]);
-				if (parsed["id"] === null) addServerMessage('Error: invalid link')
+				if (parsed["id"] === null) addChatNotification('Error: invalid link')
 				else socket.emit("queue", {id:parsed["id"], pos:"end", type:parsed["type"]});
-			} else addServerMessage('Warning! You have no permission to add links');
+			} else addChatNotification('Warning! You have no permission to add links');
 			COMMAND = false;
 		} else if (msg.indexOf('!skip') == 0) {
 			if (hasPermission("voteskip")) {
 				$("#voteskip").attr("disabled", true);
 				socket.emit("voteskip");
-				if ($queue.find(".queue_entry").length > 0) addServerMessage('item voteskipped')
-				else addServerMessage('Warning! Playlist is empty');
-			} else addServerMessage('Warning! You have no permission to voteskip');
+				if ($queue.find(".queue_entry").length > 0) addChatNotification('item voteskipped')
+				else addChatNotification('Warning! Playlist is empty');
+			} else addChatNotification('Warning! You have no permission to voteskip');
 			COMMAND = false;
 		} else if (msg.indexOf('!next') == 0) {
 			if (hasPermission("playlistjump")) {
 				if ($queue.find(".queue_entry").length > 0) socket.emit("playNext")
-				else addServerMessage('Warning! Playlist is empty');
-			} else addServerMessage('Warning! You have no permission to playing next item');
+				else addChatNotification('Warning! Playlist is empty');
+			} else addChatNotification('Warning! You have no permission to playing next item');
 			COMMAND = false;
 		} else if (msg.indexOf('!bump') == 0) {
 			if (hasPermission("playlistmove")) {
@@ -5223,9 +5226,9 @@ function prepareMessage(msg) {
 					var last = $queue.children().length;
 					var uid = $queue.find(".queue_entry:nth-child(" + last + ")").data("uid");
 					socket.emit("moveMedia", {from:uid, after:PL_CURRENT});
-					addServerMessage('last item bumped to next');
-				} else addServerMessage('Warning! Playlist is empty');
-			} else addServerMessage('Warning! You have no permission to move playlist items');
+					addChatNotification('last item bumped to next');
+				} else addChatNotification('Warning! Playlist is empty');
+			} else addChatNotification('Warning! You have no permission to move playlist items');
 			COMMAND = false;
 		} else if(msg.indexOf('!movernd') == 0) {
 			if (hasPermission("playlistmove")) {
@@ -5236,9 +5239,9 @@ function prepareMessage(msg) {
 					var b = $queue.find(".queue_entry:nth-child(" + r1 + ")").data("uid");
 					var a = $queue.find(".queue_entry:nth-child(" + r2 + ")").data("uid");
 					socket.emit("moveMedia", {from:b, after:a});
-					addServerMessage('random item moved to random position');
-				} else addServerMessage('Warning! Playlist is empty');
-			} else addServerMessage('Warning! You have no permission to move playlist items');
+					addChatNotification('random item moved to random position');
+				} else addChatNotification('Warning! Playlist is empty');
+			} else addChatNotification('Warning! You have no permission to move playlist items');
 			COMMAND = false;
 		} else if(msg.indexOf('!drop') == 0) {
 			if (hasPermission("playlistmove")) {
@@ -5247,9 +5250,9 @@ function prepareMessage(msg) {
 					var b = $queue.find(".queue_entry:nth-child(1)").data("uid");
 					var a = $queue.find(".queue_entry:nth-child(" + len + ")").data("uid");
 					socket.emit("moveMedia", {from:b, after:a});
-					addServerMessage('first item moved to the end of playlist');
-				} else addServerMessage('Warning! Playlist is empty');
-			} else addServerMessage('Warning! You have no permission to move playlist items');
+					addChatNotification('first item moved to the end of playlist');
+				} else addChatNotification('Warning! Playlist is empty');
+			} else addChatNotification('Warning! You have no permission to move playlist items');
 			COMMAND = false;
 		} else if(msg.indexOf('!deletelast') == 0) {
 			if (hasPermission("playlistdelete")) {
@@ -5257,9 +5260,9 @@ function prepareMessage(msg) {
 				if (len > 0) {
 					var a = $queue.find(".queue_entry:nth-child(" + len + ")").data("uid");
 					socket.emit("delete", a);
-					addServerMessage('last item deleted from playlist');
-				} else addServerMessage('Warning! Playlist is empty');
-			} else addServerMessage('Warning! You have no permission to delete playlist items');
+					addChatNotification('last item deleted from playlist');
+				} else addChatNotification('Warning! Playlist is empty');
+			} else addChatNotification('Warning! You have no permission to delete playlist items');
 			COMMAND = false;
 		} else if (msg.indexOf('!fact') == 0 && FactsArray.length > 0) {
 			checkCommandsAbuse();
@@ -5302,7 +5305,7 @@ function sendMessage() {
 	else if (msg == "/css") document.getElementById("layout-2").click()
 	else if (msg == "/leader") {
 		if (hasPermission("leaderctl")) document.getElementById("chat-15").click();
-		else addServerMessage('Warning! You have no permission to give yourself a Leader status');
+		else addChatNotification('Warning! You have no permission to give yourself a Leader status');
 		cl = false;
 	} else if (msg == "/theatre") {
 		if ($("#close-btn").length > 0) document.getElementById("close-btn").click();
@@ -5319,8 +5322,8 @@ function sendMessage() {
 		cl = false;
 	} else if (msg == "/autoscroll") {
 		document.getElementById("chat-18").click();
-		if ($("#chat-18").hasClass('activated')) addServerMessage('Chat autoscroll is now off')
-		else addServerMessage('Chat autoscroll is now on');
+		if ($("#chat-18").hasClass('activated')) addChatNotification('Chat autoscroll is now off')
+		else addChatNotification('Chat autoscroll is now on');
 	} else if (msg == "/ulist") {
 		document.getElementById("userlisttoggle").click();
 		cl = false;
@@ -5330,28 +5333,28 @@ function sendMessage() {
 	} else if (msg == "/top") document.getElementById("scroll-top").click()
 	else if (msg == "/chatclear") document.getElementById("chat-f8").click()
 	else if (msg == "/plhide") {
-		if (NOPLAYER) addServerMessage('Warning! Unavailable command - player was removed')
+		if (NOPLAYER) addChatNotification('Warning! Unavailable command - player was removed')
 		else {
 			document.getElementById("plr-1").click();
 			cl = false;
 		}
 	} else if (msg == "/pltoggle") {
-		if (NOPLAYER) addServerMessage('Warning! Unavailable command - player was removed')
+		if (NOPLAYER) addChatNotification('Warning! Unavailable command - player was removed')
 		else {
 			document.getElementById("plr-13").click();
 			cl = false;
 		}
 	} else if (msg == "/plmute") {
-		if (NOPLAYER) addServerMessage('Warning! Unavailable command - player was removed')
+		if (NOPLAYER) addChatNotification('Warning! Unavailable command - player was removed')
 		else {
 			document.getElementById("plr-9").click();
 			cl = false;
 		}
 	} else if (msg == "/nn") {
-		if (NOPLAYER) addServerMessage('Warning! Unavailable command - player was removed')
+		if (NOPLAYER) addChatNotification('Warning! Unavailable command - player was removed')
 		else document.getElementById("chat-3").click();
 	} else if (msg == "/mascot") {
-		if (NOPLAYER) addServerMessage('Warning! Unavailable command - player was removed')
+		if (NOPLAYER) addChatNotification('Warning! Unavailable command - player was removed')
 		else {
 			document.getElementById("plr-17").click();
 			cl = false;
@@ -5359,10 +5362,10 @@ function sendMessage() {
 	} else if (msg == "/last") document.getElementById("pls-1").click()
 	else if (msg == "/save") {
 		if ($("#pls-3").css('display') == "none") {
-			addServerMessage('Warning! This item has no downloadable link');
+			addChatNotification('Warning! This item has no downloadable link');
 		} else document.getElementById("pls-3").click();
 	} else if (msg == "/fav") {
-		if (NOPLAYER) addServerMessage('Warning! Unavailable command - player was removed')
+		if (NOPLAYER) addChatNotification('Warning! Unavailable command - player was removed')
 		else {
 			if (!$("#favs-btn").hasClass('btn-success')) {
 				if (!$("#favs-btn").hasClass('active')) document.getElementById("favs-btn").click();
@@ -5397,7 +5400,7 @@ function sendMessage() {
 			var html = 'Warning! This command cannot be executed - chat antiflood option is enabled. '
 				 + '"# of messages allowed before throttling" option in Chat Settings '
 				 + 'must be above 1 to run this command. Ask channel administrator.'
-			addServerMessage(html);
+			addChatNotification(html);
 		} else {
 			var meta = {};
 			if (USEROPTS.adminhat && CLIENT.rank >= 255) msg = '/a ' + msg
@@ -5645,7 +5648,7 @@ function API_IMGUR_upload(file) {
 	xhr.onerror = function(){
 		alert('An error occurred during upload: ' + xhr.status);
 		imageli.show();
-		$("#oeup").show();
+		$("#oeup-btn").show();
 		upalert.remove();
 	};
 	xhr.upload.onprogress = function(ev) {
@@ -5663,7 +5666,7 @@ function API_IMGUR_uploading(file) {
 	} else {
 		alert('Only image files are allowed.');
 		imageli.show();
-		$("#oeup").show();
+		$("#oeup-btn").show();
 		upalert.remove();
 	}
 }
@@ -5671,7 +5674,7 @@ function API_IMGUR_uploading(file) {
 API_IMGUR_load(function(res) {
 	insertText(res + ' ');
 	imageli.show();
-	$("#oeup").show();
+	$("#oeup-btn").show();
 	upalert.remove();
 });
 
@@ -5712,7 +5715,7 @@ uploadbtn = $('<button id="upload-btn" class="btn btn-sm btn-default">Upload ima
 
 uploadinput.onchange = function() {
 	imageli.hide();
-	$("#oeup").hide();
+	$("#oeup-btn").hide();
 	upalert = $('<div id="upalert" class="profile-box text-center upalert">File upload: 0%</div>')
 	  .appendTo("#chatwrap");
 	upalert.css('top', ($chatwrap.height() - upalert.height()) / 2)
@@ -5738,7 +5741,7 @@ function uploadOekaki(pic) {
 	  .appendTo("#chatwrap");
 	upalert.css('top', ($chatwrap.height() - upalert.height()) / 2)
 	  .css('left', ($chatwrap.width() - upalert.width()) / 2);
-	$("#oeup, #chat-f9").hide();
+	$("#oeup-btn, #chat-f9").hide();
 	if (ImgurClientID == "") ImgurClientID = 'a11c2b9fbdd104a';
 
 	$.ajax({url:'https://api.imgur.com/3/image',
@@ -5749,12 +5752,12 @@ function uploadOekaki(pic) {
 		success:function(json) {
 			socket.emit("chatMsg", {msg:json.data.link + '?oekaki'});
 			upalert.remove();
-			$("#oeup, #chat-f9").show();
+			$("#oeup-btn, #chat-f9").show();
 		},
 		error:function(json) {
 			alert('Error! Try again.');
 			upalert.remove();
-			$("#oeup, #chat-f9").show();
+			$("#oeup-btn, #chat-f9").show();
 		}
 	});
 }
@@ -5774,9 +5777,9 @@ function oekaki() {
 		DrawingBoard.Control.Upload = DrawingBoard.Control.extend({
 			name:'Upload',
 			initialize:function() {
-				$('<button id="oeup" title="send to chat" />').appendTo(this.$el)
+				$('<button id="oeup-btn" title="send to chat" />').appendTo(this.$el)
 				  .html('Send <i class="glyphicon glyphicon-export"></i>')
-				this.$el.on('click', '#oeup', $.proxy(function(e) {
+				this.$el.on('click', '#oeup-btn', $.proxy(function(e) {
 					e.preventDefault();
 					var time = (new Date()).getTime();
 					if ((time - OETSTAMP) > 30000) {
@@ -5922,14 +5925,14 @@ var css = '.bigtitle {\n'
 	+ '#upalert {padding:10px; position:absolute; width:150px; max-width:150px; border-width:4px}\n'
 	+ '#timeleftclock {float:right; margin:auto 5px}\n'
 	+ '#plr-menu {min-width:215px}\n'
-	+ '#plr-menu .glyphicon-refresh, #ping-reset .glyphicon-refresh {margin-right:5px}\n'
+	+ '#plr-menu .glyphicon-refresh {margin-right:5px}\n'
 	+ '#contributors-list th:nth-child(1), #contributors-list td:nth-child(1) {padding-right:15px}\n'
 	+ '#contributors-list th:nth-child(3), #contributors-list td:nth-child(3) {\n'
 	+ '  text-align:right; padding-left:50px\n'
 	+ '}\n'
 	+ '#db-well {margin-top:10px}\n'
 	+ '#db-well > button {display:block; width:40%; margin:0 auto}\n'
-	+ '#advoptswrap {margin-bottom:5px}\n'
+	+ '#addoptswrap {margin-bottom:5px}\n'
 	+ '#utc {padding-top:5px}\n'
 	+ '#channel-list {max-height:400px; margin-top:5px; overflow:auto}\n'
 	+ '#favscontrol, #addtofav-btn {margin-bottom:5px}\n'
@@ -5955,7 +5958,7 @@ var css = '.bigtitle {\n'
 	+ '#spoekaki {margin:0 auto; max-width:400px}\n'
 	+ '#spoekaki canvas {height:235px}\n'
 	+ '#spoekaki .drawing-board-control-navigation button {color:#000}\n'
-	+ '#oeup {font-size:10pt; color:#000}\n'
+	+ '#oeup-btn {font-size:10pt; color:#000}\n'
 	+ '#avatarspanel {padding-bottom:9px; text-align:center}\n'
 	+ '#avatarspanel div {margin-bottom:9px}\n'
 	+ '#avatarspanel img {margin:0 5px 10px; border-radius:10px; max-width:50px; max-height:50px}\n'
@@ -6273,7 +6276,7 @@ if (USERNAMEMARK != ":") {
 socket.on("addUser", function(data) {
 	if (PREMIUMNOTMODE == 2 || PREMIUMNOTMODE == 4) {
 		if (JoinMessage == "") JoinMessage = 'joined';
-		addServerMessage(data.name + ' ' + JoinMessage);
+		addChatNotification(data.name + ' ' + JoinMessage);
 	}
 	if (AVATARSLIST) refreshAvatarsList();
 });
@@ -6298,7 +6301,7 @@ socket.on("queue", function() {
 socket.on("userLeave", function(data) {
 	if (PREMIUMNOTMODE == 2 || PREMIUMNOTMODE == 4) {
 		if (LeaveMessage == "") LeaveMessage = 'disconnected';
-		addServerMessage(data.name + ' ' + LeaveMessage);
+		addChatNotification(data.name + ' ' + LeaveMessage);
 	}
 	if (AVATARSLIST) refreshAvatarsList();
 });
@@ -6362,18 +6365,18 @@ if (WelcomeSoundFileURL != "" && PLAYWELCOME) {
 
 LOADED = true;
 var time = Math.round(new Date().getTime() - START) / 1000;
-addServerMessage('Synchtube Premium v. ' + VERSION + ' activated (in ' + time + ' s.)');
+addChatNotification('Synchtube Premium v. ' + VERSION + ' activated (in ' + time + ' s.)');
 
 
 // Admin messages
 
 if (CLIENT.rank > 2) {
 	if (!TOOLSENABLED) {
-		addServerMessage('You have now access to Premium Admin Tools.');
-		var html = 'Open "Advanced options" panel [<span class="glyphicon glyphicon-flash"></span> '
+		addChatNotification('You have now access to Premium Admin Tools.');
+		var html = 'Open "Additional options" panel [<span class="glyphicon glyphicon-flash"></span> '
 			 + 'button below player] and select "Tools".';
-		addServerMessage(html);
-		addServerMessage('Message above won\'t show again after entering "Tools".');
+		addChatNotification(html);
+		addChatNotification('Message above won\'t show again after entering "Tools".');
 	}
 	if (CHANNEL.opts.externaljs.indexOf('https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js') < 0) {
 		$.getScript(DROPBOX + "295oy7nkr9nv2re/check.js", function() {
@@ -6382,7 +6385,7 @@ if (CLIENT.rank > 2) {
 			if (typeof CURRENT_VERSION !== "undefined" && ver != CURRENT_VERSION) {
 				var html = 'Version <b>' + CURRENT_VERSION + '</b> of Synchtube Premium '
 					 + 'is now available. It is recommended to update your custom script.';
-				addServerMessage(html);
+				addChatNotification(html);
 			}
 		});
 	}
@@ -6400,9 +6403,9 @@ if (EMOTESCACHE) {
 			document.title = PAGETITLE;
 			var html = 'Loading emotes to cache finished! ' + num + ' ' + 'emote' + ((num != 1) ? 's' : '')
 				 + ' loaded, ' + err + ' error' + ((err != 1) ? 's' : '');
-			addServerMessage(html);
+			addChatNotification(html);
 		}
-		addServerMessage('Loading emotes to cache started! Status is shown on the browser\'s tab');
+		addChatNotification('Loading emotes to cache started! Status is shown on the browser\'s tab');
 		var num = 0;
 		var err = 0;
 		for (i in CHANNEL.emotes) {
