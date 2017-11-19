@@ -26,7 +26,7 @@ _________
 # Release date:		2017-11-19
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
-# Project URL:		https://github.com/ZimnyTest/SynchtubePremium
+# Project URL:		https://github.com/ZimnyLech/Synchtube-Premium
 
 # API CONTENTS
 ______________
@@ -1018,15 +1018,6 @@ function refreshAvatarsList() {
 	$avatarspanel.html(html);
 }
 
-// Hide non-visible playlist again if rebuilded
-
-function rehidePlaylist() {
-	if (HIDEPLS) $queue.hide();
-	if (HIDEPLSBTNS) setTimeout(function() {
-		queueButtons("hide");
-		scrollQueue();
-	}, 1000);
-}
 
 // Remove selected link from favourites list
 
@@ -2570,7 +2561,7 @@ if (arr.length == 3) arr[2] = '<span class="smallfont">' + arr[2] + '</span>';
 VERSION = arr.join(".");
 
 var html = '<br />Channel powered by: <b>Synchtube Premium</b> v. ' + VERSION + ', Copyright © 2016-2017 ZimnyLech · '
-	 + '<a href="https://github.com/ZimnyTest/Premium" target="_blank">GitHub</a> · '
+	 + '<a href="https://github.com/ZimnyLech/Synchtube-Premium" target="_blank">GitHub</a> · '
 	 + '<img src="http://simplehitcounter.com/hit.php?uid=2187367" title="Synchtube Premium load counter" /><br />'
 	 + '<a href="http://s06.flagcounter.com/more/rze9" target="_blank">'
 	 +   '<img id="spc" src="http://s06.flagcounter.com/count/rze9/bg=FFFFFF/txt=000000/'
@@ -6176,7 +6167,6 @@ if (window.location.href.indexOf("//synchtu.be/") < 0) synchlogo = 'none';
 var _bg = $(".navbar-brand").css('background-image');
 if (_bg != "none") synchlogo = _bg;
 if (MiniLogoURL != "") synchlogo = 'url("' + MiniLogoURL + '")';
-
 if (synchlogo == "none") var _pl = 15
 else {
 	var _pd = $(".navbar-brand").css('padding-left');
@@ -6332,7 +6322,13 @@ socket.on("setLeader", function() {
 	else $("#chat-15").removeClass('activated');
 });
 socket.on("setMotd", alterMOTD);
-socket.on("setPlaylistLocked", rehidePlaylist);
+socket.on("setPlaylistLocked", function() {
+	if (HIDEPLS) $queue.hide();
+	if (HIDEPLSBTNS) setTimeout(function() {
+		queueButtons("hide");
+		scrollQueue();
+	}, 1000);
+});
 
 
 // Execute final functions
