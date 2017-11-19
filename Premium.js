@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.RC 1
-# Release date:		2017-11-19
+# Version:		2.10.RC 2
+# Release date:		2017-11-20
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyLech/Synchtube-Premium
@@ -264,7 +264,7 @@ VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "u
 // Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
-VERSION		= '2.10.RC 1';
+VERSION		= '2.10.RC 2';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -6378,14 +6378,14 @@ if (WelcomeSoundFileURL != "" && PLAYWELCOME) {
 }
 
 
-// Message if script has been succesfully loaded
+// Notification if API has been succesfully loaded
 
 LOADED = true;
 var time = Math.round(new Date().getTime() - START) / 1000;
 addChatNotification('Synchtube Premium v. ' + VERSION + ' activated (in ' + time + ' s.)');
 
 
-// Admin messages
+// Admin notifications
 
 if (CLIENT.rank > 2) {
 	if (!TOOLSENABLED) {
