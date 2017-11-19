@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.beta 1
-# Release date:		2017-11-17
+# Version:		2.10.RC 1
+# Release date:		2017-11-19
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyTest/SynchtubePremium
@@ -264,7 +264,7 @@ VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "u
 // Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
-VERSION		= '2.10.beta 1';
+VERSION		= '2.10.RC 1';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -388,7 +388,7 @@ $plmeta			= $("#plmeta");
 
 // ***** Helper functions (in alphabetical order) ***** //
 
-// Add private premium message to chat
+// Add personal chat notification
 
 function addChatNotification(html) {
 	setTimeout(function() {
@@ -621,7 +621,7 @@ function getTimePos() {
 	else return -0.01;
 }
 
-// Get variable from channel external JS file URL
+// Get variable from URL of an external JS file
 
 function getURLVar(v) {
 	var link = CHANNEL.opts.externaljs.split("?");
@@ -737,7 +737,7 @@ function handleRank() {
 		if ($("#chat-14").parent().css('display') == "none") $("#chat-15").parent().hide()
 		else $("#chat-15").parent().show();
 	}
-	HIDEPLSBTNS ? $queue.addClass('nobuttons') : $queue.removeClass('nobuttons');
+	HIDEPLSBTNS ? queueButtons("hide") : queueButtons("show");
 }
 
 // Hide chat emotes
@@ -932,7 +932,7 @@ function progressBar() {
 function rebuildMiniatures() {
 	if (!MINIATURES) return;
 	$queue.find(".miniature").remove();
-	showMiniatures();
+	queueMiniatures("show");
 }
 
 // Process various layout elements
@@ -1023,7 +1023,7 @@ function refreshAvatarsList() {
 function rehidePlaylist() {
 	if (HIDEPLS) $queue.hide();
 	if (HIDEPLSBTNS) setTimeout(function() {
-		$queue.addClass('nobuttons');
+		queueButtons("hide");
 		scrollQueue();
 	}, 1000);
 }
@@ -1092,18 +1092,6 @@ function setPlayerBrightness() {
 	$("#plr-bright").css('background-color', 'rgba(' + col + ',' + col + ',' + col + ',' + op + ')');
 }
 
-// Display contributors usernames on the playlist
-
-function showContributors() {
-	if (!SHOWCONTRIBS) return;
-	$queue.find("li").each(function() {
-		var contr = $(this).attr('title').replace('Added by: ', '');
-		var time = $(this).find(".qe_time");
-		time.find(".contrib").remove()
-		time.html('<span class="contrib">' + contr + ' | </span>' + time.html());
-	});
-}
-
 // Show images directly on chat
 
 function showImagesOnChat(elem) {
@@ -1114,23 +1102,6 @@ function showImagesOnChat(elem) {
 		  });
   		$(this).html(img);
 	});
-}
-
-// show miniatures on the playlist
-
-function showMiniatures() {
-	$queue.find("li").each(function() {
-		var link = '';
-		var media = $(this).data("media");
-		if (media.type == "yt") link = 'http://img.youtube.com/vi/' + media.id + '/1.jpg'
-		else if (media.type == "dm") link = 'http://www.dailymotion.com/thumbnail/video/' + media.id;
-		if (link != "") {
-			if (USEROPTS.qbtn_idontlikechange) {
-				$(this).append('<img src="' + link + '" class="miniature" />');
-			} else $(this).find(".btn-group").before('<img src="' + link + '" class="miniature" />');
-		}
-	});
-	scrollQueue();
 }
 
 // Show oekaki directly on chat
@@ -1260,7 +1231,7 @@ function volumeLvl() {
 }
 
 
-// ***** Layout functions (in order of appearance) ***** //
+// ***** Functions from "Layout" menu (in order of appearance) ***** //
 
 function compactLayout() {
 	$body.addClass('fluid');
@@ -1393,7 +1364,7 @@ function largeChat() {
 	if (ratio > 1.85) classes = 'col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2'
 	else classes = 'col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1';
 	$("#chatwrap, #leftcontrols").removeClass().addClass(classes);
-	collapseChat();
+	chatHeight("compact");
 	var ht = $(window).height() - 100;
 	if (ht > 500) ht -= 200;
 	$("#messagebuffer, #userlist").height(ht);
@@ -1411,7 +1382,7 @@ function normalChat() {
 	var class2 = 12 - parseInt(match[1], 10);
 	$("#chatwrap, #leftcontrols").removeClass().addClass('col-md-' + class1 + ' col-lg-' + class1);
 	$videowrap.removeClass().addClass('col-md-' + class2 + ' col-lg-' + class2);
-	collapseChat();
+	chatHeight("compact");
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
@@ -1442,7 +1413,7 @@ function normalPlayer() {
 	$chatwrap.removeClass().addClass('col-md-' + class1 + ' col-lg-' + class1);
 	$("#videowrap, #rightcontrols").removeClass().addClass('col-md-' + class2 + ' col-lg-' + class2);
 	$scrollToChat.html('To chat ▴');
-	collapseChat();
+	chatHeight("compact");
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
@@ -1451,7 +1422,7 @@ function theatreMode() {
 	if (LARGECHAT) normalChat();
 	if (LARGEPLAYER) normalPlayer();
 	if (SINGLECOLUMN) twoColumns();
-	if (FULLTITLE) compactTitle();
+	if (FULLTITLE) titlebarMode("compact");
 	$(".poll-menu").remove();
 	$("#chatwrap, #videowrap").show();
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #userlist").hide();
@@ -1499,7 +1470,7 @@ function theatreMode() {
 		$("#emote-view").removeClass('b-right').addClass('t-right bright-old');
 		EMOTESPREVPOS = "t-right";
 	}
-	if ($expandChat.hasClass('label-success')) collapseChat();
+	if ($expandChat.hasClass('label-success')) chatHeight("compact");
 	closebtn = $('<button id="close-btn" class="btn btn-danger pointer" title="Close Theatre Mode" />')
 	  .addClass(!SYNCH ? 'tmode' : 'tmode2').appendTo("body")
 	  .append('<span class="glyphicon glyphicon-new-window" />')
@@ -1536,7 +1507,7 @@ function closeTheatreMode() {
 	if ($userlisttoggle.hasClass('glyphicon-chevron-down')) $userlist.show();
 	if (!$("#oekaki-btn").hasClass('btn-success')) $oekakiwrap.hide();
 	if (!$("#notepad-btn").hasClass('btn-success')) $notepadwrap.hide();
-	if (FULLTITLE) fullWidthTitle();
+	if (FULLTITLE) titlebarMode("full");
 	if (SINGLECOLUMN) singleColumn();
 	if (LARGECHAT) largeChat();
 	if (LARGEPLAYER) largePlayer();
@@ -1566,7 +1537,7 @@ function radioMode() {
 	if (LARGECHAT) normalChat();
 	if (LARGEPLAYER) normalPlayer();
 	if (COMPACT) fluidLayout();
-	if (SCROLLNAVBAR) fixedNavbar();
+	if (SCROLLNAVBAR) navbarMode("static");
 	if (FULLTITLE) {
 		$videowrapHeader.detach().prependTo("#videowrap").removeClass('bigtitle');
 		$titlerow.remove();
@@ -1583,7 +1554,7 @@ function radioMode() {
 	if (NOPLAYER) $("#plr-btn").hide();
 	$("#chatwrap, #videowrap, #leftcontrols, #rightcontrols, #rightpane").removeClass()
 	  .addClass('col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2');
-	if ($expandChat.hasClass('label-success')) collapseChat();
+	if ($expandChat.hasClass('label-success')) chatHeight("compact");
 	var html = 'You are listening to: /r/' + window.location.href.split("/").pop();
 	if (CHANNEL.opts.pagetitle != "") html += '<i> - ' + CHANNEL.opts.pagetitle + '</i>';
 	radioheaderwrap = $('<div id="radioheaderwrap" class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2" />')
@@ -1677,8 +1648,8 @@ function closeRadioMode() {
 	var class2 = 12 - parseInt(match[1], 10);
 	$("#chatwrap, #leftcontrols").removeClass().addClass('col-md-' + class1 + ' col-lg-' + class1);
 	$("#videowrap, #rightcontrols, #rightpane").removeClass().addClass('col-md-' + class2 + ' col-lg-' + class2);
-	if (FULLTITLE) fullWidthTitle();
-	if (SCROLLNAVBAR) scrollableNavbar();
+	if (FULLTITLE) titlebarMode("full");
+	if (SCROLLNAVBAR) navbarMode("scrollable");
 	if (!SYNCH) $chatwrap.insertBefore($videowrap);
 	if (SINGLECOLUMN) singleColumn();
 	if (COMPACT) compactLayout();
@@ -1693,89 +1664,256 @@ function closeRadioMode() {
 	$chatline.focus();
 }
 
-function scrollableNavbar() {
-	document.getElementById("navbar-unpin")
-	  .innerHTML = '<span class="glyphicon glyphicon-pushpin" title="Make navigation bar static"></span>';
-	$(".navbar-fixed-top, #mainpage").addClass('snav');
-}
+// ***** Other layout functions (in alphabetical order) ***** //
 
-function fixedNavbar() {
-	document.getElementById("navbar-unpin")
-	  .innerHTML = '<span class="glyphicon glyphicon-open" title="Make navigation bar scrollable"></span>';
-	$(".navbar-fixed-top, #mainpage").removeClass('snav');
-}
-
-function fullWidthTitle() {
-	$titlerow = $('<div id="titlerow" class="row" />').insertBefore("#main");
-	$titlewrap = $('<div id="titlewrap" class="col-lg-12 col-md-12" />').appendTo($titlerow)
-	  .html($videowrapHeader.detach().addClass('bigtitle'));
-	$("#plr-2").addClass('activated');
-	if (SINGLECOLUMN) {
-		$videowrap.before($titlewrap.detach());
-		$titlewrap.removeClass()
-		  .addClass('col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1 margin-bottom-10');
+function chatHeight(mode) {
+	if (mode == "compact") {
+		$expandChat.removeClass('label-success');
+		var ht = $ytapiplayer.height();
+		if (NOPLAYER || LARGECHAT || $("#plr-13").hasClass('activated')) ht = $(window).height() - 300;
+		$("#messagebuffer, #userlist").height(ht);
+		handleVideoResize();
+		$(window).unbind('resize.expandchat');
+	} else if (mode == "full") {
+		$expandChat.addClass('label-success');
+		if ($body.hasClass('radio-mode')) {
+			var ht = $(window).height() - $videowrap.outerHeight() - $chatheader.outerHeight();
+			ht -= $chatline.outerHeight();
+			$("#messagebuffer, #userlist").height(ht - 12);
+		} else {
+			var ht = $(window).height() - $chatheader.outerHeight() - $chatline.outerHeight();
+			if (!SCROLLNAVBAR) ht -= $nav.outerHeight();
+			if (FULLTITLE && !SINGLECOLUMN) ht -= ($chatwrap.offset().top - $titlerow.offset().top);
+			$("#messagebuffer, #userlist").height(ht - 6);
+		}
+		scrollChatToTop();
 	}
-	var html = '<span id="totalclock" class="pull-right">--:--</span>'
-		 + '<span id="mediaclock" class="pull-right">--:-- |&nbsp;</span>';
-	$mediastats = $('<p id="mediastats" />').prependTo($videowrap).html('&nbsp;' + html);
-	MEDIACLOCK = setInterval(function() {mediaClock()}, 1000);
-	mediaClock();
 }
 
-function compactTitle() {
-	$videowrapHeader.detach().prependTo("#videowrap").removeClass('bigtitle');
-	$("#plr-2").removeClass('activated');
-	$("#titlerow, #titlewrap, #mediastats").remove();
-	clearInterval(MEDIACLOCK);
-}
-
-function hideProgressBar() {
-	$("#plr-3").addClass('activated');
-	clearInterval(PBAR);
-	$videowrapHeader.removeClass('pbar').css('background-size', '0% 100%');
-}
-
-function showProgressBar() {
-	$videowrapHeader.addClass('pbar');
-	$("#plr-3").removeClass('activated');
-	PBAR = setInterval(function() {progressBar()}, 2000);
-	progressBar();
-}
-
-function expandChat() {
-	$expandChat.addClass('label-success');
-	if ($body.hasClass('radio-mode')) {
-		var ht = $(window).height() - $videowrap.outerHeight() - $chatheader.outerHeight();
-		ht -= $chatline.outerHeight();
-		$("#messagebuffer, #userlist").height(ht - 12);
-	} else {
-		var ht = $(window).height() - $chatheader.outerHeight() - $chatline.outerHeight();
-		if (!SCROLLNAVBAR) ht -= $nav.outerHeight();
-		if (FULLTITLE && !SINGLECOLUMN) ht -= ($chatwrap.offset().top - $titlerow.offset().top);
-		$("#messagebuffer, #userlist").height(ht - 6);
+function contributorsNames(mode) {
+	if (mode == "hide") {
+		$queue.find("li .contrib").each(function() {
+			$(this).remove();
+		});
+	} else if (mode == "show") {
+		$queue.find("li").each(function() {
+			var contr = $(this).attr('title').replace('Added by: ', '');
+			var time = $(this).find(".qe_time");
+			time.find(".contrib").remove()
+			time.html('<span class="contrib">' + contr + ' | </span>' + time.html());
+		});
 	}
-	scrollChatToTop();
 }
 
-function collapseChat() {
-	$expandChat.removeClass('label-success');
-	var ht = $ytapiplayer.height();
-	if (NOPLAYER || LARGECHAT || $("#plr-13").hasClass('activated')) ht = $(window).height() - 300;
-	$("#messagebuffer, #userlist").height(ht);
-	handleVideoResize();
-	$(window).unbind('resize.expandchat');
+function mediaTimeLeft(mode) {
+	if (mode == "hide") {
+		clearInterval(TIMELEFTCLOCK);
+		$timeleftclock.remove();
+	} else if (mode == "show") {
+		$timeleftclock = $('<span id="timeleftclock">[--:--]</span>').insertAfter("#resize-video-larger");
+		TIMELEFTCLOCK = setInterval(function() {timeLeftClock()}, 1000);
+		timeLeftClock();
+	}
 }
 
-function userlistRight() {
-	$("#chat-f5").addClass('activated');
-	$userlist.addClass('pull-right');
-	$body.addClass('synchtube');
+function navbarMode(mode) {
+	if (mode == "static") {
+		var html = '<span class="glyphicon glyphicon-open" title="Make navigation bar scrollable"></span>';
+		$(".navbar-fixed-top, #mainpage").removeClass('snav');
+	} else if (mode == "scrollable") {
+		var html = '<span class="glyphicon glyphicon-pushpin" title="Make navigation bar static"></span>';
+		$(".navbar-fixed-top, #mainpage").addClass('snav');
+	}
+	document.getElementById("navbar-unpin").innerHTML = html;
 }
 
-function userlistLeft() {
-	$("#chat-f5").removeClass('activated');
-	$userlist.removeClass('pull-right');
-	$body.removeClass('synchtube');
+function playerMascot(mode) {
+	if (mode == "hide") {
+		$("#mascot").remove();
+	} else if (mode == "show") {
+		var arr = [
+			['Swinging Miku', DROPBOX + 'slv73jrurvhkzpb/1.gif'],
+			['Raving Miku', DROPBOX + 'k1f6a5h4anqbnz1/2.gif'],
+			['Small Miku', DROPBOX + 'jl1984kqelw5s2n/3.gif'],
+			['Rocking Miku', DROPBOX + 'r43pbglzdy2risu/4.gif'],
+			['Emilia', DROPBOX + '4me121ir8yh4vr5/5.gif'],
+			['Koneko', DROPBOX + 'je6owthtawuubkr/6.gif'],
+			['Cirno', DROPBOX + 'ky3jex5hzvdezfl/7.gif'],
+			['Haruhi', DROPBOX + '0slpa6al657bvj5/8.gif'],
+			['Blue dress girl', DROPBOX + 'm2qfgwl2oc6ooha/9.gif'],
+			['Flashing colours girl', DROPBOX + 'a9onwax8v1m7c4y/10.gif'],
+			['Cheerleader girl', DROPBOX + 'tpr1ppaqxnxsrfe/11.gif'],
+			['Silver-haired girl', DROPBOX + '383g9evpm7zhs5z/12.gif'],
+		];
+		MASCOT = getOrDefault('SP_mascot', '');
+		if (MASCOT == "") MASCOT = arr[0][1];
+		MASCOTPOS = getOrDefault('SP_mascotpos', 'b-left');
+		$videowrap.find(".embed-responsive-16by9")
+		  .append('<img id="mascot" class="' + MASCOTPOS + '" src="' + MASCOT + '" />');
+		if (MASCOT == "custom") $("#mascot").attr('src', getOrDefault('SP_custommascoturl', ''));
+
+		$("#mascot").on("click", function() {
+			createModal('Mascot Settings');
+
+			var html = '<form class="form-horizontal"><div class="form-group">'
+				 +   '<label class="control-label col-sm-5">Mascot type</label>'
+				 +   '<div class="col-sm-7 config-col"><select id="mascottype" class="form-control">';
+			var len = arr.length;
+			for (var i = 0; i < len; i++) {
+				html += '<option value="' + arr[i][1] + '">' + arr[i][0] + '</option>'
+			}
+			html += '<option value="custom">(Custom mascot)</option>'
+			     +  '</select></div></div><div class="form-group">'
+			     +    '<label class="control-label col-sm-5">Custom mascot URL</label>'
+			     +    '<div class="col-sm-7 config-col">'
+			     +      '<input id="custommascoturl" class="form-control" type="text" '
+			     +      'placeholder="Enter image URL" />'
+			     +  '</div></div><div class="form-group">'
+			     +    '<label class="control-label col-sm-5">Position on the player</label>'
+			     +    '<div class="col-sm-7 config-col">'
+			     +      '<select id="mascotpos" class="form-control">'
+			     +        '<option value="b-left">bottom left</option>'
+			     +        '<option value="b-center">bottom center</option>'
+			     +        '<option value="b-right">bottom right</option>'
+			     +        '<option value="t-left">top left</option>'
+			     +        '<option value="t-right">top right</option>'
+			     +        '<option value="c-center">center</option></select>'
+			     +  '</div></div></form>';
+			body.html(html);
+			if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide();
+
+			$("#mascottype").val(MASCOT)
+			  .on("change", function() {
+				MASCOT = $(this).val();
+				$("#mascot").attr('src', MASCOT);
+				if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide()
+				else {
+					$("#custommascoturl").parent().parent().show();
+					$("#mascot").attr('src', $("#custommascoturl").val());
+				}
+				setOpt('SP_mascot', MASCOT);
+			  });
+			$("#custommascoturl").val(getOrDefault('SP_custommascoturl', ''))
+			  .on("change blur", function() {
+				$("#mascot").attr('src', $(this).val());
+				setOpt('SP_custommascoturl', $(this).val());
+			  });
+			$("#mascotpos").val(MASCOTPOS)
+			  .on("change", function() {
+				MASCOTPOS = $(this).val();
+				$("#mascot").removeClass().addClass(MASCOTPOS);
+				setOpt('SP_mascotpos', MASCOTPOS);
+			});
+
+			$('<button class="btn btn-default pull-left">Hide Mascot</button>').prependTo(footer)
+			  .on("click", function() {
+				if (SHOWMASCOT) {
+					$(this).html('Show Mascot');
+					playerMascot("hide");
+				} else {
+					$(this).html('Hide Mascot');
+					playerMascot("show");
+				}
+				setOpt('SP_showmascot', SHOWMASCOT = !SHOWMASCOT);
+				$("#plr-17").toggleClass('activated');
+			  });
+		});
+	}
+}
+
+function progressBarMode(mode) {
+	if (mode == "show") {
+		$videowrapHeader.addClass('pbar');
+		PBAR = setInterval(function() {progressBar()}, 2000);
+		progressBar();
+	} else if (mode == "hide") {
+		clearInterval(PBAR);
+		$videowrapHeader.removeClass('pbar').css('background-size', '0% 100%');
+	}
+}
+
+function queueButtons(mode) {
+	if (mode == "show") {
+		if (HIDEPLSBTNS) {
+			if (hasPermission("playlistjump") || hasPermission("settemp")
+			   || hasPermission ("playlistdelete")) {
+				if (USEROPTS.qbtn_hide) {
+					var str = 'Warning! You have disabled playlist buttons globally.\n'
+						+ 'You can change it in your user preferences on the top navigation '
+						+ 'bar ("Options" > "Playback").'
+					alert(str);
+				}
+				$queue.removeClass('nobuttons');
+			} else alert('You have no permission to display playlist buttons on this channel.');
+		}
+	} else if (mode == "hide") $queue.addClass('nobuttons');
+}
+
+function queueMiniatures(mode) {
+	if (mode == "hide") $queue.find(".miniature").remove()
+	else if (mode == "show") {
+		$queue.find("li").each(function() {
+			var link = '';
+			var media = $(this).data("media");
+			if (media.type == "yt") link = 'http://img.youtube.com/vi/' + media.id + '/1.jpg'
+			else if (media.type == "dm") link = 'http://www.dailymotion.com/thumbnail/video/' + media.id;
+			if (link != "") {
+				if (USEROPTS.qbtn_idontlikechange) {
+					$(this).append('<img src="' + link + '" class="miniature" />');
+				} else {
+					$(this).find(".btn-group")
+					  .before('<img src="' + link + '" class="miniature" />');
+				}
+			}
+		});
+		scrollQueue();
+	}
+}
+
+function queueMode(mode) {
+	if (mode == "default") $queue.removeClass('numbered')
+	else if (mode == "numbered") $queue.addClass('numbered');
+}
+
+function queueScrollbar(mode) {
+	if (mode == "hide") $queue.addClass('noscroll')
+	else if (mode == "show") $queue.removeClass('noscroll');
+}
+
+function titlebarMode(mode) {
+	if (mode == "full") {
+		$titlerow = $('<div id="titlerow" class="row" />').insertBefore("#main");
+		$titlewrap = $('<div id="titlewrap" class="col-lg-12 col-md-12" />').appendTo($titlerow)
+		  .html($videowrapHeader.detach().addClass('bigtitle'));
+		$("#plr-2").addClass('activated');
+		if (SINGLECOLUMN) {
+			$videowrap.before($titlewrap.detach());
+			$titlewrap.removeClass()
+			  .addClass('col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1 margin-bottom-10');
+		}
+		var html = '<span id="totalclock" class="pull-right">--:--</span>'
+			 + '<span id="mediaclock" class="pull-right">--:-- |&nbsp;</span>';
+		$mediastats = $('<p id="mediastats" />').prependTo($videowrap).html('&nbsp;' + html);
+		MEDIACLOCK = setInterval(function() {mediaClock()}, 1000);
+		mediaClock();
+	} else if (mode == "compact") {
+		$videowrapHeader.detach().prependTo("#videowrap").removeClass('bigtitle');
+		$("#plr-2").removeClass('activated');
+		$("#titlerow, #titlewrap, #mediastats").remove();
+		clearInterval(MEDIACLOCK);
+	}
+}
+
+function userlistSide(mode) {
+	if (mode == "left") {
+		$("#chat-f5").removeClass('activated');
+		$userlist.removeClass('pull-right');
+		$body.removeClass('synchtube');
+	} else if (mode == "right") {
+		$("#chat-f5").addClass('activated');
+		$userlist.addClass('pull-right');
+		$body.addClass('synchtube');
+	}
 }
 
 
@@ -1842,7 +1980,7 @@ if (TRANSPARENTNAV) $nav.addClass('transparent');
 $("nav .navbar-brand").attr('href', document.URL);
 
 
-// Navigation bar extended "Layout" dropdown menu
+// Navigation bar extended "Layout" menu
 
 var html = '<li><a id="layout-1">Premium Settings</a></li>'
 	 + '<li><a id="layout-2" class="opt"><span class="glyphicon glyphicon-ok"></span>Theme & User CSS</a></li>'
@@ -1887,7 +2025,7 @@ if (AnnouncementHTML != "") makeAlert('Channel Administrator Message', Announcem
 
 // Full-width title (if enabled)
 
-if (FULLTITLE) fullWidthTitle();
+if (FULLTITLE) titlebarMode("full");
 
 // Disable "New Messages Below" notification (if enabled)
 
@@ -1899,7 +2037,7 @@ if (HIDEINDICATOR) $chatwrap.addClass('noindicator');
 $("#modflair").detach().prependTo($chatheader);
 $scrollTop = $('<span id="scroll-top" class="label label-default pull-right pointer scroll-label" />')
   .insertBefore($userlisttoggle).attr('title', 'Scroll chat panel to top').html('Top ▴');
-$scrollTopl = $('<span id="scroll-to-pl" class="label label-default pull-right pointer scroll-label" />')
+$scrollToPl = $('<span id="scroll-to-pl" class="label label-default pull-right pointer scroll-label" />')
   .insertBefore($userlisttoggle).attr('title', 'Scroll to playlist').html('Pl ▾');
 $expandChat = $('<span id="expand-chat" class="label label-default pull-right pointer scroll-label" />')
   .insertBefore($userlisttoggle).attr('title', 'Toggle chat expanding')
@@ -2004,18 +2142,18 @@ $plsbtnouter = $('<div id="plsbtn-outer" class="btn-group" />').appendTo("#plcon
 
 if (PLSNUMBERS) {
 	$("#pls-4").addClass('activated');
-	$queue.addClass('numbered');
+	queueMode("numbered");
 }
 if (SHOWCONTRIBS) {
 	$("#pls-5").addClass('activated');
-	showContributors();
+	contributorsNames("show");
 }
 if (PLSNOSCROLL) {
 	$("#pls-9").addClass('activated');
-	$queue.addClass('noscroll');
+	queueScrollbar("hide");
 }
 if (MINIATURES) {
-	showMiniatures();
+	queueMiniatures("show");
 	$("#pls-10").addClass('activated');
 	var len = $queue.find("li").length;
 	if (len > 500) setTimeout(function() {rebuildMiniatures()}, 7500);
@@ -2023,7 +2161,7 @@ if (MINIATURES) {
 	scrollQueue();
 }
 if (HIDEPLSBTNS) {
-	$queue.addClass('nobuttons');
+	queueButtons("hide");
 	$("#pls-11").toggleClass('activated');
 }
 $("#pls-menu").find("li[group=2]").hide();
@@ -2085,12 +2223,14 @@ if (!USEROPTS.wmode_transparent) {
 	document.getElementById("plr-btn").innerHTML = '<span class="glyphicon glyphicon-cog"></span> ▾';	
 }
 if (FULLTITLE) $("#plr-2").addClass('activated');
-PROGRESSBAR ? showProgressBar() : $("#plr-3").addClass('activated');
+PROGRESSBAR ? progressBarMode("show") : $("#plr-3").addClass('activated');
 if (TIMELEFT) {
-	$timeleftclock = $('<span id="timeleftclock">[--:--]</span>').insertAfter("#resize-video-larger");
-	TIMELEFTCLOCK = setInterval(function() {timeLeftClock()}, 1000);
-	timeLeftClock();
+	mediaTimeLeft("show");
 	$("#plr-4").addClass('activated');
+}
+if (SHOWMASCOT) {
+	playerMascot("show");
+	$("#plr-17").addClass('activated');
 }
 $("#plr-menu").find("li[group=2]").hide();
 
@@ -2369,6 +2509,10 @@ $favscontrol = $('<div id="favscontrol" class="col-lg-12 col-md-12 pl" />').inse
 
 $queue.parent().attr('id', 'queue-parent');
 
+// Show contributors (if enabled)
+
+if (SHOWCONTRIBS) contributorsNames("show");
+
 
 // Playlist labels
 
@@ -2478,7 +2622,7 @@ $navbarUp.on("click", function() {
 });
 
 $navbarUnpin.on("click", function() {
-	SCROLLNAVBAR ? fixedNavbar() : scrollableNavbar();
+	SCROLLNAVBAR ? navbarMode("static") : navbarMode("scrollable");
 	setOpt('SP_scrollnavbar', SCROLLNAVBAR = !SCROLLNAVBAR);
 });
 
@@ -3055,14 +3199,14 @@ $("#layout-2").on("click", function() {
 $("#layout-3").on("click", function() {
 	COMPACT ? fluidLayout() : compactLayout();
 	setOpt('SP_compact', COMPACT = !COMPACT);
-	if ($expandChat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) chatHeight("full");
 });
 
 
 $("#layout-4").on("click", function() {
 	SINGLECOLUMN ? twoColumns() : singleColumn();
 	setOpt('SP_singlecolumn', SINGLECOLUMN = !SINGLECOLUMN);
-	if ($expandChat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) chatHeight("full");
 });
 
 $("#layout-5").on("click", function() {
@@ -3108,17 +3252,17 @@ $('#main').on('transitionend', '#player-chat-wrap .player-chat', function() {
 // Chat header labels events
 
 $expandChat.on("click", function() {
-	if ($(this).hasClass('label-success')) collapseChat()
+	if ($(this).hasClass('label-success')) chatHeight("compact")
 	else {
-		expandChat();
+		chatHeight("full");
 		$(window).bind('resize.expandchat', function(e) {
-			expandChat();
+			chatHeight("full");
 		});
 	}
 	if (SCROLLCHAT) scrollChat();
 });
 
-$scrollTopl.on("click", function() {
+$scrollToPl.on("click", function() {
 	window.scrollTo(0, $queue.offset().top);
 });
 
@@ -3201,23 +3345,15 @@ $("#pls-3").on("click", function() {
 });
 
 $("#pls-4").on("click", function() {
-	PLSNUMBERS ? $queue.removeClass('numbered') : $queue.addClass('numbered');
+	PLSNUMBERS ? queueMode("default") : queueMode("numbered");
 	$(this).toggleClass('activated');
 	setOpt('SP_plsnumbers', PLSNUMBERS = !PLSNUMBERS);
 });
 
 $("#pls-5").on("click", function() {
-	if (!$(this).hasClass('activated')) {
-		SHOWCONTRIBS = true;
-		showContributors();
-	} else {
-		SHOWCONTRIBS = false;
-		$queue.find("li .contrib").each(function() {
-			$(this).remove();
-		});
-	}
+	SHOWCONTRIBS ? contributorsNames("hide") : contributorsNames("show");
 	$(this).toggleClass('activated');
-	setOpt('SP_showcontribs', SHOWCONTRIBS);
+	setOpt('SP_showcontribs', SHOWCONTRIBS = !SHOWCONTRIBS);
 });
 
 $("#pls-8").on("click", function() {
@@ -3237,14 +3373,14 @@ $("#pls-7").on("click", function() {
 });
 
 $("#pls-9").on("click", function() {
-	PLSNOSCROLL ?  $queue.removeClass('noscroll') : $queue.addClass('noscroll');
+	PLSNOSCROLL ?  queueScrollbar("show") : queueScrollbar("hide");
 	$(this).toggleClass('activated');
 	setOpt('SP_plsnoscroll', PLSNOSCROLL = !PLSNOSCROLL);
 });
 
 $("#pls-10").on("click", function() {
 	$(this).toggleClass('activated');
-	MINIATURES ? $(".miniature").remove() : showMiniatures();
+	MINIATURES ? queueMiniatures("hide") : queueMiniatures("show");
 	setOpt('SP_miniatures', MINIATURES = !MINIATURES);
 	scrollQueue();
 });
@@ -3259,9 +3395,9 @@ $("#pls-11").on("click", function() {
 					+ '("Options" > "Playback").'
 				alert(str);
 			}
-			$queue.removeClass('nobuttons');
+			queueButtons("show");
 		} else alert('You have no permission to display playlist buttons on this channel.');
-	} else $queue.addClass('nobuttons');
+	} else queueButtons("hide");
 	setOpt('SP_hideplsbtns', HIDEPLSBTNS = !HIDEPLSBTNS);
 	scrollQueue();
 });
@@ -3284,27 +3420,21 @@ $("#plr-1").on("click", function() {
 });
 
 $("#plr-2").on("click", function() {
-	FULLTITLE ? compactTitle() : fullWidthTitle();
+	FULLTITLE ? titlebarMode("compact") : titlebarMode("full");
 	setOpt('SP_fulltitle', FULLTITLE = !FULLTITLE);
-	if ($expandChat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) chatHeight("full");
 });
 
 $("#plr-3").on("click", function() {
-	PROGRESSBAR ? hideProgressBar() : showProgressBar();
+	PROGRESSBAR ? progressBarMode("hide") : progressBarMode("show");
+	$(this).toggleClass('activated');
 	setOpt('SP_progressbar', PROGRESSBAR = !PROGRESSBAR);
 });
 
 $("#plr-4").on("click", function() {
-	if ($(this).hasClass('activated')) {
-		clearInterval(TIMELEFTCLOCK);
-		$timeleftclock.remove();
-	} else {
-		$timeleftclock = $('<span id="timeleftclock">[--:--]</span>').insertAfter("#resize-video-larger");
-		TIMELEFTCLOCK = setInterval(function() {timeLeftClock()}, 1000);
-		timeLeftClock();
-	}
+	TIMELEFT ? mediaTimeLeft("hide") : mediaTimeLeft("show");
 	$(this).toggleClass('activated');
-	setOpt('SP_timeleft', TIMELEFT);
+	setOpt('SP_timeleft', TIMELEFT = !TIMELEFT);
 });
 
 $("#plr-5").on("click", function() {
@@ -3468,97 +3598,10 @@ $("#plr-16").on("click", function() {
 });
 
 $("#plr-17").on("click", function() {
-	if ($(this).hasClass('activated')) {
-		$("#mascot").remove();
-		setOpt('SP_showmascot', SHOWMASCOT = false);
-	} else {
-		var arr = [
-			['Swinging Miku', DROPBOX + 'slv73jrurvhkzpb/1.gif'],
-			['Raving Miku', DROPBOX + 'k1f6a5h4anqbnz1/2.gif'],
-			['Small Miku', DROPBOX + 'jl1984kqelw5s2n/3.gif'],
-			['Rocking Miku', DROPBOX + 'r43pbglzdy2risu/4.gif'],
-			['Emilia', DROPBOX + '4me121ir8yh4vr5/5.gif'],
-			['Koneko', DROPBOX + 'je6owthtawuubkr/6.gif'],
-			['Cirno', DROPBOX + 'ky3jex5hzvdezfl/7.gif'],
-			['Haruhi', DROPBOX + '0slpa6al657bvj5/8.gif'],
-			['Blue dress girl', DROPBOX + 'm2qfgwl2oc6ooha/9.gif'],
-			['Flashing colours girl', DROPBOX + 'a9onwax8v1m7c4y/10.gif'],
-			['Cheerleader girl', DROPBOX + 'tpr1ppaqxnxsrfe/11.gif'],
-			['Silver-haired girl', DROPBOX + '383g9evpm7zhs5z/12.gif'],
-		];
-		MASCOT = getOrDefault('SP_mascot', '');
-		if (MASCOT == "") MASCOT = arr[0][1];
-		MASCOTPOS = getOrDefault('SP_mascotpos', 'b-left');
-		$videowrap.find(".embed-responsive-16by9")
-		  .append('<img id="mascot" class="' + MASCOTPOS + '" src="' + MASCOT + '" />');
-		if (MASCOT == "custom") $("#mascot").attr('src', getOrDefault('SP_custommascoturl', ''));
-		setOpt('SP_showmascot', SHOWMASCOT = true);
-
-		$("#mascot").on("click", function() {
-			createModal('Mascot Settings');
-
-			var html = '<form class="form-horizontal"><div class="form-group">'
-				 +   '<label class="control-label col-sm-5">Mascot type</label>'
-				 +   '<div class="col-sm-7 config-col"><select id="mascottype" class="form-control">';
-			var len = arr.length;
-			for (var i = 0; i < len; i++) {
-				html += '<option value="' + arr[i][1] + '">' + arr[i][0] + '</option>'
-			}
-			html += '<option value="custom">(Custom mascot)</option>'
-			     +  '</select></div></div><div class="form-group">'
-			     +    '<label class="control-label col-sm-5">Custom mascot URL</label>'
-			     +    '<div class="col-sm-7 config-col">'
-			     +      '<input id="custommascoturl" class="form-control" type="text" '
-			     +      'placeholder="Enter image URL" />'
-			     +  '</div></div><div class="form-group">'
-			     +    '<label class="control-label col-sm-5">Position on the player</label>'
-			     +    '<div class="col-sm-7 config-col">'
-			     +      '<select id="mascotpos" class="form-control">'
-			     +        '<option value="b-left">bottom left</option>'
-			     +        '<option value="b-center">bottom center</option>'
-			     +        '<option value="b-right">bottom right</option>'
-			     +        '<option value="t-left">top left</option>'
-			     +        '<option value="t-right">top right</option>'
-			     +        '<option value="c-center">center</option></select>'
-			     +  '</div></div></form>';
-			body.html(html);
-			if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide();
-
-			$("#mascottype").val(MASCOT)
-			  .on("change", function() {
-				MASCOT = $(this).val();
-				$("#mascot").attr('src', MASCOT);
-				if (MASCOT != "custom") $("#custommascoturl").parent().parent().hide()
-				else {
-					$("#custommascoturl").parent().parent().show();
-					$("#mascot").attr('src', $("#custommascoturl").val());
-				}
-				setOpt('SP_mascot', MASCOT);
-			  });
-			$("#custommascoturl").val(getOrDefault('SP_custommascoturl', ''))
-			  .on("change blur", function() {
-				$("#mascot").attr('src', $(this).val());
-				setOpt('SP_custommascoturl', $(this).val());
-			  });
-			$("#mascotpos").val(MASCOTPOS)
-			  .on("change", function() {
-				MASCOTPOS = $(this).val();
-				$("#mascot").removeClass().addClass(MASCOTPOS);
-				setOpt('SP_mascotpos', MASCOTPOS);
-			});
-
-			$('<button class="btn btn-default pull-left">Hide Mascot</button>').prependTo(footer)
-			  .on("click", function() {
-				if ($("#plr-17").hasClass('activated')) $(this).html('Show Mascot')
-				else $(this).html('Hide Mascot');
-				document.getElementById("plr-17").click();
-			  });
-		});
-	}
+	SHOWMASCOT ? playerMascot("hide") : playerMascot("show");
+	setOpt('SP_showmascot', SHOWMASCOT = !SHOWMASCOT);
 	$(this).toggleClass('activated');
 });
-
-if (SHOWMASCOT) document.getElementById("plr-17").click();
 
 
 // Favourites button events
@@ -4028,7 +4071,7 @@ $("#chat-f4").on("click", function() {
 });
 
 $("#chat-f5").on("click", function() {
-	ULISTRIGHT ? userlistLeft() : userlistRight();
+	ULISTRIGHT ? userlistSide("left") : userlistSide("right");
 	setOpt('SP_ulistright', ULISTRIGHT = !ULISTRIGHT);
 });
 
@@ -4443,8 +4486,7 @@ $("#fixfavs-btn").on("click", function() {
 		$("#addtofav-btn").removeClass('btn-success disabled');
 		$favsBtn.removeClass('btn-success active');
 		$("#favscontrol").hide();
-		FAVLINKS = '{"links":[]}';
-		setOpt('SP_favlinks', FAVLINKS);
+		setOpt('SP_favlinks', FAVLINKS = '{"links":[]}');
 	}
 });
 
@@ -4735,7 +4777,7 @@ $("#jukebox-btn").on("click", function() {
 		$("#resize-video-smaller, #resize-video-larger, #clear-btn, #autoclear-btn, #afk-btn, #plr-13").hide();
 		queuewrap.after($chatwrap.detach());
 		!SYNCH ? $videowrap.before(queuewrap.detach()) : $videowrap.after(queuewrap.detach());
-		if (SCROLLNAVBAR) fixedNavbar();
+		if (SCROLLNAVBAR) navbarMode("static");
 		$("#mainpage").addClass('plmode');
 		var match = document.getElementById("rightpane").className.match(/col-md-(\d+)/);
 		var classe1 = 12 - parseInt(match[1], 10);
@@ -4756,7 +4798,7 @@ $("#jukebox-btn").on("click", function() {
 		handleRank();
 		$chatwrap.after(queuewrap.detach());
 		!SYNCH ? $videowrap.before($chatwrap.detach()) : $videowrap.after($chatwrap.detach());
-		if (SCROLLNAVBAR) scrollableNavbar();
+		if (SCROLLNAVBAR) navbarMode("scrollable");
 		$("#mainpage").removeClass('plmode');
 		queuewrap.removeClass().addClass('col-md-12 col-lg-12');
 		scrollChatToTop();
@@ -5462,25 +5504,15 @@ $("#chatbtn").on("click", function() {
 // Improved player resizing
 // source: "/www/js/ui.js" file
 
-$("#resize-video-larger").addClass('label label-default').unbind()
-  .on("click", function() {
-    try {
-	CyTube.ui.changeVideoWidth(1);
-	if ($expandChat.hasClass('label-success')) expandChat();
-    } catch (error) {
-	console.error(error);
-    }
-});
+$("#resize-video-larger").addClass('label label-default')
+  .bind("click.expand", function() {
+	if ($expandChat.hasClass('label-success')) chatHeight("full");
+  });
 
-$("#resize-video-smaller").addClass('label label-default').unbind()
-  .on("click", function() {
-    try {
-	CyTube.ui.changeVideoWidth(-1);
-	if ($expandChat.hasClass('label-success')) expandChat();
-    } catch (error) {
-	console.error(error);
-    }
-});
+$("#resize-video-smaller").addClass('label label-default')
+  .bind("click.expand", function() {
+	if ($expandChat.hasClass('label-success')) chatHeight("full");
+  });
 
 
 // Improved playlist links retrieving
@@ -6202,7 +6234,7 @@ else if (USERTHEME == '/css/themes/modern.css') $body.addClass('modern');
 if (_SYNCH) $body.removeClass('synchtube');
 setTimeout(function() {
 	handleVideoResize();
-	if ($expandChat.hasClass('label-success')) expandChat();
+	if ($expandChat.hasClass('label-success')) chatHeight("full");
 }, 2000);
 
 
@@ -6220,8 +6252,8 @@ if (LARGECHAT) largeChat();
 if (LARGEPLAYER) largePlayer();
 if (THEATREMODE) theatreMode();
 if (RADIOMODE) radioMode();
-if (SCROLLNAVBAR) scrollableNavbar();
-if (ULISTRIGHT) userlistRight();
+if (SCROLLNAVBAR) navbarMode("scrollable");
+if (ULISTRIGHT) userlistSide("right");
 processLayoutElements();
 
 
@@ -6296,7 +6328,7 @@ socket.on("channelOpts", pageTitle);
 socket.on("rank", handleRank);
 socket.on("queue", function() {
 	rebuildMiniatures();
-	showContributors();
+	if (SHOWCONTRIBS) contributorsNames("show");
 });
 socket.on("userLeave", function(data) {
 	if (PREMIUMNOTMODE == 2 || PREMIUMNOTMODE == 4) {
@@ -6321,7 +6353,6 @@ volumeLvl();
 handleRank();
 scrollChat();
 scrollQueue();
-showContributors();
 handleMediaChange();
 setTimeout(function() {nowPlaying()}, 1500);
 setTimeout(function() {scrollChat()}, 2000);
@@ -6361,7 +6392,7 @@ if (WelcomeSoundFileURL != "" && PLAYWELCOME) {
 }
 
 
-// Message if script is succesfully loaded
+// Message if script has been succesfully loaded
 
 LOADED = true;
 var time = Math.round(new Date().getTime() - START) / 1000;
