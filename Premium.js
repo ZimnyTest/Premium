@@ -9,7 +9,7 @@ _______
 # Multi-functional - adds to your channel over 100 missing features, functions, and enhancements
 # Minimal layout interference - maximum channel boost by adding only few buttons and menus
 # Ready-to-use - doesn't require any configuration to work (see: INSTALLATION)
-# Relatively small filesize - only 275 kB of code
+# Relatively small filesize - less than 275 kB of code
 # User-oriented - gives single user almost infinite possibilities to set layout and look of the channel
 
 # INSTALLATION
@@ -717,7 +717,7 @@ function handleMediaChange() {
 		$("#plr-1").removeClass('activated');
 		HIDDENPLR = false;
 	}
-	NOPLAYER ? $("#plr-13").hide() : $("#plr-13").show();
+	(NOPLAYER || LARGEPLAYER) ? $("#plr-13").hide() : $("#plr-13").show();
 	if ($queue.find(".queue_entry").length > 0 && FAVLINKS.indexOf(link) > -1) {
 		$favsBtn.addClass('btn-success');
 		$("#addtofav-btn").addClass('btn-success disabled');
@@ -1127,7 +1127,7 @@ function showVideosOnChat(elem) {
 		  .attr('src', this.href).attr('controls', '').load(function() {
 			if (SCROLLCHAT) scrollChat();
 		  }).on("click", function() {
-			($(this).get(0).paused) ? $(this).get(0).play() : $(this).get(0).pause();
+			$(this).get(0).paused ? $(this).get(0).play() : $(this).get(0).pause();
 			return false;
 		  }).on("dblclick", function() {
 			window.open($(this).attr('src'), "_blank");
@@ -1253,10 +1253,9 @@ function fluidLayout() {
 function singleColumn() {
 	if (LARGECHAT) document.getElementById("layout-7").click();
 	if (LARGEPLAYER) document.getElementById("layout-8").click();
-	$("#layout-7, #layout-8, #controlsrow, #playlistrow, #jukebox-btn, #plr-13").hide();
+	$("#layout-7, #layout-8, #controlsrow, #playlistrow, #plr-13, #jukebox-btn").hide();
 	$("#resize-video-smaller, #resize-video-larger").hide();
 	$body.addClass('singlecolumn');
-	$("#layout-4").addClass('activated');
 	var classes;
 	var ratio = $(window).width() / $(window).height();
 	if (ratio > 1.85) classes = 'col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2'
@@ -1278,6 +1277,7 @@ function singleColumn() {
 		$titlewrap.removeClass()
 		  .addClass('col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1 margin-bottom-10');
 	}
+	$("#layout-4").addClass('activated');
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
@@ -1287,7 +1287,6 @@ function twoColumns() {
 	$("#controlsrow, #playlistrow, #plr-13, #jukebox-btn").show();
 	if (NOPLAYER) $("#plr-13").hide();
 	$body.removeClass('singlecolumn');
-	$("#layout-4").removeClass('activated');
 	$("#motdrow > div, #drinkbar, #titlewrap").removeClass().addClass('col-lg-12 col-md-12');
 	$("#announcements > div").removeClass().addClass('col-md-12');
 	$("#videowrap, #rightcontrols, #rightpane").removeClass().addClass("col-lg-7 col-md-7");
@@ -1305,12 +1304,12 @@ function twoColumns() {
 		$("#controlsrow").append($leftcontrols.detach()).append($rightcontrols.detach());
 		$("#playlistrow").append($leftpane.detach()).append($rightpane.detach());
 	}
+	$("#layout-4").removeClass('activated');
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
 
 function synchLayout() {
-	$("#layout-5").addClass('activated');
 	$videowrap.after($chatwrap.detach());
 	$leftcontrols.before($rightcontrols.detach());
 	$rightpane.after($leftpane.detach());
@@ -1320,11 +1319,11 @@ function synchLayout() {
 		$("#rightcontrols, #rightpane").addClass('margin-bottom-10');
 		if (MOTDBOTTOM) $leftpane.addClass('margin-bottom-10');
 	}
+	$("#layout-5").addClass('activated');
 	if (SCROLLCHAT) scrollChat();
 }
 
 function nonSynchLayout() {
-	$("#layout-5").removeClass('activated');
 	$videowrap.before($chatwrap.detach());
 	$leftcontrols.after($rightcontrols.detach());
 	$rightpane.before($leftpane.detach());
@@ -1337,34 +1336,35 @@ function nonSynchLayout() {
 			$leftpane.removeClass('margin-bottom-10');
 		}
 	}
+	$("#layout-5").removeClass('activated');
 	if (SCROLLCHAT) scrollChat();
 }
 
 function bottomMOTD() {
-	$("#layout-6").addClass('activated');
 	$("#resizewrap").before($("#motdrow").detach()).before($("#announcements").detach());
 	$("#playlistrow").addClass('margin-bottom-10');
 	if (SINGLECOLUMN && SYNCH) $leftpane.addClass('margin-bottom-10');
+	$("#layout-6").addClass('activated');
 }
 
 function topMOTD() {
-	$("#layout-6").removeClass('activated');
 	$("#drinkbarwrap").before($("#motdrow").detach()).before($("#announcements").detach());
 	$("#playlistrow").removeClass('margin-bottom-10');
 	SYNCH ? $leftpane.removeClass('margin-bottom-10') : $rightpane.removeClass('margin-bottom-10');
+	$("#layout-6").removeClass('activated');
 }
 
 function largeChat() {
 	HIDDENVWRAP = true;
 	if (LARGEPLAYER) document.getElementById("layout-8").click();
 	$("#videowrap, #resize-video-smaller, #resize-video-larger, #rightcontrols, #plr-13, #jukebox-btn").hide();
-	$("#layout-7").addClass('activated');
 	var classes;
 	var ratio = $(window).width() / $(window).height();
 	if (ratio > 1.85) classes = 'col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2'
 	else classes = 'col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1';
 	$("#chatwrap, #leftcontrols").removeClass().addClass(classes);
 	chatHeight("compact");
+	$("#layout-7").addClass('activated');
 	var ht = $(window).height() - 100;
 	if (ht > 500) ht -= 200;
 	$("#messagebuffer, #userlist").height(ht);
@@ -1376,37 +1376,36 @@ function normalChat() {
 	HIDDENVWRAP = false;
 	$("#rightcontrols, #resize-video-smaller, #resize-video-larger, #plr-13, #jukebox-btn").show();
 	NOPLAYER ? $("#plr-13").hide() : $("#videowrap").show();
-	$("#layout-7").removeClass('activated');
 	var match = document.getElementById("leftpane").className.match(/col-md-(\d+)/);
 	var class1 = parseInt(match[1], 10);
 	var class2 = 12 - parseInt(match[1], 10);
 	$("#chatwrap, #leftcontrols").removeClass().addClass('col-md-' + class1 + ' col-lg-' + class1);
 	$videowrap.removeClass().addClass('col-md-' + class2 + ' col-lg-' + class2);
 	chatHeight("compact");
+	$("#layout-7").removeClass('activated');
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
 
 function largePlayer() {
 	if (LARGECHAT) document.getElementById("layout-7").click();
-	$("#chatwrap, #resize-video-smaller, #resize-video-larger, #leftcontrols, #plr-14").hide();
-	$("#jukebox-btn, #plr-13").hide();
-	$("#layout-8").addClass('activated');
+	$("#chatwrap, #resize-video-smaller, #resize-video-larger, #leftcontrols").hide();
+	$("#plr-13, #plr-14, #jukebox-btn").hide();
 	var classes;
 	var ratio = $(window).width() / $(window).height();
 	if (ratio > 1.85) classes = 'col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2'
 	else classes = 'col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1';
 	$("#videowrap, #rightcontrols").removeClass().addClass(classes);
 	$scrollToChat.html('To player ▴');
+	$("#layout-8").addClass('activated');
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
 
 function normalPlayer() {
-	$("#chatwrap, #resize-video-smaller, #resize-video-larger, #leftcontrols, #plr-14").show();
-	$("#jukebox-btn, #plr-13").show();
+	$("#chatwrap, #resize-video-smaller, #resize-video-larger, #leftcontrols").show();
+	$("#plr-13, #plr-14, #jukebox-btn").show();
 	if (NOPLAYER) $("#plr-13").hide();
-	$("#layout-8").removeClass('activated');
 	var match = document.getElementById("leftpane").className.match(/col-md-(\d+)/);
 	var class1 = parseInt(match[1], 10);
 	var class2 = 12 - parseInt(match[1], 10);
@@ -1414,6 +1413,7 @@ function normalPlayer() {
 	$("#videowrap, #rightcontrols").removeClass().addClass('col-md-' + class2 + ' col-lg-' + class2);
 	$scrollToChat.html('To chat ▴');
 	chatHeight("compact");
+	$("#layout-8").removeClass('activated');
 	handleVideoResize();
 	if (SCROLLCHAT) scrollChat();
 }
@@ -1425,10 +1425,9 @@ function theatreMode() {
 	if (FULLTITLE) titlebarMode("compact");
 	$(".poll-menu").remove();
 	$("#chatwrap, #videowrap").show();
-	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #userlist").hide();
-	$("#videowrap-header, #controlsrow, .leftareas, #rightpane, #sitefooter").hide();
+	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatheader .label, #userlist").hide();
+	$("#userlisttoggle, #usercount, #videowrap-header, #controlsrow, .leftareas, #rightpane, #sitefooter").hide();
 	$body.addClass('theatre-mode');
-	$("#usercount, #userlisttoggle, #chatheader .label").hide();
 	$('<span id="theatre-void">&nbsp;</span>').appendTo($chatheader);
 	$('<span id="theatre-emotes" class="label label-default pull-right pointer scroll-label" />')
 	  .appendTo($chatheader).attr('title', 'Show Emote List').html('Emote List')
@@ -1496,11 +1495,10 @@ function closeTheatreMode() {
 		$("#tqueue-close, #tqueue").remove();
 		$queue.removeClass('theatre-mode');	
 	}
-	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #videowrap-header").show();
-	$("#controlsrow, .leftareas, #rightpane, #sitefooter").show();
-	$("body, #queue").removeClass('theatre-mode');
-	$("#usercount, #userlisttoggle, #chatheader .label").show();
 	$("#theatre-void, #theatre-emotes, #theatre-side, #theatre-queue").remove();
+	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatheader .label").show();
+	$("#userlisttoggle, #usercount, #videowrap-header, #controlsrow, .leftareas, #rightpane, #sitefooter").show();
+	$("body, #queue").removeClass('theatre-mode');
 	processLayoutElements();
 	$("#messagebuffer").removeClass('tmode');
 	$("#chatwrap, #videowrap, #pollwrap").removeClass('tmode tmode2');
@@ -1542,8 +1540,6 @@ function radioMode() {
 		$videowrapHeader.detach().prependTo("#videowrap").removeClass('bigtitle');
 		$titlerow.remove();
 	}
-	$body.addClass('radio-mode');
-	$videowrapHeader.addClass("radiotitle");
 	document.getElementById("plr-12").click();
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").hide();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").hide();
@@ -1552,6 +1548,8 @@ function radioMode() {
 	$("#plr-5").parent().parent().hide();
 	$("#playlistrow, #leftpane, #oekakiwrap, #notepadwrap, #rightpane, #sitefooter").hide();
 	if (NOPLAYER) $("#plr-btn").hide();
+	$body.addClass('radio-mode');
+	$videowrapHeader.addClass("radiotitle");
 	$("#chatwrap, #videowrap, #leftcontrols, #rightcontrols, #rightpane").removeClass()
 	  .addClass('col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2');
 	if ($expandChat.hasClass('label-success')) chatHeight("compact");
@@ -1571,18 +1569,16 @@ function radioMode() {
 			if (PLAYER) PLAYER.setVolume(ui.value / 100);
 		})
 	});
-	if (!NOPLAYER) {
-		togglevidBtn = $('<button id="togglevid-btn" class="btn btn-default btn-sm" />').html('Player')
-		  .prependTo("#videocontrols")
-		  .on("click", function() {
-			HIDDENVWRAP = !HIDDENVWRAP;
-			if ($(this).hasClass('btn-success')) document.getElementById("plr-12").click();
-			$("#videowrap .embed-responsive-16by9, #plr-1, #plr-11, #plr-15, #plr-16").toggle();
-			$("#plr-5").parent().parent().toggle();
-			if (!NOPLAYER) $("#fullscreenbtn").toggle();
-			$(this).toggleClass('btn-success');
-	 	 });
-	}
+	togglevidBtn = $('<button id="togglevid-btn" class="btn btn-default btn-sm" />').html('Player')
+	  .prependTo("#videocontrols")
+	  .on("click", function() {
+		HIDDENVWRAP = !HIDDENVWRAP;
+		if ($(this).hasClass('btn-success')) document.getElementById("plr-12").click();
+		$("#videowrap .embed-responsive-16by9, #plr-1, #plr-11, #plr-15, #plr-16").toggle();
+		$("#plr-5").parent().parent().toggle();
+		if (!NOPLAYER) $("#fullscreenbtn").toggle();
+		$(this).toggleClass('btn-success');
+	  });
 	toggleplBtn = $('<button id="togglepl-btn" class="btn btn-default btn-sm" />').html('Playlist')
 	  .prependTo("#videocontrols")
 	  .on("click", function() {
@@ -1631,9 +1627,6 @@ function closeRadioMode() {
 	$("#radioheaderwrap, #mediastats, #newplaylistwrap, #togglevid-btn").remove();
 	$("#togglepl-btn, #togglechat-btn, #close-btn").remove();
 	$("#switch-btn, #css-btn, #radioslider").remove();
-	$body.removeClass('radio-mode');
-	$videowrapHeader.removeClass("radiotitle");
-	if ($expandChat.hasClass('label-success')) $expandChat.removeClass('label-success');
 	document.getElementById("plr-12").click();
 	$("nav, footer, #motdrow, #announcements, #drinkbarwrap, #chatwrap").show();
 	$("#resize-video-smaller, #resize-video-larger, #videowrap .embed-responsive-16by9, #leftcontrols").show();
@@ -1643,6 +1636,9 @@ function closeRadioMode() {
 	$("#playlistrow, #leftpane, #rightpane, #sitefooter").show();
 	if ($("#oekaki-btn").hasClass('btn-success')) $oekakiwrap.show();
 	if ($("#notepad-btn").hasClass('btn-success')) $notepadwrap.show();
+	$body.removeClass('radio-mode');
+	$videowrapHeader.removeClass("radiotitle");
+	if ($expandChat.hasClass('label-success')) $expandChat.removeClass('label-success');
 	var match = document.getElementById("leftpane").className.match(/col-md-(\d+)/);
 	var class1 = parseInt(match[1], 10);
 	var class2 = 12 - parseInt(match[1], 10);
@@ -3242,11 +3238,19 @@ $("#layout-10").on("click", function() {
 });
 
 
-// Remove chat message from player
+// Remove chat messages from player
 
 $('#main').on('transitionend', '#player-chat-wrap .player-chat', function() {
 	$(this).remove();
 });
+
+
+// Video header labels events if expanded chat
+
+$("#resize-video-larger, #resize-video-smaller").addClass('label label-default')
+  .bind("click.expand", function() {
+	if ($expandChat.hasClass('label-success')) chatHeight("full");
+  });
 
 
 // Chat header labels events
@@ -3379,14 +3383,13 @@ $("#pls-9").on("click", function() {
 });
 
 $("#pls-10").on("click", function() {
-	$(this).toggleClass('activated');
 	MINIATURES ? queueMiniatures("hide") : queueMiniatures("show");
+	$(this).toggleClass('activated');
 	setOpt('SP_miniatures', MINIATURES = !MINIATURES);
 	scrollQueue();
 });
 
 $("#pls-11").on("click", function() {
-	$(this).toggleClass('activated');
 	if (HIDEPLSBTNS) {
 		if (hasPermission("playlistjump") || hasPermission("settemp") || hasPermission("playlistdelete")) {
 			if (USEROPTS.qbtn_hide) {
@@ -3398,6 +3401,7 @@ $("#pls-11").on("click", function() {
 			queueButtons("show");
 		} else alert('You have no permission to display playlist buttons on this channel.');
 	} else queueButtons("hide");
+	$(this).toggleClass('activated');
 	setOpt('SP_hideplsbtns', HIDEPLSBTNS = !HIDEPLSBTNS);
 	scrollQueue();
 });
@@ -3599,8 +3603,8 @@ $("#plr-16").on("click", function() {
 
 $("#plr-17").on("click", function() {
 	SHOWMASCOT ? playerMascot("hide") : playerMascot("show");
-	setOpt('SP_showmascot', SHOWMASCOT = !SHOWMASCOT);
 	$(this).toggleClass('activated');
+	setOpt('SP_showmascot', SHOWMASCOT = !SHOWMASCOT);
 });
 
 
@@ -4076,8 +4080,8 @@ $("#chat-f5").on("click", function() {
 });
 
 $("#chat-f6").on("click", function() {
-	$(this).toggleClass('activated');
 	$userlist.toggleClass('bigp');
+	$(this).toggleClass('activated');
 	setOpt('SP_bigprofiles', BIGPROFILES = !BIGPROFILES);
 });
 
@@ -4192,7 +4196,6 @@ $("#chat-f8").on("click", function() {
 // Chat options dropdown menu click events
 
 $("#chat-1").on("click", function() {
-	$(this).toggleClass('activated');
 	if (SHOWIMAGES) {
 		$messagebuffer.find(ImageExtensions).each(function() {
   			$(this).html(this.href);
@@ -4203,23 +4206,23 @@ $("#chat-1").on("click", function() {
 		showImagesOnChat($messagebuffer);
 		$("#oekaki-checkbox").hide();
 	}
+	$(this).toggleClass('activated');
 	setOpt('SP_showimages', SHOWIMAGES = !SHOWIMAGES);
 	if (SCROLLCHAT) scrollChat();
 });
 
 $("#chat-2").on("click", function() {
-	$(this).toggleClass('activated');
 	if (SHOWVIDEOS) {
 		$messagebuffer.find(MediaExtensions).each(function() {
   			$(this).html(this.href);
 		});
 	} else showVideosOnChat($messagebuffer);
+	$(this).toggleClass('activated');
 	setOpt('SP_showvideos', SHOWVIDEOS = !SHOWVIDEOS);
 	if (SCROLLCHAT) scrollChat();
 });
 
 $("#chat-3").on("click", function() {
-	$(this).toggleClass('activated');
 	if (!PLAYERTEXT) {
 		$videowrap.find(".embed-responsive-16by9").prepend('<div id="player-chat-wrap" />');
 		addChatNotification('NicoNico mode is now on - chat messages will be displayed on the player');
@@ -4227,6 +4230,7 @@ $("#chat-3").on("click", function() {
 		$("#player-chat-wrap").remove();
 		addChatNotification('NicoNico mode is now off');
 	}
+	$(this).toggleClass('activated');
 	setOpt('SP_playertext', PLAYERTEXT = !PLAYERTEXT);
 });
 
@@ -4431,7 +4435,7 @@ $("#filter_playlist").on("click", function() {
 	if (val == "") return;
 	$queue.find("li").each(function() {
 		var added = $(this).attr('title').split("by: ")[1];
-		(val != added) ? $(this).hide() : $(this).show();
+		val != added ? $(this).hide() : $(this).show();
 	});
 });
 
@@ -5501,20 +5505,6 @@ $("#chatbtn").on("click", function() {
 });
 
 
-// Improved player resizing
-// source: "/www/js/ui.js" file
-
-$("#resize-video-larger").addClass('label label-default')
-  .bind("click.expand", function() {
-	if ($expandChat.hasClass('label-success')) chatHeight("full");
-  });
-
-$("#resize-video-smaller").addClass('label label-default')
-  .bind("click.expand", function() {
-	if ($expandChat.hasClass('label-success')) chatHeight("full");
-  });
-
-
 // Improved playlist links retrieving
 // source: "/www/js/ui.js" file
 
@@ -6290,7 +6280,7 @@ $messagebuffer.find("div").each(function() {
 				var uname = klass.substring(("chat-msg-").length, klass.length);
 				var span = $('<span />');
 				var ts = $(this).find(".timestamp");
-				(ts.length > 0) ? span.insertAfter(ts) : span.prependTo($(this));
+				ts.length > 0 ? span.insertAfter(ts) : span.prependTo($(this));
 				$('<strong class="username">').html(uname + ': ').appendTo(span);
 			}
 		}
@@ -6428,7 +6418,8 @@ if (CLIENT.rank > 2) {
 if (EMOTESCACHE) {
 	var len = CHANNEL.emotes.length;
 	if (len > 0) {
-		var updateStatus = function() {
+		var updateStatus = function(v) {
+			v == "num" ? num++ : v == "err" ? err++ : '';
 			document.title = num + ' / ' + len + ' [' + err + ' err.]';
 			if (num + err != len) return;
 			document.title = PAGETITLE;
@@ -6440,16 +6431,14 @@ if (EMOTESCACHE) {
 		var num = 0;
 		var err = 0;
 		for (i in CHANNEL.emotes) {
-			var img = document.createElement('img');
-			img.src = CHANNEL.emotes[i].image;
-			img.onload = function() {
-				num++;
-				updateStatus();
-			};
-			img.onerror = function() {
-				err++;
-				updateStatus();
-			};
+			var _img = document.createElement('img');
+			_img.src = CHANNEL.emotes[i].image;
+			_img.onload = function() {
+				updateStatus("num");
+			}
+			_img.onerror = function() {
+				updateStatus("err");
+			}
 		}
 	}
 }
