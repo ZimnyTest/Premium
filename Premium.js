@@ -206,9 +206,11 @@ SHOWVIDEOS	= getOrDefault('SP_showvideos',		false);
 SINGLECOLUMN	= getOrDefault('SP_singlecolumn',	false);
 SOUNDSLVL	= getOrDefault('SP_soundslvl',		6);
 SYNCH		= getOrDefault('SP_synch',		_SYNCH);
+TEXTTOSPEECH	= getOrDefault('SP_texttospeech',	false);
 THEATREMODE	= getOrDefault('SP_theatremode',	false);
 TIMELEFT	= getOrDefault('SP_timeleft',		false);
 TOOLSENABLED	= getOrDefault('SP_toolsenabled',	false);
+TTSLANGUAGE	= getOrDefault('SP_ttslanguage',	'en');
 ULISTRIGHT	= getOrDefault('SP_ulistright',		_SYNCH);
 USERCSS		= getOrDefault('SP_usercss',		'');
 USERFONT	= getOrDefault('SP_userfont',		'');
@@ -436,7 +438,7 @@ function createFavsPanel() {
 		var link = arr[i]["link"];
 		html += '<li class="queue_entry fav-' + id + '">'
 		     +    '<button class="btn btn-xs btn-default pull-left" title="Click to copy link" '
-		     +    'onClick="pasteFav(\'' + link +'\')">Paste link to add</button>'
+		     +    'onClick="pasteLink(\'' + link +'\')">Paste link to add</button>'
 		     +    '<a target="_blank" href="' + link + '" class="qe_title">' + arr[i]["title"] +'</a>'
 		     +    '<button class="btn btn-xs btn-danger pull-right" title="Remove from list" '
 		     +    'onClick="removeFav(' + id + ')"><span class="glyphicon glyphicon-trash"></span></button>';
@@ -498,7 +500,7 @@ function createMediaDatabase() {
 			count++;
 			var link = MediaDatabase[i][0];
 			var html = '<button class="btn btn-xs btn-default pull-left" title="Click to copy link" '
-				 + 'onClick="pasteFav(\'' + link +'\')">Paste link to add</button>'
+				 + 'onClick="pasteLink(\'' + link +'\')">Paste link to add</button>'
 				 + '<a target="_blank" href="' + link + '" class="qe_title">' + item + ' | '
 				 +   MediaDatabase[i][1] +'</a>';
 			var parsed = parseMediaLink(link);
@@ -629,7 +631,7 @@ function getURLVar(v) {
 	var vars = link[1].split("&");
 	for (var i = 0; i < vars.length; i++) {
 		var p = vars[i].split("=");
-		if(p[0] == v) return p[1];
+		if (p[0] == v) return p[1];
 	}
 	return '';
 }
@@ -839,9 +841,9 @@ function pageTitle() {
 
 // Paste link from the favourites list to URL input
 
-function pasteFav(link) {
+function pasteLink(url) {
 	if (!$("#showmediaurl").hasClass('active')) document.getElementById("showmediaurl").click();
-	$("#mediaurl").val(link);
+	$("#mediaurl").val(url);
 }
 
 // Chat messages on player (NicoNico mode)
@@ -916,25 +918,6 @@ function processChannelCSS(bool) {
 	}
 }
 
-// Update progress bar
-
-function progressBar() {
-	if (!PLAYER || PLAYER.mediaType === undefined) return;
-	var a = 0;
-	var b = Math.round(getTimePos());
-	if (b != PREVTIME) a = b / PLAYER.mediaLength * 100;
-	$videowrapHeader.css('background-size', a + '% 100%');
-	PREVTIME = b;
-}
-
-// Rebuild playlist miniatures
-
-function rebuildMiniatures() {
-	if (!MINIATURES) return;
-	$queue.find(".miniature").remove();
-	queueMiniatures("show");
-}
-
 // Process various layout elements
 
 function processLayoutElements() {
@@ -966,6 +949,25 @@ function processLayoutElements() {
 		elms[i] == 0 ? $(ids[i]).addClass('hidden') : $(ids[i]).removeClass('hidden');
 	}
 	elms["logo"] == 1 ? $(ids["logo"]).addClass('logo') : $(ids["logo"]).removeClass('hidden logo');
+}
+
+// Update progress bar
+
+function progressBar() {
+	if (!PLAYER || PLAYER.mediaType === undefined) return;
+	var a = 0;
+	var b = Math.round(getTimePos());
+	if (b != PREVTIME) a = b / PLAYER.mediaLength * 100;
+	$videowrapHeader.css('background-size', a + '% 100%');
+	PREVTIME = b;
+}
+
+// Rebuild playlist miniatures
+
+function rebuildMiniatures() {
+	if (!MINIATURES) return;
+	$queue.find(".miniature").remove();
+	queueMiniatures("show");
 }
 
 // Rebuild saved mentions
@@ -1011,8 +1013,15 @@ function refreshPlayer() {
 function refreshAvatarsList() {
 	var html = '';
 	$userlist.find(".userlist_item span:nth-child(2)").each(function() {
-		var img = findUserlistItem($(this).text()).data().profile.image;
-		if (img != "") html += '<img src="' + img + '" title="' + $(this).text() + '" />'
+		var name = $(this).text();
+		var img = findUserlistItem(name).data().profile.image;
+		if (img != "") {
+			html += '<img src="' + img + '" title="' + $(this).text() + '" ';
+			if (name != CLIENT.name) {
+				html += 'class="pointer" onClick="initPm(\'' + $(this).text() + '\')" ';
+			}
+			html += '/>';
+		}
 	});
 	if (html == "") html = '<div>no profile images to display</div>';
 	$avatarspanel.html(html);
@@ -2277,7 +2286,9 @@ var html = '<button id="notepad-btn" class="btn btn-sm btn-default btn-chatctrl"
 	 +   '<ul id="chatopts-menu" class="dropdown-menu dropdown-menu-right noclose"></ul></div>';
 $chatcontrols = $('<div id="chatcontrols" class="btn-group pull-right" />').appendTo("#leftcontrols").html(html);
 
-if ((jQuery.isEmptyObject(SoundFiltersArray) && WelcomeSoundFileURL == "") || !CHATSOUNDS) $("#sounds-btn").hide();
+if (!TEXTTOSPEECH && (!CHATSOUNDS || (jQuery.isEmptyObject(SoundFiltersArray) && WelcomeSoundFileURL == ""))) {
+	$("#sounds-btn").hide();
+}
 if (MUTECHAT) $("#sounds-btn").addClass('btn-danger').attr('title', 'Unmute chat sounds');
 
 
@@ -2357,8 +2368,11 @@ var html = '<li group="1"><a id="chat-1" class="opt"><span class="glyphicon glyp
 	 +   'Always Show Usernames</a></li>'
 	 + '<li class="divider" group="2"></li>'
 	 + '<li group="2"><a id="chat-20" class="opt"><span class="glyphicon glyphicon-ok"></span>'
-	 +   'Matrix Style Chat</a></li>'
+	 +   'Chat Text-To-Speech</a></li>'
+	 + '<li class="divider" group="2"></li>'
 	 + '<li group="2"><a id="chat-21" class="opt"><span class="glyphicon glyphicon-ok"></span>'
+	 +   'Matrix Style Chat</a></li>'
+	 + '<li group="2"><a id="chat-22" class="opt"><span class="glyphicon glyphicon-ok"></span>'
 	 +   'Bubbled Chat Messages</a></li>';
 document.getElementById("chatopts-menu").innerHTML = html;
 
@@ -2376,7 +2390,7 @@ if (MSGSEPARATOR == "lines") {
 	$("#chat-5").addClass('activated');
 	$messagebuffer.addClass('lines');
 } else if (MSGSEPARATOR == "bubbles") {
-	$("#chat-21").addClass('activated');
+	$("#chat-22").addClass('activated');
 	$messagebuffer.addClass('bubbles');
 }
 if (IGNOREAVATARS) {
@@ -2417,8 +2431,9 @@ if (NOAUTOSCROLL) {
 	$chatwrap.addClass('noindicator');
 }
 if (CHATUSERNAME) $("#chat-19").addClass('activated');
+if (TEXTTOSPEECH) $("#chat-20").addClass('activated');
 if (CHATSTYLE == "matrix") {
-	$("#chat-20").addClass('activated');
+	$("#chat-21").addClass('activated');
 	$("#userlist, #messagebuffer, #chatline").addClass('matrix');
 }
 $("#chatopts-menu").find("li[group=2]").hide();
@@ -3279,7 +3294,7 @@ $("#pls-1").on("click", function() {
 		links.push(link);
 		html += '<tr><td>' + (len - i + 1) + '.</td><td>'
 		     +    '<button class="btn btn-xs btn-default pull-left modal-btn-xs" title="Click to copy link" '
-		     +    'onClick="pasteFav(\'' + link + '\'); $(\'#close-modal-btn\').trigger(\'click\')">+</button>'
+		     +    'onClick="pasteLink(\'' + link + '\'); $(\'#close-modal-btn\').trigger(\'click\')">+</button>'
 		     +    LASTPLAYED[i] + '</td></tr>';
 	}
 	html += '</table><br /><strong>History of your plays</strong> '
@@ -3297,7 +3312,7 @@ $("#pls-1").on("click", function() {
 			j++;
 			html += '<tr><td>' + j + '.</td><td>'
 			     +    '<button class="btn btn-xs btn-default pull-left modal-btn-xs" '
-			     +    'title="Click to copy link" onClick="pasteFav(\'' + link + '\'); '
+			     +    'title="Click to copy link" onClick="pasteLink(\'' + link + '\'); '
 			     +    '$(\'#close-modal-btn\').trigger(\'click\')">+</button>' + arr[i] + '</td></tr>';
 		}
 	}
@@ -3653,6 +3668,25 @@ $("#sounds-btn").on("click", function() {
 		})
 	});
 	$("#cslvl").html((SOUNDSLVL * 10) + '%');
+
+	var lang = [
+		['English', 'en'], ['Dutch', 'nl'], ['Finnish', 'su'], ['French', 'fr'], ['Hungarian', 'hu'],
+		['Italian', 'it'], ['Japanese', 'ja'], ['Lithuanian', 'lt'], ['Polish', 'pl'], ['Portuguese', 'pt'],
+		['Romanian', 'ro'], ['Russian', 'ru'], ['Spanish', 'es']
+	];
+
+	panel.append('<div class="panel-heading">Select text-to-speech language</div>');
+	var html = '<div class="panel-body"><form class="form-horizontal"><div class="form-group">'
+		 +   '<label class="control-label col-sm-5">Language</label>'
+		 +   '<div class="col-sm-7 config-col"><select id="tts-language" class="form-control">';
+	for (i in lang) html += '<option value="' + lang[i][1] + '">' + lang[i][0] + '</option>';
+	html += '</select></div></div></form></div>';
+	panel.append(html);
+	$("#tts-language").val(TTSLANGUAGE)
+	  .on("change", function() {
+		TTSLANGUAGE = $(this).val();
+		setOpt('SP_ttslanguage', TTSLANGUAGE);
+	  });
 	
 	panel.append('<div class="panel-heading">Select specific users to mute</div>');
 	mutegroup = $('<div class="panel-body" id="mutegroup" class="btn-group-vertical"></div>').appendTo(panel);
@@ -4240,7 +4274,7 @@ $("#chat-5").on("click", function() {
 		MSGSEPARATOR = '';
 	} else {
 		$messagebuffer.addClass('lines').removeClass('bubbles');
-		$("#chat-21").removeClass('activated');
+		$("#chat-22").removeClass('activated');
 		MSGSEPARATOR = 'lines';
 		if (SCROLLCHAT) scrollChat();
 	}
@@ -4383,6 +4417,16 @@ $("#chat-19").on("click", function() {
 
 $("#chat-20").on("click", function() {
 	if ($(this).hasClass('activated')) {
+		if (!CHATSOUNDS || (jQuery.isEmptyObject(SoundFiltersArray) && WelcomeSoundFileURL == "")) {
+			$("#sounds-btn").hide();
+		}
+	} else $("#sounds-btn").show();
+	$(this).toggleClass('activated');
+	setOpt('SP_texttospeech', TEXTTOSPEECH = !TEXTTOSPEECH);
+});
+
+$("#chat-21").on("click", function() {
+	if ($(this).hasClass('activated')) {
 		$("#userlist, #messagebuffer, #chatline").removeClass('matrix');
 		CHATSTYLE = '';
 	} else {
@@ -4394,7 +4438,7 @@ $("#chat-20").on("click", function() {
 	if (SCROLLCHAT) scrollChat();
 });
 
-$("#chat-21").on("click", function() {
+$("#chat-22").on("click", function() {
 	if ($(this).hasClass('activated')) {
 		$messagebuffer.removeClass('bubbles');
 		MSGSEPARATOR = '';
@@ -5115,6 +5159,18 @@ function formatChatMessage(data, last) {
 			}	
 		}
 	}
+	if (TEXTTOSPEECH && CHATSOUNDS && !MUTECHAT && (!(data.username in MUTEDVOICES)
+	|| MUTEDVOICES[data.username] == "0")) {
+		var _div = $('<div />').html(data.msg);
+		_div.find("a, img").remove();
+		var link = 'http://translate.google.com/translate_tts?tl=' + TTSLANGUAGE + '&q='
+			 + encodeURI(_div.html()) + '&client=tw-ob';
+		var aud = new Audio(link);
+		aud.volume = SOUNDSLVL / 10;
+		aud.play();
+		$("#sounds-btn").addClass('btn-success');
+		setTimeout(function() {$("#sounds-btn").removeClass('btn-success')}, 1000);
+	}
 
 	var message = $('<span />').appendTo(div);
 	message[0].innerHTML = data.msg;
@@ -5264,7 +5320,7 @@ function prepareMessage(msg) {
 				} else addChatNotification('Warning! Playlist is empty');
 			} else addChatNotification('Warning! You have no permission to move playlist items');
 			COMMAND = false;
-		} else if(msg.indexOf('!movernd') == 0) {
+		} else if (msg.indexOf('!movernd') == 0) {
 			if (hasPermission("playlistmove")) {
 				var len = $queue.find(".queue_entry").length;
 				if (len > 0) {
@@ -5277,7 +5333,7 @@ function prepareMessage(msg) {
 				} else addChatNotification('Warning! Playlist is empty');
 			} else addChatNotification('Warning! You have no permission to move playlist items');
 			COMMAND = false;
-		} else if(msg.indexOf('!drop') == 0) {
+		} else if (msg.indexOf('!drop') == 0) {
 			if (hasPermission("playlistmove")) {
 				var len = $queue.find(".queue_entry").length;
 				if (len > 0) {
@@ -5288,7 +5344,7 @@ function prepareMessage(msg) {
 				} else addChatNotification('Warning! Playlist is empty');
 			} else addChatNotification('Warning! You have no permission to move playlist items');
 			COMMAND = false;
-		} else if(msg.indexOf('!deletelast') == 0) {
+		} else if (msg.indexOf('!deletelast') == 0) {
 			if (hasPermission("playlistdelete")) {
 				var len = $queue.find(".queue_entry").length;
 				if (len > 0) {
@@ -5472,7 +5528,7 @@ $chatline.on("keydown", function(ev) {
 		return false;
 	} else if (ev.keyCode == 38) {
 		if (CHATHISTIDX == CHATHIST.length) CHATHIST.push($chatline.val());
-		if(CHATHISTIDX > 0) {
+		if (CHATHISTIDX > 0) {
 			CHATHISTIDX--;
 			$chatline.val(CHATHIST[CHATHISTIDX]);
 		}
