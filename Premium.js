@@ -526,7 +526,7 @@ function createModal(title) {
 		  });
 	dialog = $('<div class="modal-dialog modal-dialog-nonfluid non-fluid" />').appendTo(outer);
 	var html = '<button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
-		 + '<h3>' + title + '</h3>';
+		 + '<h4>' + title + '</h4>';
 	modal = $('<div class="modal-content" />').appendTo(dialog)
 		  .append('<div class="modal-header">' + html + '</div>');
 	body = $('<div class="modal-body scrolled" />').appendTo(modal);
@@ -1651,6 +1651,7 @@ function closeRadioMode() {
 	$chatline.focus();
 }
 
+
 // ***** Other layout functions (in alphabetical order) ***** //
 
 function chatHeight(mode) {
@@ -2290,7 +2291,7 @@ var html = '<li><a id="chat-f1">Premium Commands Help</a></li>'
 	 + '<li class="divider"></li>'
 	 + '<li><a id="chat-f5" class="opt"><span class="glyphicon glyphicon-ok"></span>'
 	 +   'Userlist on Right</a></li>'
-	 + '<li><a id="chat-f6" class="opt"><span class="glyphicon glyphicon-ok"></span>Big User Profiles</a></li>'
+	 + '<li><a id="chat-f6" class="opt"><span class="glyphicon glyphicon-ok"></span>Large User Profiles</a></li>'
 	 + '<li class="divider"></li>'
 	 + '<li><a id="chat-f7" class="opt"><span class="glyphicon glyphicon-ok"></span>Custom Ping Sound</a></li>'
 	 + '<li><a id="chat-f8">Clear Chat Window</a></li>'
@@ -2566,12 +2567,8 @@ var html = '<br />Channel powered by: <b>Synchtube Premium</b> v. ' + VERSION + 
 	 + '<a href="http://s06.flagcounter.com/more/rze9" target="_blank">'
 	 +   '<img id="spc" src="http://s06.flagcounter.com/count/rze9/bg=FFFFFF/txt=000000/'
 	 +   'border=CCCCCC/columns=3/maxflags=12/viewers=0/labels=1/pageviews=1/" /></a>';
+if (CustomFooterHTML != '') html += '<br />' + CustomFooterHTML;
 $("footer .credit").html($("footer .credit").html() + html);
-
-
-// Optional additional custom footer
-
-if (CustomFooterHTML != '') $("footer .credit").html($("footer .credit").html() + '<br />' + CustomFooterHTML);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3719,7 +3716,7 @@ $("#chat-f1").on("click", function() {
 	     +        '(e.g. <i>!pick japan,korea,china</i>)</td></tr>'
 	     +      '<tr><td><code>!ask</code></td><td>ask yes-no type question<br />'
 	     +        '(e.g. <i>!ask Am I stupid?</i>)</td></tr>'
-	     +      '<tr><td><code>!gif</code></td><td>search for gif on giphy.com<br />'
+	     +      '<tr><td><code>!gif</code></td><td>get random gif from selected phrase on giphy.com<br />'
 	     +        '(e.g. <i>!gif anime</i>)</td></tr>'
 	     +      '<tr><td><code>!dice</code></td><td>roll a dice</td></tr>'
 	     +      '<tr><td><code>!roll</code></td><td>roll a 6-digit number</td></tr>'
