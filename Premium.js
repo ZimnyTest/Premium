@@ -4269,7 +4269,7 @@ $("#chat-4").on("click", function() {
 		$("#sounds-btn").show();
 		BLINKBTN = setInterval(function() {
 			$("#sounds-btn").toggleClass('btn-warning');
-		}, 200);
+		}, 250);
 		setTimeout(function() {
 			clearInterval(BLINKBTN);
 			$("#sounds-btn").removeClass('btn-warning');
@@ -4949,7 +4949,7 @@ $(window).unbind("focus")
 
 
 // Improved implementation of emotes tab completion
-// source: "/www/js/tabcomplete.js" and "/www/js/util.js" files
+// source: "/www/js/tabcomplete.js" and "/www/js/ui.js" files
 
 CyTube.tabCompleteMethods['Longest unique match'] = function(input, position, options, context) {
 	var lower = input.toLowerCase();
@@ -5028,9 +5028,7 @@ CyTube.tabCompleteMethods['Cycle options'] = function(input, position, options, 
 
 	var matches = options.filter(function (option) {
 		return option.toLowerCase().indexOf(incomplete) === 0;
-	}).sort(function (a, b) {
-		return a.toLowerCase() > b.toLowerCase();
-	});
+	}).sort(function (a, b) {return a.toLowerCase() > b.toLowerCase()});
 
 	if (matches.length === 0) return {text:input, emote:'', newPosition:position};
 
@@ -5062,6 +5060,7 @@ function chatTabComplete() {
 	});
 
 	var method = USEROPTS.chat_tab_method;
+	if (!CyTube.tabCompleteMethods[method]) method = "Cycle options";
 	var result = CyTube.tabCompleteMethods[method](
 		currentText, currentPosition, options, CyTube.chatTabCompleteData.context
 	);
