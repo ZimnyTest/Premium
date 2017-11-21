@@ -220,6 +220,7 @@ VISITS		= getOrDefault('SP_visits',		0);
 
 // Premium Settings
 
+AUTOPLAYEMBEDS	= getOrDefault('SP_autoplayembeds',	false);
 AVATARSLIST	= getOrDefault('SP_avatarslist',	false);
 CHATHIDESCROLL	= getOrDefault('SP_chathidescroll',	false);
 CHATTOTOP	= getOrDefault('SP_chattotop',		false);
@@ -1132,6 +1133,7 @@ function showVideosOnChat(elem) {
 			window.open($(this).attr('src'), "_blank");
 			return false;
 		  });
+		if (AUTOPLAYEMBEDS) vid.attr('autoplay', '');
 		$(this).html(vid);
 	});
 }
@@ -2641,6 +2643,7 @@ $("#layout-1").on("click", function() {
 		['', 'Chat options'],
 		['chathidescroll', 'Autohide scrollbars (chat & userlist)'],
 		['hideindicator', 'Don\'t display "New Messages Below" alert'],
+		['autoplayembeds', 'Autoplay media embeds (if "Convert Links to Media" enabled)'],
 		['avatarslist', 'Display all user profile images below chat'],
 		['emotescache', 'Load emotes to cache on start'],
 		['chattotop', 'Scroll chat panel to top on load'],
@@ -2666,6 +2669,7 @@ $("#layout-1").on("click", function() {
 	if (SEPARATEULIST) $("#separateulist").prop('checked', true);
 	if (CHATHIDESCROLL) $("#chathidescroll").prop('checked', true);
 	if (HIDEINDICATOR) $("#hideindicator").prop('checked', true);
+	if (AUTOPLAYEMBEDS) $("#autoplayembeds").prop('checked', true);
 	if (AVATARSLIST) $("#avatarslist").prop('checked', true);
 	if (EMOTESCACHE) $("#emotescache").prop('checked', true);
 	if (CHATTOTOP) $("#chattotop").prop('checked', true);
@@ -2707,6 +2711,10 @@ $("#layout-1").on("click", function() {
 		if (HIDEINDICATOR) $chatwrap.addClass('noindicator')
 		else if (!$("#chat-18").hasClass('activated')) $chatwrap.removeClass('noindicator');
 		setOpt('SP_hideindicator', HIDEINDICATOR);
+	});
+	$("#autoplayembeds").on("click", function() {
+		AUTOPLAYEMBEDS = $("#autoplayembeds").prop('checked');
+		setOpt('SP_autoplayembeds', AUTOPLAYEMBEDS);
 	});
 	$("#avatarslist").on("click", function() {
 		if (AVATARSLIST) $avatarswrap.remove();
@@ -3322,14 +3330,13 @@ $("#pls-2").on("click", function() {
 		list2.push([key, list[key]]);
 	}
 	list2.sort(function(a, b) {return a[1] - b[1]}).reverse();
-	var list3 = [];
-	for (i in list2) {
-		list3.push('<tr><td>' + (i * 1 + 1) + '. </td><td>' + list2[i].join('</td><td> ') + '</td></tr>');
-	}
 	var html = 'Ranking of users by number of items added to current playlist.<br /><br />'
 		 + '<table id="contributors-list" class="table table-striped table-condensed">'
-		 +   '<thead><th>Ranking</th><th>Username</th><th>Playlist items</th></thead>'
-		 + list3.join("") + '</table><br />';
+		 +   '<thead><th>Ranking</th><th>Username</th><th>Playlist items</th></thead>';
+	for (i in list2) {
+		html += '<tr><td>' + (i * 1 + 1) + '. </td><td>' + list2[i].join('</td><td> ') + '</td></tr>';
+	}
+	html += '</table><br />';
 	body.html(html);
 	$plsbtnouter.removeClass('open');
 });
@@ -5176,17 +5183,20 @@ function formatChatMessage(data, last) {
 		str = str.replace(/(!pick|!ask|!gif|!dice|!roll|!time|!now|!stat|!calc|!game)/g, "");
 		str = str.replace(/(!add|!skip|!next|!bump|!movernd|!drop|!deletelast)/g, "");
 		var _div = $('<div />').html(str);
-		_div.find("img, a video, a audio").remove();
-		_div.find("code, strong, em, a, span, div").each(function() {
+		_div.find("img, a").remove();
+		_div.find("code, strong, em, span, div").each(function() {
 			$(this).replaceWith(this.childNodes);
 		});
-		var link = 'http://translate.google.com/translate_tts?tl=' + TTSLANGUAGE + '&q='
-			 + encodeURI(_div.html()) + '&client=tw-ob';
-		var aud = new Audio(link);
-		aud.volume = SOUNDSLVL / 10;
-		aud.play();
-		$("#sounds-btn").addClass('btn-success');
-		setTimeout(function() {$("#sounds-btn").removeClass('btn-success')}, 1000);
+		var tts = _div.html();
+		if (tts.length > 0) {
+			var link = 'http://translate.google.com/translate_tts?tl=' + TTSLANGUAGE + '&q='
+				 + encodeURI(tts) + '&client=tw-ob';
+			var aud = new Audio(link);
+			aud.volume = SOUNDSLVL / 10;
+			aud.play();
+			$("#sounds-btn").addClass('btn-success');
+			setTimeout(function() {$("#sounds-btn").removeClass('btn-success')}, 1000);
+		}
 	}
 
 	var message = $('<span />').appendTo(div);
@@ -5816,7 +5826,7 @@ uploadinput.onchange = function() {
 
 // API functions
 // source: drawingboard.js v0.4.6 - https://github.com/Leimi/drawingboard.js
-// Copyright (c) 2015 Emmanuel Pelletier [Licensed MIT]
+// Copyright © 2015 Emmanuel Pelletier [Licensed MIT]
 
 function uploadOekaki(pic) {
 	upalert = $('<div id="upalert" class="profile-box text-center upalert">Oekaki drawing upload...</div>')
