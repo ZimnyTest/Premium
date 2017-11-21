@@ -5817,7 +5817,6 @@ uploadinput.onchange = function() {
 
 // API functions
 // source: drawingboard.js v0.4.6 - https://github.com/Leimi/drawingboard.js
-
 // Copyright (c) 2015 Emmanuel Pelletier [Licensed MIT]
 
 function uploadOekaki(pic) {
