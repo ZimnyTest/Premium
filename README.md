@@ -18,7 +18,7 @@
 * Minimal layout interference - maximum channel boost by adding only few buttons and menus.
 * All-in-one file - includes both JavaScript and CSS, no additional files needed.
 * Ready-to-use - doesn't require any configuration to work.
-* Relatively small filesize - only 275 kB of code.
+* Relatively small filesize - less than 280 kB of code.
 #### General features
 * User settings stored in cookies/localStorage, applied for all rooms powered by Synchtube Premium (you don't have to configure each channel separately)
 * Synchtube logo in the navigation bar (only for Synchtube server)
@@ -98,7 +98,7 @@
 * Convert links to images (image is displayed directly on chat, instead of link)
 * Convert media to images (player with video or music file is displayed directly on chat, instead of link)
 * NicoNico mode (chat messages displayed on the player)
-* White background chat
+* Text-to-speech (automatically speaking chat messages using Google API) with 13 selectable languages and adjustable chat sounds volume
 * Separate chat messages (messages separated with horizontal lines)
 * Ignore avatars and name colors
 * Ignore emotes (displaying only emote text codes instead of images)
@@ -109,6 +109,7 @@
 * Disable autoscroll
 * Always show usernames (username displaying after every consecutive message)
 * Matrix style chat
+* White background chat
 * Bubbled chat messages
 * Autoclear button - non-stop clearing the chat (if raid or spam attack)
 * AntiAFK button - prevents user from AFK status
@@ -152,7 +153,7 @@
 * Favourites links panel - up to 200 links to save, with YouTube preview and 3 modes of sorting (oldest firest/ newest first/ alphabetically)
 ---
 ## Hosting
-Default Synchtube Premium file, together with other separated files (that cannot be included into main code - additional themes, animated mascots, external Oekaki API), is hosted on Dropbox. Some features use external APIs (imgur.com, giphy.com) and obviously are dependent on behaviour of those servers.
+Default Synchtube Premium file, together with other separated files (that cannot be included into main code - additional themes, animated mascots, text-to-speech Google API, external Oekaki API), is hosted on Dropbox. Some features use external APIs (imgur.com, giphy.com) and obviously are dependent on behaviour of those servers.
 ## Changelog
 #### v2.10 - *[2017-??-??]*
 * First release on GitHub.
