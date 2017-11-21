@@ -376,7 +376,7 @@ $plmeta			= $("#plmeta");
 # BRIGHTNESS, MEDIADBLOAD, OEKAKILOAD, OETSTAMP
 
 # List of interval global variables loaded dynamically:
-# ANTIAFK, CLEARING, MEDIACLOCK, PBAR, TIMELEFTCLOCK, UQI, UTCCLOCK
+# ANTIAFK, BLINKBTN, CLEARING, MEDIACLOCK, PBAR, TIMELEFTCLOCK, UQI, UTCCLOCK
 */
 
 
@@ -838,7 +838,7 @@ function pageTitle() {
 	PAGETITLE = title;
 }
 
-// Paste link from the favourites list to URL input
+// Paste link to "Add video from URL" input
 
 function pasteLink(url) {
 	if (!$("#showmediaurl").hasClass('active')) document.getElementById("showmediaurl").click();
@@ -3350,12 +3350,6 @@ $("#pls-5").on("click", function() {
 	setOpt('SP_showcontribs', SHOWCONTRIBS = !SHOWCONTRIBS);
 });
 
-$("#pls-8").on("click", function() {
-	$(this).toggleClass('activated');
-	toggleElement($plfiltercontrol);
-	$plsbtnouter.removeClass('open');
-});
-
 $("#pls-6").on("click", function() {
 	$("#pls-menu").find("li[group=1]").hide();
 	$("#pls-menu").find("li[group=2]").show();
@@ -3364,6 +3358,12 @@ $("#pls-6").on("click", function() {
 $("#pls-7").on("click", function() {
 	$("#pls-menu").find("li[group=1]").show();
 	$("#pls-menu").find("li[group=2]").hide();
+});
+
+$("#pls-8").on("click", function() {
+	$(this).toggleClass('activated');
+	toggleElement($plfiltercontrol);
+	$plsbtnouter.removeClass('open');
 });
 
 $("#pls-9").on("click", function() {
@@ -3615,7 +3615,7 @@ $("#notepad-btn").on("click", function() {
 });
 
 
-// Chat sounds button events
+// Chat sounds control button events
 
 $("#sounds-btn").on("click", function() {
 	createModal('Chat Sounds Control');
@@ -4215,7 +4215,7 @@ $("#chat-f8").on("click", function() {
 });
 
 
-// Chat options dropdown menu click events
+// Chat options dropdown menu events
 
 $("#chat-1").on("click", function() {
 	if (SHOWIMAGES) {
