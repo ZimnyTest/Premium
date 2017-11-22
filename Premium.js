@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.RC 3
-# Release date:		2017-11-21
+# Version:		2.10.RC 4
+# Release date:		2017-11-22
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyLech/Synchtube-Premium
@@ -266,7 +266,7 @@ VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "u
 // Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
-VERSION		= '2.10.RC 3';
+VERSION		= '2.10.RC 4';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -436,12 +436,14 @@ function createFavsPanel() {
 	for (i in arr) {
 		var id = arr[i]["id"];
 		var link = arr[i]["link"];
-		html += '<li class="queue_entry fav-' + id + '">'
-		     +    '<button class="btn btn-xs btn-default pull-left" title="Click to copy link" '
-		     +    'onClick="pasteLink(\'' + link +'\')">Paste link to add</button>'
-		     +    '<a target="_blank" href="' + link + '" class="qe_title">' + arr[i]["title"] +'</a>'
-		     +    '<button class="btn btn-xs btn-danger pull-right" title="Remove from list" '
-		     +    'onClick="removeFav(' + id + ')"><span class="glyphicon glyphicon-trash"></span></button>';
+		html += '<li class="queue_entry fav-' + id + '">';
+		if (hasPermission("playlistadd")) {
+			html += '<button class="btn btn-xs btn-default pull-left" title="Click to copy link" '
+			     +  'onClick="pasteLink(\'' + link +'\')">Paste link to add</button>';
+		}
+		html += '<a target="_blank" href="' + link + '" class="qe_title">' + arr[i]["title"] +'</a>'
+		     +  '<button class="btn btn-xs btn-danger pull-right" title="Remove from list" '
+		     +  'onClick="removeFav(' + id + ')"><span class="glyphicon glyphicon-trash"></span></button>';
 		var parsed = parseMediaLink(link);
 		if (parsed["type"] == "yt") {
 			html += '<button class="btn btn-default btn-xs pull-right" title="Click to preview" '
@@ -499,10 +501,10 @@ function createMediaDatabase() {
 			item++;
 			count++;
 			var link = MediaDatabase[i][0];
-			var html = '<button class="btn btn-xs btn-default pull-left" title="Click to copy link" '
-				 + 'onClick="pasteLink(\'' + link +'\')">Paste link to add</button>'
-				 + '<a target="_blank" href="' + link + '" class="qe_title">' + item + ' | '
-				 +   MediaDatabase[i][1] +'</a>';
+			var html = '<button class="btn btn-xs btn-default pull-left pastebtn" '
+				 + 'title="Click to copy link" onClick="pasteLink(\'' + link +'\')">Paste link to add'
+				 + '</button><a target="_blank" href="' + link + '" class="qe_title">'
+				 + item + ' | ' + MediaDatabase[i][1] +'</a>';
 			var parsed = parseMediaLink(link);
 			if (parsed["type"] == "yt") {
 				html += '<button class="btn btn-default btn-xs pull-right" title="Click to preview" '
@@ -2081,6 +2083,10 @@ if (typeof MediaDatabase !== "undefined" || getURLVar("db") != "" || (EXECDB && 
 			}
 		}
 		$(this).toggleClass('btn-success');
+		if ($(this).hasClass('btn-success')) {
+			if (hasPermission("playlistadd")) $("#db-well").find(".pastebtn").show()
+			else $("#db-well").find(".pastebtn").hide();
+		}
 		toggleElement($dbwell);
 	  });
 	$('<button id="dbreload-btn" class="btn btn-sm btn-default" />').appendTo(dbgroup)
@@ -3278,19 +3284,26 @@ $("#scroll-top, #scroll-to-chat").on("click", function() {
 $("#pls-1").on("click", function() {
 	createModal('Last Played');
 
-	var html = '<p class="text-info">Click "+" button to paste selected link into "Add video" input.</p><br />'
-		 + '<strong>List of items played in current session</strong> (from latest):<br /><br />'
-		 + '<table class="table table-striped table-condensed"><thead><th>Num.</th><th>Title</th></thead>';
+	var html = '';
+	if (hasPermission("playlistadd")) {
+		html += '<p class="text-info">Click "+" button to paste selected link into "Add video" input.</p>'
+		     +  '<br />';
+	}
+	html += '<strong>List of items played in current session</strong> (from latest):<br /><br />'
+	     +  '<table class="table table-striped table-condensed"><thead><th>Num.</th><th>Title</th></thead>';
 	var links = [];
 	var len = LASTPLAYED.length - 1;
 	for (var i = len; i >= 0; i--) {
 		var tmp = $('<div />').append(LASTPLAYED[i]);
 		var link = tmp.find("a").attr('href');
 		links.push(link);
-		html += '<tr><td>' + (len - i + 1) + '.</td><td>'
-		     +    '<button class="btn btn-xs btn-default pull-left modal-btn-xs" title="Click to copy link" '
-		     +    'onClick="pasteLink(\'' + link + '\'); $(\'#close-modal-btn\').trigger(\'click\')">+</button>'
-		     +    LASTPLAYED[i] + '</td></tr>';
+		html += '<tr><td>' + (len - i + 1) + '.</td><td>';
+		if (hasPermission("playlistadd")) {
+			html += '<button class="btn btn-xs btn-default pull-left modal-btn-xs" '
+			     +  'title="Click to copy link" onClick="pasteLink(\'' + link + '\'); '
+			     +  '$(\'#close-modal-btn\').trigger(\'click\')">+</button>';
+		}
+		html += LASTPLAYED[i] + '</td></tr>';
 	}
 	html += '</table><br /><strong>History of your plays</strong> '
 	     +  '(max. last 200 unique, items from current session are ignored):<br /><br />'
@@ -3305,10 +3318,13 @@ $("#pls-1").on("click", function() {
 		var link = tmp.find("a").attr('href');
 		if (links.indexOf(link) < 0) {
 			j++;
-			html += '<tr><td>' + j + '.</td><td>'
-			     +    '<button class="btn btn-xs btn-default pull-left modal-btn-xs" '
-			     +    'title="Click to copy link" onClick="pasteLink(\'' + link + '\'); '
-			     +    '$(\'#close-modal-btn\').trigger(\'click\')">+</button>' + arr[i] + '</td></tr>';
+			html += '<tr><td>' + j + '.</td><td>';
+			if (hasPermission("playlistadd")) {
+				html += '<button class="btn btn-xs btn-default pull-left modal-btn-xs" '
+				     +  'title="Click to copy link" onClick="pasteLink(\'' + link + '\'); '
+				     +  '$(\'#close-modal-btn\').trigger(\'click\')">+</button>';
+			}
+			html += arr[i] + '</td></tr>';
 		}
 	}
 	html += '</table>';
@@ -3676,11 +3692,15 @@ $("#sounds-btn").on("click", function() {
 		PLAYWELCOME = $("#play-welcome").prop('checked');
 		setOpt('SP_playwelcome', PLAYWELCOME);
 	});
-	
-	panel.append('<div class="panel-heading">Soundfilters - select specific users to mute</div>')
-	var div = $('<div class="col-sm-12" />').appendTo(panel).html('<br />');
+
+	var str = 'Chat soundfilters';
+	if (!jQuery.isEmptyObject(SoundFiltersArray)) str += ' - select specific users to temporary mute'
+	$('<div class="panel-heading" />').appendTo(panel).html(str);
+	var div = $('<div class="panel-body" />').appendTo(panel);
+
+	var wrap = $('<div />').appendTo(div);
 	muteallbtn = $('<button id="muteall-btn" class="btn btn-primary btn-default">Mute all soundfilters</button>')
-	  .appendTo(div)
+	  .appendTo(wrap)
 	  .on("click", function() {
 		if (MUTECHAT) {
 			$(this).html('Mute all soundfilters').removeClass('btn-danger');
@@ -3693,28 +3713,28 @@ $("#sounds-btn").on("click", function() {
 	  });
 	if (MUTECHAT) muteallbtn.html('Unmute all soundfilters').addClass('btn-danger');
 	if (jQuery.isEmptyObject(SoundFiltersArray)) {
-		$('<span> · <span class="text-info">[no soundfilters on this channel]</span><span>').appendTo(div);
+		$('<span> · <span class="text-info">[no soundfilters on this channel]</span><span>').appendTo(wrap);
 	}
 
-	mutegroup = $('<div class="panel-body btn-group-vertical" id="mutegroup"></div>').appendTo(panel);
-	$(".userlist_item").each(function() {
-		var user = $(this).find("span:nth-child(2)").html();
-		var btn = $('<button class="btn btn-primary btn-default btn-sm" name="' + user + '" />')
-		  .appendTo(mutegroup).html(user)
-		  .on("click", function() {
-			var name = $(this).attr('name');
-			if (name in MUTEDVOICES && MUTEDVOICES[name] == "1") {
-				$(this).removeClass('btn-danger');
-				MUTEDVOICES[name] = 0;
-			} else {
-				$(this).addClass('btn-danger');
-				MUTEDVOICES[name] = 1;
-			}
-	 	  });
-		if (user in MUTEDVOICES && MUTEDVOICES[user] == "1") btn.addClass('btn-danger');
-	});
-
 	if (!jQuery.isEmptyObject(SoundFiltersArray)) {
+		mutegroup = $('<div class="btn-group" id="mutegroup" />').appendTo(div);
+		$(".userlist_item").each(function() {
+			var user = $(this).find("span:nth-child(2)").html();
+			var btn = $('<button class="btn btn-primary btn-default btn-sm" name="' + user + '" />')
+			  .appendTo(mutegroup).html(user)
+			  .on("click", function() {
+				var name = $(this).attr('name');
+				if (name in MUTEDVOICES && MUTEDVOICES[name] == "1") {
+					$(this).removeClass('btn-danger');
+					MUTEDVOICES[name] = 0;
+				} else {
+					$(this).addClass('btn-danger');
+					MUTEDVOICES[name] = 1;
+				}
+	 		  });
+			if (user in MUTEDVOICES && MUTEDVOICES[user] == "1") btn.addClass('btn-danger');
+		});
+
 		var html = '<div class="panel-heading">List of channel\'s chat soundfilters</div>'
 			 + '<div class="panel-body">'
 			 +   '<table id="soundfilters-list" class="table table-striped table-condensed">'
@@ -6003,6 +6023,7 @@ var css = '.bigtitle {\n'
 	+ '#mediastats {margin:0 0 1px; padding-left:1px; padding-right:1px}\n'
 	+ '#player-chat-wrap img {max-width:60px; max-height:60px}\n'
 	+ '#player-chat-wrap img.oekakiimg {max-width:100px; max-height:100px}\n'
+	+ '#mutegroup {margin-top:10px; margin-bottom:10px}\n'
 	+ '#chatpanel {\n'
 	+ '  position:absolute; top:0px; left:15px; width:calc(100% - 30px);\n'
 	+ '  max-height:65%; border-width:6px; padding:10px;\n'
@@ -6342,7 +6363,10 @@ $messagebuffer.find("div").each(function() {
 		message.html(execTextEffects(message.html()));
 		if (SHOWIMAGES) showImagesOnChat(message)
 		else if (SHOWOEKAKI) showOekakiOnChat(message);
-		if (SHOWVIDEOS) showVideosOnChat(message);
+		if (SHOWVIDEOS) {
+			showVideosOnChat(message);
+			$(this).find("video").removeAttr('autoplay');
+		}
 		IGNOREEMOTES ? hideEmotes(message) : enhanceEmotes(message);
 		if (CHATUSERNAME) {
 			if ($(this).find(".username").length < 1) {
@@ -6475,7 +6499,7 @@ if (CLIENT.rank > 2) {
 		addChatNotification(html);
 		addChatNotification('Message above won\'t show again after entering "Tools".');
 	}
-	if (CHANNEL.opts.externaljs.indexOf('https://dl.dropboxusercontent.com/s/1dyazoq6t7wh808/Premium.js') < 0) {
+	if (CHANNEL.opts.externaljs.indexOf(DROPBOX + "1dyazoq6t7wh808/Premium.js") < 0) {
 		$.getScript(DROPBOX + "295oy7nkr9nv2re/check.js", function() {
 			var arr = VERSION.split(".");
 			var ver = arr[0] + "." + arr[1];
