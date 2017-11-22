@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.RC 4
-# Release date:		2017-11-22
+# Version:		2.10.RC 5
+# Release date:		2017-11-23
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyLech/Synchtube-Premium
@@ -261,12 +261,12 @@ MUTEDVOICES	= [];
 NOPLAYER	= false;
 ONLINETIME 	= 0;
 PREVTIME	= 0;
-VISIBLETAB	= {"commands":1, "emotes":1, "messages":1, "options":1, "tools":1, "unicode":1}
+VISIBLETAB	= {"commands":1, "emotes":1, "lastmedia":1, "messages":1, "options":1, "tools":1, "unicode":1}
 
 // Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
-VERSION		= '2.10.RC 4';
+VERSION		= '2.10.RC 5';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -371,10 +371,10 @@ $plmeta			= $("#plmeta");
 
 /*
 # List of global variables stored in localStorage/cookies, loaded dynamically (only when needed):
-# FAVSORTMODE, MASCOT, MASCOTPOS, MENTIONHISTORY, NOBACKDROP, PLAYERHISTORY
+# ADDEDLINKS, FAVSORTMODE, MASCOT, MASCOTPOS, MENTIONHISTORY, NOBACKDROP, PLAYERHISTORY
 
 # List of session global variables loaded dynamically:
-# BRIGHTNESS, MEDIADBLOAD, OEKAKILOAD, OETSTAMP
+# BRIGHTNESS, MEDIADBLOAD, OEKAKILOAD, OETSTAMP, TTSTHROTTLE
 
 # List of interval global variables loaded dynamically:
 # ANTIAFK, BLINKBTN, CLEARING, MEDIACLOCK, PBAR, TIMELEFTCLOCK, UQI, UTCCLOCK
@@ -688,8 +688,8 @@ function handleMediaChange() {
 		var html = '<a href="' + link + '" target="_blank">' + uid.title + '</a>';
 		if (LASTPLAYED.length < 1 || LASTPLAYED[LASTPLAYED.length - 1] != html) {
 			LASTPLAYED.push(html);
-			var PLAYERHISTORY = getOrDefault('SP_playerhistory', '');
 			var rnd = Math.random().toString();
+			var PLAYERHISTORY = getOrDefault('SP_playerhistory', '');
 			// backwards compatibility
 			PLAYERHISTORY = PLAYERHISTORY.replace(/\|\|\+\|\|/g, ",").replace(/a>,<a/g, "a>" + rnd + "<a");
 			var arr = PLAYERHISTORY.length > 0 ? PLAYERHISTORY.split(rnd) : [];
@@ -976,8 +976,8 @@ function rebuildMiniatures() {
 
 function rebuildSavedMentions(id) {
 	if (id >= 0) {
-		MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 		var rnd = Math.random().toString();
+		MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 		// backwards compatibility
 		MENTIONHISTORY = MENTIONHISTORY.replace(/\|\|\+\|\|/g, ",")
 		  .replace(/span>,\/r\//g, "span>" + rnd + "/r/");
@@ -987,8 +987,8 @@ function rebuildSavedMentions(id) {
 		$("#_b3").html('Saved Mentions [' + arr.length + ']');
 	}
 	var html = '<thead><th>Num.</th><th>Message</th></thead>';
-	MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 	var rnd = Math.random().toString();
+	MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 	// backwards compatibility
 	MENTIONHISTORY = MENTIONHISTORY.replace(/\|\|\+\|\|/g, ",").replace(/span>,\/r\//g, "span>" + rnd + "/r/");
 	var arr = MENTIONHISTORY.length > 0 ? MENTIONHISTORY.split(rnd) : [];
@@ -2120,7 +2120,7 @@ if (typeof MediaDatabase !== "undefined" || getURLVar("db") != "" || (EXECDB && 
 var html = '<button id="pls-btn" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" '
 	 + 'title="Playlist controls"><span class="glyphicon glyphicon-cog"></span> ▾</button>'
 	 + '<ul id="pls-menu" class="dropdown-menu noclose">'
-	 +   '<li group="1"><a id="pls-1">List of Last Played</a></li>'
+	 +   '<li group="1"><a id="pls-1">List of Last Media</a></li>'
 	 +   '<li group="1"><a id="pls-2">Contributors Ranking</a></li>'
 	 +   '<li group="1"><a id="pls-3" target="_blank">Download Current Item</a></li>'
 	 +   '<li class="divider" group="1"></li>'
@@ -2875,7 +2875,7 @@ $("#layout-1").on("click", function() {
 		['Chat controls', 'chatcontrols', 1],
 		['New poll and emote list buttons', 'pollemotebtns', -1],
 		['Colors button', 'colorsbtn', -1],
-		['Additional panels buttons', 'chatbtns', -1],
+		['Oekaki, notepad, and chat sounds buttons', 'chatbtns', -1],
 		['Chat control menus', 'chatmenus', -1],
 		['Playlist footer', 'plmeta', 1],
 		['Playlist footer labels', 'playlistlabels', -1],
@@ -3021,7 +3021,7 @@ $("#layout-1").on("click", function() {
 		 +   '<label class="checkbox-inline"><input id="exec-html" type="checkbox"><span> '
 		 +     'Enable and Execute Custom HTML</span></label><br /><br />'
 	      	 +   '<textarea id="customhtml" class="form-control" type="textarea" rows="10" '
-		 +   'placeholder="Paste your HTML code here" /></div></form>';
+		 +   'placeholder="Paste your HTML code here" /><br /></div></form>';
 	$("#_c6").html(html);
 
 	if (EXECHTML) $("#exec-html").prop('checked', true);
@@ -3282,7 +3282,8 @@ $("#scroll-top, #scroll-to-chat").on("click", function() {
 // Playlist options dropdown menu events
 
 $("#pls-1").on("click", function() {
-	createModal('Last Played');
+	createModal('Last Media');
+	createModalTabs(['Last Played', 'Last Added'], "lastmedia");
 
 	var html = '';
 	if (hasPermission("playlistadd")) {
@@ -3308,9 +3309,8 @@ $("#pls-1").on("click", function() {
 	html += '</table><br /><strong>History of your plays</strong> '
 	     +  '(max. last 200 unique, items from current session are ignored):<br /><br />'
 	     +  '<table class="table table-striped table-condensed"><thead><th>Num.</th><th>Title</th></thead>';
-	PLAYERHISTORY = getOrDefault('SP_playerhistory', '');
 	var rnd = Math.random().toString();
-	PLAYERHISTORY = PLAYERHISTORY.replace(/a>,<a/g, "a>" + rnd + "<a");
+	PLAYERHISTORY = getOrDefault('SP_playerhistory', '').replace(/a>,<a/g, "a>" + rnd + "<a");
 	var arr = PLAYERHISTORY.length > 0 ? PLAYERHISTORY.split(rnd) : [];
 	var j = 0;
 	for (i in arr) {
@@ -3328,7 +3328,34 @@ $("#pls-1").on("click", function() {
 		}
 	}
 	html += '</table>';
-	body.html(html);
+	$("#_c1").html(html);
+
+	var html = '';
+	if (hasPermission("playlistadd")) {
+		html += '<p class="text-info">Click "+" button to paste selected link into "Add video" input.</p>'
+		     +  '<br />';
+	}
+	html += '<strong>History of your added links</strong> (max. last 200 unique, from latest):<br /><br />'
+	     +  '<table class="table table-striped table-condensed"><thead><th>Num.</th><th>Title</th></thead>';
+	var rnd = Math.random().toString();
+	ADDEDLINKS = getOrDefault('SP_addedlinks', '').replace(/a>,<a/g, "a>" + rnd + "<a");
+	var arr = ADDEDLINKS.length > 0 ? ADDEDLINKS.split(rnd) : [];
+	var j = 0;
+	for (i in arr) {
+		var tmp = $('<div />').append(arr[i]);
+		var link = tmp.find("a").attr('href');
+		j++;
+		html += '<tr><td>' + j + '.</td><td>';
+		if (hasPermission("playlistadd")) {
+			html += '<button class="btn btn-xs btn-default pull-left modal-btn-xs" '
+			     +  'title="Click to copy link" onClick="pasteLink(\'' + link + '\'); '
+			     +  '$(\'#close-modal-btn\').trigger(\'click\')">+</button>';
+		}
+		html += arr[i] + '</td></tr>';
+	}
+	html += '</table>';
+	$("#_c2").html(html);
+
 	$plsbtnouter.removeClass('open');
 });
 
@@ -3854,7 +3881,7 @@ $("#chat-f1").on("click", function() {
 
 	var html = 'Use chatline shortcuts instead of defined long texts or code sequences.<br /><br />'
 		 + '<table id="sctbl" class="commands-tbl maxwidth"></table><br /><div class="centered">'
-		 +   '<button id="saveshortcuts-btn" class="btn btn-primary">Save Changes</button><br /></div>';
+		 +   '<button id="saveshortcuts-btn" class="btn btn-primary">Save Changes</button><br /><br /></div>';
 	$("#_c3").html(html);
 
 	var arr = JSON.parse(SHORTHANDS)["codes"];
@@ -3896,8 +3923,8 @@ $("#chat-f1").on("click", function() {
 $("#chat-f2").on("click", function() {
 	createModal('My Messages & Mentions');
 
-	MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 	var rnd = Math.random().toString();
+	MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 	// backwards compatibility
 	MENTIONHISTORY = MENTIONHISTORY.replace(/\|\|\+\|\|/g, ",").replace(/span>,\/r\//g, "span>" + rnd + "/r/");
 	var arr_ = MENTIONHISTORY.length > 0 ? MENTIONHISTORY.split(rnd) : [];
@@ -5142,7 +5169,7 @@ function formatChatMessage(data, last) {
 	if (data.meta.forceShowName) skip = false;
 
 	var uname = (CLIENT.name != "") ? CLIENT.name : 'Anonymous';
-	var ment = (data.msg.indexOf(uname) > -1) ? true : false;
+	var ment = (data.msg.toLowerCase().indexOf(uname.toLowerCase()) > -1) ? true : false;
 
 	data.msg = stripImages(data.msg);
 	data.msg = execEmotes(data.msg);
@@ -5199,24 +5226,32 @@ function formatChatMessage(data, last) {
 		}
 	}
 	if (TEXTTOSPEECH) {
-		var str = data.msg.replace(/(&gt;|&lt;)/g, "").replace(/&amp;/g, "");
-		str = str.replace(/(!pick|!ask|!gif|!dice|!roll|!time|!now|!stat|!calc|!game)/g, "");
-		str = str.replace(/(!add|!skip|!next|!bump|!movernd|!drop|!deletelast)/g, "");
-		var _div = $('<div />').html(str);
-		_div.find("img, a").remove();
-		_div.find("code, strong, em, span, div").each(function() {
-			$(this).replaceWith(this.childNodes);
-		});
-		var tts = _div.html();
-		if (tts.length > 0) {
-			var link = 'http://translate.google.com/translate_tts?tl=' + TTSLANGUAGE + '&q='
-				 + encodeURI(tts) + '&client=tw-ob';
-			var aud = new Audio(link);
-			aud.volume = SOUNDSLVL / 10;
-			aud.play();
-			$("#sounds-btn").addClass('btn-success');
-			setTimeout(function() {$("#sounds-btn").removeClass('btn-success')}, 1000);
-		}
+		if (typeof TTSTHROTTLE === "undefined") TTSTHROTTLE = 0;
+		if (TTSTHROTTLE < 3) {
+			TTSTHROTTLE++;
+			setTimeout(function() {
+				TTSTHROTTLE--;
+				if (TTSTHROTTLE < 3 && !MUTECHAT) $("#sounds-btn").removeClass('btn-danger');
+			}, 2000);
+			var str = data.msg.replace(/(&gt;|&lt;)/g, "").replace(/&amp;/g, "");
+			str = str.replace(/(!pick|!ask|!gif|!dice|!roll|!time|!now|!stat|!calc|!game)/g, "");
+			str = str.replace(/(!add|!skip|!next|!bump|!movernd|!drop|!deletelast)/g, "");
+			var _div = $('<div />').html(str);
+			_div.find("img, a").remove();
+			_div.find("code, strong, em, span, div").each(function() {
+				$(this).replaceWith(this.childNodes);
+			});
+			var tts = _div.html();
+			if (tts.length > 0) {
+				var link = 'http://translate.google.com/translate_tts?tl=' + TTSLANGUAGE + '&q='
+					 + encodeURI(tts) + '&client=tw-ob';
+				var aud = new Audio(link);
+				aud.volume = SOUNDSLVL / 10;
+				aud.play();
+				$("#sounds-btn").addClass('btn-success');
+				setTimeout(function() {$("#sounds-btn").removeClass('btn-success')}, 1000);
+			}
+		} else $("#sounds-btn").removeClass('btn-success').addClass('btn-danger');
 	}
 
 	var message = $('<span />').appendTo(div);
@@ -5245,8 +5280,8 @@ function formatChatMessage(data, last) {
 			 + d.getDate() + ' → ' + div.html();
 		CHATMENTIONS.push(html);
 		if (SAVEMENTIONS) {
-			MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 			var rnd = Math.random().toString();
+			MENTIONHISTORY = getOrDefault('SP_mentionhistory_' + CLIENT.name, '');
 			// backwards compatibility
 			MENTIONHISTORY = MENTIONHISTORY.replace(/\|\|\+\|\|/g, ",")
 			  .replace(/span>,\/r\//g, "span>" + rnd + "/r/");
@@ -6409,18 +6444,24 @@ socket.on("channelCSSJS", function() {
 	setAdditionalCSS();
 });
 socket.on("channelOpts", pageTitle);
-socket.on("rank", handleRank);
-socket.on("queue", function() {
+socket.on("queue", function(data) {
 	rebuildMiniatures();
 	if (SHOWCONTRIBS) contributorsNames("show");
-});
-socket.on("userLeave", function(data) {
-	if (PREMIUMNOTMODE == 2 || PREMIUMNOTMODE == 4) {
-		if (LeaveMessage == "") LeaveMessage = 'disconnected';
-		addChatNotification(data.name + ' ' + LeaveMessage);
+	var link = formatURL(data.item.media);
+	var html = '<a href="' + link + '" target="_blank">' + data.item.media.title + '</a>';
+	var rnd = Math.random().toString();
+	ADDEDLINKS = getOrDefault('SP_addedlinks', '').replace(/a>,<a/g, "a>" + rnd + "<a");
+	var arr = ADDEDLINKS.length > 0 ? ADDEDLINKS.split(rnd) : [];
+	var nr = 0;
+	while (nr > -1) {
+		nr = arr.indexOf(html);
+		if (nr > -1) arr.splice(nr, 1);
 	}
-	if (AVATARSLIST) refreshAvatarsList();
+	arr.unshift(html);
+	if (arr.length > 200) arr = arr.slice(0, 200);
+	setOpt('SP_addedlinks', arr.join(","));
 });
+socket.on("rank", handleRank);
 socket.on("setLeader", function() {
 	if (CLIENT.leader) $("#chat-15").addClass('activated');
 	else $("#chat-15").removeClass('activated');
@@ -6432,6 +6473,13 @@ socket.on("setPlaylistLocked", function() {
 		queueButtons("hide");
 		scrollQueue();
 	}, 1000);
+});
+socket.on("userLeave", function(data) {
+	if (PREMIUMNOTMODE == 2 || PREMIUMNOTMODE == 4) {
+		if (LeaveMessage == "") LeaveMessage = 'disconnected';
+		addChatNotification(data.name + ' ' + LeaveMessage);
+	}
+	if (AVATARSLIST) refreshAvatarsList();
 });
 
 
