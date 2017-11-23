@@ -22,8 +22,8 @@ ______________
 # RELEASE
 _________
 
-# Version:		2.10.RC 5
-# Release date:		2017-11-23
+# Version:		2.10
+# Release date:		2017-11-24
 # License:		Creative Commons CC-BY-NC-SA 4.0
 # License URL:		http://creativecommons.org/licenses/by-nc-sa/4.0/
 # Project URL:		https://github.com/ZimnyLech/Synchtube-Premium
@@ -152,7 +152,7 @@ _USERTHEME	= document.getElementById("usertheme").getAttribute("href");
 _COMPACT	= ['fluid', 'synchtube-fluid'].indexOf(USEROPTS.layout) < 0 ? true : false;
 _SINGLECOLUMN	= USEROPTS.layout == "hd" ? true : false;
 _SYNCH		= USEROPTS.layout.indexOf("synchtube") > -1 ? true : false;
-_ELEMENTS	= 'header:1|logo:1|motd:1|announcements:1|mainheader:1|playerlabels:1|chatlabels:1|playercontrols:1|'
+_ROOMELEMENTS	= 'header:1|logo:1|motd:1|announcements:1|mainheader:1|playerlabels:1|chatlabels:1|playercontrols:1|'
 		+ 'playlistbtns:1|playlistmenu:1|playermenu:1|playerbtns:1|mediadbbtns:1|chatcontrols:1|'
 		+ 'pollemotebtns:1|colorsbtn:1|chatbtns:1|chatmenus:1|plmeta:1|playlistlabels:1|footer:1';
 
@@ -229,7 +229,6 @@ COLLAPSEULIST	= getOrDefault('SP_collapseulist',	false);
 CUSTOMDBURL	= getOrDefault('SP_customdburl',	'');
 CUSTOMFILTERS	= getOrDefault('SP_customfilters',	'synchtube > Synchtube');
 CUSTOMHTML	= getOrDefault('SP_customhtml',		'');
-ELEMENTS	= getOrDefault('SP_elements',		_ELEMENTS);
 EMOTESCACHE	= getOrDefault('SP_emotescache',	false);
 EMOTESPERPAGE	= getOrDefault('SP_emotesperpage',	100);
 EMOTESPREVPOS	= getOrDefault('SP_emotesprevpos',	'b-left');
@@ -242,6 +241,7 @@ HIDEPLAYERURL	= getOrDefault('SP_hideplayerurl',	'');
 IGNORECHATMODE	= getOrDefault('SP_ignorechatmode',	3);
 IMAGEURLACCEPT	= getOrDefault('SP_imageurlaccept',	false);
 PREMIUMNOTMODE	= getOrDefault('SP_premiumnotmode',	4);
+ROOMELEMENTS	= getOrDefault('SP_roomelements',	_ROOMELEMENTS);
 SEPARATEULIST	= getOrDefault('SP_separateulist',	false);
 TABMODE		= getOrDefault('SP_tabmode',		0);
 TRANSPARENTNAV	= getOrDefault('SP_transparentnav',	false);
@@ -266,7 +266,7 @@ VISIBLETAB	= {"commands":1, "emotes":1, "lastmedia":1, "messages":1, "options":1
 // Constants
 
 DROPBOX		= 'https://dl.dropboxusercontent.com/s/';
-VERSION		= '2.10.RC 5';
+VERSION		= '2.10';
 
 // Allowed link extensions that can be displayed directly on chat by a user
 
@@ -923,7 +923,7 @@ function processChannelCSS(bool) {
 // Process various layout elements
 
 function processLayoutElements() {
-	var arr = ELEMENTS.split("|");
+	var arr = ROOMELEMENTS.split("|");
 	var elms = {};
 	for (i in arr) {
 		var row = arr[i].split(":");
@@ -942,12 +942,6 @@ function processLayoutElements() {
 		"playlistlabels":"#plmeta .label", "footer":"#sitefooter, footer"
 	}
 	for (i in ids) {
-		// backwards compatibility
-		if (elms[i] === undefined) {
-			arr.push(i + ":1");
-			setOpt('SP_elements', ELEMENTS = arr.join("|"));
-			processLayoutElements();
-		}
 		elms[i] == 0 ? $(ids[i]).addClass('hidden') : $(ids[i]).removeClass('hidden');
 	}
 	elms["logo"] == 1 ? $(ids["logo"]).addClass('logo') : $(ids["logo"]).removeClass('hidden logo');
@@ -2899,7 +2893,7 @@ $("#layout-1").on("click", function() {
 	html += '</div></div>';
 	$("#_c3").html('<form class="form-horizontal">' + html + '</form>');
 
-	var arr = ELEMENTS.split("|");
+	var arr = ROOMELEMENTS.split("|");
 	for (i in arr) {
 		var row = arr[i].split(":");
 		if (row[1] == 1) $("#elms_" + row[0]).prop('checked', true);
@@ -2914,16 +2908,16 @@ $("#layout-1").on("click", function() {
 	}
 
 	$("input[id^='elms_']").on("click", function() {
-		var arr = ELEMENTS.split("|");
+		var arr = ROOMELEMENTS.split("|");
 		var arr2 = [];
 		for (i in arr) {
 			var row = arr[i].split(":");
 			$("#elms_" + row[0]).prop('checked') ? row[1] = 1 : row[1] = 0;
 			arr2.push(row.join(":"));
 		}
-		ELEMENTS = arr2.join("|");
+		ROOMELEMENTS = arr2.join("|");
 		processLayoutElements();
-		setOpt('SP_elements', ELEMENTS);
+		setOpt('SP_roomelements', ROOMELEMENTS);
 		if ($(this).attr('mode') == 1) {
 			var attr = $(this).attr('panel');
 			var panel = $(".modal").find(".panel-body[panel=" + attr + "]");
@@ -3689,7 +3683,7 @@ $("#sounds-btn").on("click", function() {
 	$("#cslvl").html((SOUNDSLVL * 10) + '%');
 
 	var lang = [
-		['English', 'en'], ['Dutch', 'nl'], ['Finnish', 'su'], ['French', 'fr'], ['Hungarian', 'hu'],
+		['English', 'en'], ['Dutch', 'nl'], ['Finnish', 'fi'], ['French', 'fr'], ['Hungarian', 'hu'],
 		['Italian', 'it'], ['Japanese', 'ja'], ['Lithuanian', 'lt'], ['Polish', 'pl'],
 		['Portuguese', 'pt'], ['Romanian', 'ro'], ['Russian', 'ru'], ['Spanish', 'es']
 	];
@@ -3706,44 +3700,41 @@ $("#sounds-btn").on("click", function() {
 		setOpt('SP_ttslanguage', TTSLANGUAGE);
 	  });
 
-	panel.append('<div class="panel-heading">Welcome sound file</div>');
-	var div = $('<div class="panel-body" />').appendTo(panel);
-	var html = '<div class="form-group"><div class="col-sm-12 config-col">'
-		 +   '<label class="checkbox-inline"><input id="play-welcome" type="checkbox">'
-		 +   '<span> Play welcome sound file on load';
-	if (WelcomeSoundFileURL == "") html += ' · <span class="text-info">[no file on this channel]</span>';
-	html += '</span></label></div></div><br />';
-	div.html(html);
-	if (PLAYWELCOME) $("#play-welcome").prop('checked', true);
-	$("#play-welcome").on("click", function() {
-		PLAYWELCOME = $("#play-welcome").prop('checked');
-		setOpt('SP_playwelcome', PLAYWELCOME);
-	});
-
-	var str = 'Chat soundfilters';
-	if (!jQuery.isEmptyObject(SoundFiltersArray)) str += ' - select specific users to temporary mute'
-	$('<div class="panel-heading" />').appendTo(panel).html(str);
-	var div = $('<div class="panel-body" />').appendTo(panel);
-
-	var wrap = $('<div />').appendTo(div);
-	muteallbtn = $('<button id="muteall-btn" class="btn btn-primary btn-default">Mute all soundfilters</button>')
-	  .appendTo(wrap)
-	  .on("click", function() {
-		if (MUTECHAT) {
-			$(this).html('Mute all soundfilters').removeClass('btn-danger');
-			$("#sounds-btn").removeClass('btn-danger');
-		} else {
-			$(this).html('Unmute all soundfilters').addClass('btn-danger');
-			$("#sounds-btn").addClass('btn-danger');
-		}
-		setOpt('SP_mutechat', MUTECHAT = !MUTECHAT);
-	  });
-	if (MUTECHAT) muteallbtn.html('Unmute all soundfilters').addClass('btn-danger');
-	if (jQuery.isEmptyObject(SoundFiltersArray)) {
-		$('<span> · <span class="text-info">[no soundfilters on this channel]</span><span>').appendTo(wrap);
+	if (WelcomeSoundFileURL != "") {
+		panel.append('<div class="panel-heading">Welcome sound file</div>');
+		var div = $('<div class="panel-body" />').appendTo(panel);
+		var html = '<div class="form-group"><div class="col-sm-12 config-col">'
+			 +   '<label class="checkbox-inline"><input id="play-welcome" type="checkbox">'
+			 +   '<span> Play welcome sound file on load';
+		html += '</span></label></div></div><br />';
+		div.html(html);
+		if (PLAYWELCOME) $("#play-welcome").prop('checked', true);
+		$("#play-welcome").on("click", function() {
+			PLAYWELCOME = $("#play-welcome").prop('checked');
+			setOpt('SP_playwelcome', PLAYWELCOME);
+		});
 	}
 
 	if (!jQuery.isEmptyObject(SoundFiltersArray)) {
+		$('<div class="panel-heading" />').appendTo(panel)
+		  .html('Chat soundfilters - select specific users to temporary mute');
+		var div = $('<div class="panel-body" />').appendTo(panel);
+
+		var wrap = $('<div />').appendTo(div);
+		muteallbtn = $('<button id="muteall-btn" class="btn btn-primary btn-default" />')
+		  .appendTo(wrap).html('Mute all soundfilters')
+		  .on("click", function() {
+			if (MUTECHAT) {
+				$(this).html('Mute all soundfilters').removeClass('btn-danger');
+				$("#sounds-btn").removeClass('btn-danger');
+			} else {
+				$(this).html('Unmute all soundfilters').addClass('btn-danger');
+				$("#sounds-btn").addClass('btn-danger');
+			}
+			setOpt('SP_mutechat', MUTECHAT = !MUTECHAT);
+	  	  });
+		if (MUTECHAT) muteallbtn.html('Unmute all soundfilters').addClass('btn-danger');
+
 		mutegroup = $('<div class="btn-group" id="mutegroup" />').appendTo(div);
 		$(".userlist_item").each(function() {
 			var user = $(this).find("span:nth-child(2)").html();
@@ -6306,7 +6297,7 @@ if (MiniLogoURL != "") synchlogo = 'url("' + MiniLogoURL + '")';
 if (synchlogo == "none") var _pl = 15
 else {
 	var _pd = $(".navbar-brand").css('padding-left');
-	var _pl = (_pd != "none") ? _pd.replace('px', '') : 61;
+	var _pl = (_pd == "none" || _pd == "15px") ? 61 : _pd.replace('px', '');
 }
 
 css += '.navbar-brand {background-image:none !important; font-size:0pt !important; padding-left:15px !important}\n'
@@ -6447,19 +6438,21 @@ socket.on("channelOpts", pageTitle);
 socket.on("queue", function(data) {
 	rebuildMiniatures();
 	if (SHOWCONTRIBS) contributorsNames("show");
-	var link = formatURL(data.item.media);
-	var html = '<a href="' + link + '" target="_blank">' + data.item.media.title + '</a>';
-	var rnd = Math.random().toString();
-	ADDEDLINKS = getOrDefault('SP_addedlinks', '').replace(/a>,<a/g, "a>" + rnd + "<a");
-	var arr = ADDEDLINKS.length > 0 ? ADDEDLINKS.split(rnd) : [];
-	var nr = 0;
-	while (nr > -1) {
-		nr = arr.indexOf(html);
-		if (nr > -1) arr.splice(nr, 1);
+	if ((data.item.queueby == CLIENT.name) || (!data.item.queueby && CLIENT.name == "")) {
+		var link = formatURL(data.item.media);
+		var html = '<a href="' + link + '" target="_blank">' + data.item.media.title + '</a>';
+		var rnd = Math.random().toString();
+		ADDEDLINKS = getOrDefault('SP_addedlinks', '').replace(/a>,<a/g, "a>" + rnd + "<a");
+		var arr = ADDEDLINKS.length > 0 ? ADDEDLINKS.split(rnd) : [];
+		var nr = 0;
+		while (nr > -1) {
+			nr = arr.indexOf(html);
+			if (nr > -1) arr.splice(nr, 1);
+		}
+		arr.unshift(html);
+		if (arr.length > 200) arr = arr.slice(0, 200);
+		setOpt('SP_addedlinks', arr.join(","));
 	}
-	arr.unshift(html);
-	if (arr.length > 200) arr = arr.slice(0, 200);
-	setOpt('SP_addedlinks', arr.join(","));
 });
 socket.on("rank", handleRank);
 socket.on("setLeader", function() {
