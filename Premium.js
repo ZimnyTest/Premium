@@ -600,6 +600,11 @@ function execTextEffects(html) {
 	return html;
 }
 
+// Fix "#mainpage" padding-top if navigation bar has non-standard height
+
+function fixMainPadding() {
+	$("#mainpage").css('padding-top', ($nav.outerHeight() + 8) + 'px');
+}
 
 // Raw list of links from the playlist
 
@@ -1714,9 +1719,14 @@ function navbarMode(mode) {
 	if (mode == "static") {
 		var html = '<span class="glyphicon glyphicon-open" title="Make navigation bar scrollable"></span>';
 		$(".navbar-fixed-top, #mainpage").removeClass('snav');
+		$(window).bind("resize.mptop", function() {
+			fixMainPadding();
+		});
+		fixMainPadding();
 	} else if (mode == "scrollable") {
 		var html = '<span class="glyphicon glyphicon-pushpin" title="Make navigation bar static"></span>';
 		$(".navbar-fixed-top, #mainpage").addClass('snav');
+		$(window).unbind("resize.mptop");
 	}
 	document.getElementById("navbar-unpin").innerHTML = html;
 }
@@ -6359,7 +6369,7 @@ if (LARGECHAT) largeChat();
 if (LARGEPLAYER) largePlayer();
 if (THEATREMODE) theatreMode();
 if (RADIOMODE) radioMode();
-if (SCROLLNAVBAR) navbarMode("scrollable");
+SCROLLNAVBAR ? navbarMode("scrollable") : navbarMode("static");
 if (ULISTRIGHT) userlistSide("right");
 processLayoutElements();
 
