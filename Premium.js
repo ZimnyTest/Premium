@@ -3683,8 +3683,8 @@ $("#sounds-btn").on("click", function() {
 	$("#cslvl").html((SOUNDSLVL * 10) + '%');
 
 	var lang = [
-		['English', 'en'], ['Dutch', 'nl'], ['Finnish', 'fi'], ['French', 'fr'], ['Hungarian', 'hu'],
-		['Italian', 'it'], ['Japanese', 'ja'], ['Lithuanian', 'lt'], ['Polish', 'pl'],
+		['English', 'en'], ['Dutch', 'nl'], ['Finnish', 'fi'], ['French', 'fr'],
+		['Hungarian', 'hu'], ['Italian', 'it'], ['Japanese', 'ja'], ['Polish', 'pl'],
 		['Portuguese', 'pt'], ['Romanian', 'ro'], ['Russian', 'ru'], ['Spanish', 'es']
 	];
 
